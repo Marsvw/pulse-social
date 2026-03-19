@@ -33,6 +33,13 @@ async def lifespan(app: FastAPI):
             ))
         except Exception:
             pass
+        # Ensure avatar_url column exists as TEXT (fallback)
+        try:
+            await conn.execute(text(
+                "ALTER TABLE users ADD COLUMN avatar_url TEXT DEFAULT NULL"
+            ))
+        except Exception:
+            pass
     yield
 
 

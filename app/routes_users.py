@@ -70,8 +70,12 @@ async def upload_avatar(
         raise HTTPException(status_code=400, detail=f"Could not process image: {str(e)}")
 
     user.avatar_url = data_url
-    await db.commit()
-    await db.refresh(user)
+    try:
+        await db.commit()
+        await db.refresh(user)
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Could not save avatar: {str(e)}")
     return user
 
 
