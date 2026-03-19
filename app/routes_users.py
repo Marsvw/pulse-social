@@ -1,7 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+import base64
+import io
+
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from PIL import Image
 
 from app.database import get_db
 from app.models import User, Post, Comment, Like
@@ -10,6 +14,10 @@ from app.auth import get_current_user, require_user
 from app.routes_posts import post_to_out
 
 router = APIRouter(prefix="/api/users", tags=["users"])
+
+AVATAR_MAX_SIZE = 200  # px
+AVATAR_QUALITY = 80
+AVATAR_MAX_BYTES = 5 * 1024 * 1024  # 5MB upload limit
 
 
 @router.get("/{username}", response_model=UserOut)
@@ -29,6 +37,45 @@ async def update_my_profile(
 ):
     for key, val in payload.model_dump(exclude_unset=True).items():
         setattr(user, key, val)
+    await db.commit()
+    await db.refresh(user)
+    return user
+
+
+@router.post("/me/avatar", response_model=UserOut)
+async def upload_avatar(
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(require_user),
+):
+    # Validate file type
+    if file.content_type not in ("image/jpeg", "image/png", "image/gif", "image/webp"):
+        raise HTTPException(status_code=400, detail="Only JPEG, PNG, GIF, and WebP images are allowed")
+
+    data = await file.read()
+    if len(data) > AVATAR_MAX_BYTES:
+        raise HTTPException(status_code=400, detail="Image must be under 5MB")
+
+    try:
+        img = Image.open(io.BytesIO(data))
+        img = img.convert("RGB")
+        # Crop to square from center
+        w, h = img.size
+        side = min(w, h)
+        left = (w - side) // 2
+        top = (h - side) // 2
+        img = img.crop((left, top, left + side, top + side))
+        # Resize to thumbnail
+        img = img.resize((AVATAR_MAX_SIZE, AVATAR_MAX_SIZE), Image.LANCZOS)
+        # Encode as JPEG base64
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=AVATAR_QUALITY)
+        b64 = base64.b64encode(buf.getvalue()).decode()
+        data_url = f"data:image/jpeg;base64,{b64}"
+    except Exception:
+        raise HTTPException(status_code=400, detail="Could not process image")
+
+    user.avatar_url = data_url
     await db.commit()
     await db.refresh(user)
     return user

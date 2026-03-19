@@ -26,6 +26,13 @@ async def lifespan(app: FastAPI):
                 ))
             except Exception:
                 pass  # column already exists
+        # Migrate avatar_url from VARCHAR(500) to TEXT for base64 storage
+        try:
+            await conn.execute(text(
+                "ALTER TABLE users ALTER COLUMN avatar_url TYPE TEXT"
+            ))
+        except Exception:
+            pass
     yield
 
 

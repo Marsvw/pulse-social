@@ -13,7 +13,7 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     display_name: Mapped[str] = mapped_column(String(100), default="")
     bio: Mapped[str | None] = mapped_column(Text, default=None)
-    avatar_url: Mapped[str | None] = mapped_column(String(500), default=None)
+    avatar_url: Mapped[str | None] = mapped_column(Text, default=None)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime.datetime] = mapped_column(

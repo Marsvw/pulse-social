@@ -588,11 +588,17 @@ async function renderProfile(app) {
 /* ═══ EDIT PROFILE ═══ */
 function renderEditProfile(app) {
   if (!S.user) { navigate('login'); return; }
+  const currentAvatar = S.user.avatar_url;
   app.innerHTML = `<div class="auth-wrap">
     <h2>Edit Profile</h2><p class="sub">Update your details</p>
-    <div style="text-align:center;margin-bottom:20px">${avatarHtml(S.user.avatar_url, S.user.display_name || S.user.username, 'profile-avatar')}</div>
+    <div style="text-align:center;margin-bottom:20px">
+      <div id="avatarPreview">${avatarHtml(currentAvatar, S.user.display_name || S.user.username, 'profile-avatar')}</div>
+      <input type="file" id="epAvatarFile" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none" onchange="previewAvatar(this)">
+      <button class="btn btn-sm" style="margin-top:10px" onclick="document.getElementById('epAvatarFile').click()">Upload Photo</button>
+      ${currentAvatar ? '<button class="btn btn-sm btn-ghost" style="margin-top:6px" onclick="removeAvatar()">Remove Photo</button>' : ''}
+      <div id="avatarMsg" style="margin-top:8px"></div>
+    </div>
     <div class="form-group"><label>Display Name</label><input id="epName"></div>
-    <div class="form-group"><label>Avatar URL</label><input id="epAvatar" placeholder="https://example.com/photo.jpg"></div>
     <div class="form-group"><label>Bio</label><textarea id="epBio" rows="3"></textarea></div>
     <div id="epErr"></div>
     <div style="display:flex;gap:8px;margin-top:12px">
@@ -600,7 +606,7 @@ function renderEditProfile(app) {
       <button class="btn btn-primary" onclick="saveProfile()">Save</button>
     </div>
     <hr style="border:none;border-top:3px solid var(--fg);margin:28px 0 20px">
-    <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:4px">Change Password</h2>
+    <h2 style="font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;margin-bottom:4px">Change Password</h2>
     <p class="sub" style="margin-bottom:16px">Leave blank if you don't want to change it</p>
     <div class="form-group"><label>Current Password</label><input id="epCurPass" type="password" placeholder="current password"></div>
     <div class="form-group"><label>New Password</label><input id="epNewPass" type="password" placeholder="new password (min 4 chars)"></div>
@@ -609,8 +615,51 @@ function renderEditProfile(app) {
   </div>`;
   /* Set values safely via DOM */
   document.getElementById('epName').value = S.user.display_name || '';
-  document.getElementById('epAvatar').value = S.user.avatar_url || '';
   document.getElementById('epBio').value = S.user.bio || '';
+}
+
+function previewAvatar(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    document.getElementById('avatarMsg').innerHTML = '<p class="error-msg">Image must be under 5MB</p>';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('avatarPreview').innerHTML = `<img src="${e.target.result}" class="profile-avatar" style="object-fit:cover;border-radius:0">`;
+  };
+  reader.readAsDataURL(file);
+  /* Upload immediately */
+  uploadAvatar(file);
+}
+
+async function uploadAvatar(file) {
+  const msg = document.getElementById('avatarMsg');
+  msg.innerHTML = '<p style="color:var(--muted-fg);font-size:.75rem">Uploading...</p>';
+  try {
+    const form = new FormData();
+    form.append('file', file);
+    const h = {};
+    if (S.token) h['Authorization'] = 'Bearer ' + S.token;
+    const r = await fetch('/api/users/me/avatar', { method: 'POST', headers: h, body: form });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.detail || 'Upload failed');
+    S.user = data;
+    msg.innerHTML = '<p style="color:var(--primary);font-size:.75rem;font-weight:700">Photo updated!</p>';
+    updateNav();
+  } catch (e) {
+    msg.innerHTML = `<p class="error-msg">${e.message}</p>`;
+  }
+}
+
+async function removeAvatar() {
+  try {
+    S.user = await api('/api/users/me', { method: 'PATCH', body: JSON.stringify({ avatar_url: null }) });
+    toast('Photo removed');
+    updateNav();
+    renderEditProfile(document.getElementById('app'));
+  } catch (e) { toast(e.message, 'error'); }
 }
 
 async function saveProfile() {
@@ -618,7 +667,6 @@ async function saveProfile() {
     const payload = {
       display_name: document.getElementById('epName').value,
       bio: document.getElementById('epBio').value,
-      avatar_url: document.getElementById('epAvatar').value.trim() || null,
     };
     S.user = await api('/api/users/me', { method: 'PATCH', body: JSON.stringify(payload) });
     toast('Profile updated!');
@@ -698,7 +746,7 @@ function formatBody(text) {
 
 function avatarHtml(url, name, cssClass) {
   const cls = cssClass || 'post-avatar';
-  if (url) return `<img src="${esc(url)}" alt="${esc(name)}" class="${cls}" style="object-fit:cover;border-radius:0">`;
+  if (url) return `<img src="${esc(url)}" alt="${esc(name)}" class="${cls}" style="object-fit:cover">`;
   const initial = (name || '?')[0].toUpperCase();
   return `<div class="${cls}">${initial}</div>`;
 }
