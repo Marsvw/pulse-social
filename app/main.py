@@ -8,6 +8,7 @@ from app.routes_auth import router as auth_router
 from app.routes_posts import router as posts_router
 from app.routes_users import router as users_router
 from app.routes_admin import router as admin_router
+from app.routes_curriculum import router as curriculum_router
 
 
 @asynccontextmanager
@@ -36,6 +37,7 @@ app.include_router(auth_router)
 app.include_router(posts_router)
 app.include_router(users_router)
 app.include_router(admin_router)
+app.include_router(curriculum_router)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 

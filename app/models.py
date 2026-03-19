@@ -62,6 +62,22 @@ class Comment(Base):
     post: Mapped["Post"] = relationship(back_populates="comments")
 
 
+class LessonProgress(Base):
+    __tablename__ = "lesson_progress"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    level_id: Mapped[str] = mapped_column(String(10), nullable=False)  # a1, a2, b1, b2
+    week: Mapped[int] = mapped_column(Integer, nullable=False)
+    day: Mapped[int] = mapped_column(Integer, nullable=False)
+    completed: Mapped[bool] = mapped_column(Boolean, default=False)
+    quiz_score: Mapped[int | None] = mapped_column(Integer, default=None)  # out of total questions
+    quiz_total: Mapped[int | None] = mapped_column(Integer, default=None)
+    completed_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True), default=None
+    )
+
+
 class Like(Base):
     __tablename__ = "likes"
 

@@ -178,6 +178,55 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px;min-height:calc
 .blob-1{width:300px;height:300px;background:var(--primary);top:-60px;right:-80px}
 .blob-2{width:250px;height:250px;background:var(--secondary);bottom:-40px;left:-60px}
 
+/* ── CURRICULUM ── */
+.level-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:28px}
+.level-card{background:var(--card-bg);border:2px solid var(--border);padding:24px;cursor:pointer;transition:all .3s;border-radius:var(--radius-lg);text-align:center;box-shadow:var(--shadow-soft)}
+.level-card:hover{border-color:var(--primary);box-shadow:var(--shadow-float);transform:translateY(-3px)}
+.level-card.active{border-color:var(--primary);background:rgba(93,112,82,0.06)}
+.level-id{font-family:'Fraunces',serif;font-size:2rem;font-weight:800;color:var(--primary);margin-bottom:4px}
+.level-name{font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;color:var(--fg);margin-bottom:8px}
+.level-desc{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--muted-fg);line-height:1.4}
+.level-progress{margin-top:10px;font-family:'Nunito',sans-serif;font-size:.65rem;color:var(--primary);font-weight:700}
+.week-card{background:var(--card-bg);border:1px solid rgba(222,216,207,0.5);padding:20px;margin-bottom:12px;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);transition:all .3s}
+.week-card:hover{box-shadow:var(--shadow-float)}
+.week-title{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;color:var(--fg);margin-bottom:8px}
+.week-num{font-family:'Nunito',sans-serif;font-size:.6rem;font-weight:700;color:var(--muted-fg);text-transform:uppercase;letter-spacing:.1em}
+.progress-bar{height:6px;background:var(--muted);border-radius:9999px;margin:10px 0;overflow:hidden}
+.progress-fill{height:100%;background:var(--primary);border-radius:9999px;transition:width .4s ease}
+.day-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.day-btn{width:40px;height:40px;border:2px solid var(--border);background:transparent;border-radius:50%;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .3s;color:var(--fg);display:flex;align-items:center;justify-content:center}
+.day-btn:hover{border-color:var(--primary);color:var(--primary);transform:scale(1.1)}
+.day-btn.completed{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+.day-btn.completed:hover{background:#4a5d42}
+.lesson-section{background:var(--card-bg);border:1px solid rgba(222,216,207,0.5);padding:24px;margin-bottom:16px;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft)}
+.lesson-section h3{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:12px}
+.vocab-grid{display:flex;flex-wrap:wrap;gap:8px}
+.vocab-chip{background:rgba(93,112,82,0.08);color:var(--primary);padding:6px 14px;border-radius:9999px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:600}
+.example-row{padding:10px 0;border-bottom:1px solid rgba(222,216,207,0.3)}
+.example-row:last-child{border-bottom:none}
+.example-en{font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;color:var(--fg)}
+.example-es{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);font-style:italic;margin-top:2px}
+.tip-box{background:rgba(193,140,93,0.1);border:2px solid rgba(193,140,93,0.25);padding:16px 20px;border-radius:var(--radius-lg);margin-bottom:16px}
+.tip-box p{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--secondary);font-weight:600;line-height:1.5}
+.flashcard-container{perspective:800px;margin:0 auto 16px;max-width:380px}
+.flashcard{position:relative;width:100%;height:200px;cursor:pointer;transition:transform .6s;transform-style:preserve-3d}
+.flashcard.flipped{transform:rotateY(180deg)}
+.flashcard-face{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;border-radius:var(--radius-lg);border:2px solid var(--border);font-family:'Nunito',sans-serif}
+.flashcard-front{background:var(--card-bg);color:var(--fg)}
+.flashcard-back{background:var(--primary);color:var(--primary-fg);transform:rotateY(180deg)}
+.flashcard-text{font-size:1.3rem;font-weight:700;text-align:center;line-height:1.3}
+.flashcard-hint{font-size:.7rem;color:var(--muted-fg);margin-top:10px;font-weight:600}
+.flashcard-nav{display:flex;justify-content:center;gap:12px;align-items:center;margin-top:12px}
+.flashcard-counter{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);font-weight:600}
+.quiz-option{display:block;width:100%;text-align:left;padding:14px 20px;margin-bottom:8px;border:2px solid var(--border);background:var(--card-bg);font-family:'Nunito',sans-serif;font-size:.85rem;cursor:pointer;transition:all .3s;border-radius:var(--radius-lg);color:var(--fg);font-weight:600}
+.quiz-option:hover{border-color:var(--primary);background:rgba(93,112,82,0.04)}
+.quiz-option.selected{border-color:var(--primary);background:rgba(93,112,82,0.1);color:var(--primary)}
+.quiz-option.correct{border-color:#5D7052;background:rgba(93,112,82,0.15);color:#5D7052}
+.quiz-option.wrong{border-color:var(--destructive);background:rgba(168,84,72,0.1);color:var(--destructive)}
+.quiz-question{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;margin-bottom:14px;color:var(--fg);line-height:1.3}
+.quiz-result{text-align:center;padding:30px;background:var(--card-bg);border:2px solid var(--primary);border-radius:var(--radius-lg)}
+.quiz-score{font-family:'Fraunces',serif;font-size:3rem;font-weight:800;color:var(--primary)}
+
 /* ── RESPONSIVE ── */
 @media(max-width:600px){
   nav{top:8px;padding:0 12px}
@@ -241,6 +290,7 @@ function updateNav() {
   const nl = document.getElementById('navLinks');
   if (S.user) {
     nl.innerHTML = `
+      <button onclick="navigate('curriculum')">Learn</button>
       ${S.user.is_admin ? '<button onclick="navigate(\'admin\')">Admin</button>' : ''}
       <div class="nav-user" onclick="navigate('profile',S.user.username)">
         ${avatarHtml(S.user.avatar_url, S.user.display_name || S.user.username, 'nav-avatar')}
@@ -295,6 +345,10 @@ function render() {
     case 'profile': return renderProfile(app);
     case 'edit-profile': return renderEditProfile(app);
     case 'admin': return renderAdmin(app);
+    case 'curriculum': return renderCurriculum(app);
+    case 'lesson': return renderLesson(app);
+    case 'flashcards': return renderFlashcards(app);
+    case 'quiz': return renderQuiz(app);
     default: return renderFeed(app);
   }
 }
@@ -760,6 +814,253 @@ function timeAgo(iso) {
   if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
   if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
   return new Date(iso).toLocaleDateString();
+}
+
+/* ═══ CURRICULUM ═══ */
+let curriculumData = null;
+
+async function renderCurriculum(app) {
+  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Loading curriculum...</div>';
+  try {
+    const data = await api('/api/curriculum/levels');
+    curriculumData = data;
+    const levels = data.levels;
+
+    app.innerHTML = `
+      <h2 class="page-title">English Curriculum</h2>
+      <div class="page-subtitle">For Spanish speakers — A1 to B2</div>
+      <div class="level-grid">
+        ${levels.map(l => {
+          const totalDays = l.weeks.reduce((s,w) => s + w.total_days, 0);
+          const doneDays = l.weeks.reduce((s,w) => s + w.completed_days, 0);
+          const pct = totalDays ? Math.round(doneDays / totalDays * 100) : 0;
+          return `<div class="level-card" onclick="openLevel('${l.id}')">
+            <div class="level-id">${l.id.toUpperCase()}</div>
+            <div class="level-name">${esc(l.name)}</div>
+            <div class="level-desc">${esc(l.description)}</div>
+            ${S.user ? `<div class="level-progress">${pct}% complete (${doneDays}/${totalDays})</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>` : ''}
+          </div>`;
+        }).join('')}
+      </div>
+      <div id="levelDetail"></div>`;
+  } catch(e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
+}
+
+function openLevel(levelId) {
+  if (!curriculumData) return;
+  const level = curriculumData.levels.find(l => l.id === levelId);
+  if (!level) return;
+  const det = document.getElementById('levelDetail');
+  det.innerHTML = `
+    <h2 class="page-title">${esc(level.name)}</h2>
+    <div class="page-subtitle">${esc(level.description)}</div>
+    ${level.weeks.map(w => {
+      const pct = w.total_days ? Math.round(w.completed_days / w.total_days * 100) : 0;
+      return `<div class="week-card">
+        <div class="week-num">Week ${w.week}</div>
+        <div class="week-title">${esc(w.title)}</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="day-list">
+          ${w.days.map(d => `<button class="day-btn ${d.completed ? 'completed' : ''}" onclick="navigate('lesson','${levelId}/${w.week}/${d.day}')" title="${esc(d.topic)}${d.quiz_score !== null ? ' — Quiz: '+d.quiz_score+'/'+d.quiz_total : ''}">${d.day}</button>`).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+    <div style="text-align:center;margin-top:20px"><button class="btn btn-ghost" onclick="document.getElementById('levelDetail').innerHTML=''">Close</button></div>`;
+  det.scrollIntoView({behavior:'smooth'});
+}
+
+async function renderLesson(app) {
+  const parts = S.pageArg ? S.pageArg.split('/') : [];
+  if (parts.length < 3) { navigate('curriculum'); return; }
+  const [levelId, week, day] = parts;
+  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Loading lesson...</div>';
+  try {
+    const lesson = await api(`/api/curriculum/lesson/${levelId}/${week}/${day}`);
+    app.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-ghost" onclick="navigate('curriculum')">← Back</button>
+        <div>
+          <span class="cat-badge cat-material">${levelId.toUpperCase()} — Week ${week}</span>
+          <h2 class="page-title" style="margin-top:6px">Day ${day}: ${esc(lesson.topic)}</h2>
+        </div>
+      </div>
+      <div class="tip-box"><p>💡 ${esc(lesson.tip)}</p></div>
+      <div class="lesson-section">
+        <h3>📖 Grammar</h3>
+        <p style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--fg);line-height:1.6">${esc(lesson.grammar)}</p>
+      </div>
+      <div class="lesson-section">
+        <h3>📝 Vocabulary</h3>
+        <div class="vocab-grid">${lesson.vocabulary.map(v => `<span class="vocab-chip">${esc(v)}</span>`).join('')}</div>
+      </div>
+      <div class="lesson-section">
+        <h3>💬 Examples</h3>
+        ${lesson.examples.map(ex => `<div class="example-row">
+          <div class="example-en">${esc(ex.en)}</div>
+          <div class="example-es">${esc(ex.es)}</div>
+        </div>`).join('')}
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+        <button class="btn btn-primary" onclick="navigate('flashcards','${levelId}/${week}/${day}')">🃏 Flashcards</button>
+        <button class="btn" onclick="navigate('quiz','${levelId}/${week}/${day}')">📋 Quiz</button>
+        ${S.user ? `<button class="btn btn-ghost" onclick="markComplete('${levelId}',${week},${day})">✓ Mark Complete</button>` : ''}
+      </div>
+      ${parseInt(day) < 5 ? `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${levelId}/${week}/${parseInt(day)+1}')">Next Day →</button></div>` : ''}
+      ${parseInt(day) === 5 && parseInt(week) < 8 ? `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${levelId}/${parseInt(week)+1}/1')">Next Week →</button></div>` : ''}`;
+  } catch(e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
+}
+
+async function markComplete(levelId, week, day) {
+  try {
+    await api(`/api/curriculum/progress/${levelId}/${week}/${day}`, {method:'POST'});
+    toast('Lesson marked complete!');
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+/* ═══ FLASHCARDS ═══ */
+let fcCards = [], fcIndex = 0, fcFlipped = false;
+
+async function renderFlashcards(app) {
+  const parts = S.pageArg ? S.pageArg.split('/') : [];
+  if (parts.length < 3) { navigate('curriculum'); return; }
+  const [levelId, week, day] = parts;
+  try {
+    const lesson = await api(`/api/curriculum/lesson/${levelId}/${week}/${day}`);
+    fcCards = lesson.flashcards || [];
+    fcIndex = 0; fcFlipped = false;
+    app.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Back to Lesson</button>
+        <div>
+          <span class="cat-badge cat-material">${levelId.toUpperCase()} W${week}D${day}</span>
+          <h2 class="page-title" style="margin-top:6px">🃏 Flashcards: ${esc(lesson.topic)}</h2>
+        </div>
+      </div>
+      <div id="fcArea"></div>`;
+    renderFlashcard();
+  } catch(e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
+}
+
+function renderFlashcard() {
+  const area = document.getElementById('fcArea');
+  if (!area || !fcCards.length) return;
+  const card = fcCards[fcIndex];
+  area.innerHTML = `
+    <div class="flashcard-container">
+      <div class="flashcard ${fcFlipped ? 'flipped' : ''}" onclick="fcFlip()">
+        <div class="flashcard-face flashcard-front">
+          <div class="flashcard-text">${esc(card.front)}</div>
+          <div class="flashcard-hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="flashcard-text">${esc(card.back)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard-nav">
+      <button class="btn btn-sm btn-ghost" onclick="fcPrev()" ${fcIndex === 0 ? 'disabled' : ''}>← Prev</button>
+      <span class="flashcard-counter">${fcIndex + 1} / ${fcCards.length}</span>
+      <button class="btn btn-sm btn-ghost" onclick="fcNext()" ${fcIndex === fcCards.length - 1 ? 'disabled' : ''}>Next →</button>
+    </div>
+    <div style="text-align:center;margin-top:16px">
+      <button class="btn btn-sm" onclick="fcShuffle()">🔀 Shuffle</button>
+    </div>`;
+}
+
+function fcFlip() { fcFlipped = !fcFlipped; renderFlashcard(); }
+function fcPrev() { if (fcIndex > 0) { fcIndex--; fcFlipped = false; renderFlashcard(); } }
+function fcNext() { if (fcIndex < fcCards.length - 1) { fcIndex++; fcFlipped = false; renderFlashcard(); } }
+function fcShuffle() {
+  for (let i = fcCards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [fcCards[i],fcCards[j]] = [fcCards[j],fcCards[i]]; }
+  fcIndex = 0; fcFlipped = false; renderFlashcard(); toast('Shuffled!');
+}
+
+/* ═══ QUIZ ═══ */
+let quizQs = [], quizAnswers = [], quizCurrent = 0, quizSubmitted = false;
+
+async function renderQuiz(app) {
+  const parts = S.pageArg ? S.pageArg.split('/') : [];
+  if (parts.length < 3) { navigate('curriculum'); return; }
+  const [levelId, week, day] = parts;
+  try {
+    const lesson = await api(`/api/curriculum/lesson/${levelId}/${week}/${day}`);
+    quizQs = lesson.quiz || [];
+    quizAnswers = new Array(quizQs.length).fill(-1);
+    quizCurrent = 0; quizSubmitted = false;
+    app.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Back to Lesson</button>
+        <div>
+          <span class="cat-badge cat-assignment">${levelId.toUpperCase()} W${week}D${day}</span>
+          <h2 class="page-title" style="margin-top:6px">📋 Quiz: ${esc(lesson.topic)}</h2>
+        </div>
+      </div>
+      <div id="quizArea"></div>`;
+    renderQuizQuestion();
+  } catch(e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
+}
+
+function renderQuizQuestion() {
+  const area = document.getElementById('quizArea');
+  if (!area) return;
+  if (quizSubmitted) return;
+
+  const q = quizQs[quizCurrent];
+  area.innerHTML = `
+    <div class="lesson-section">
+      <div style="font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--muted-fg);font-weight:700;margin-bottom:8px">Question ${quizCurrent + 1} of ${quizQs.length}</div>
+      <div class="quiz-question">${esc(q.q)}</div>
+      ${q.options.map((opt, i) => `<button class="quiz-option ${quizAnswers[quizCurrent] === i ? 'selected' : ''}" onclick="quizSelect(${i})">${esc(opt)}</button>`).join('')}
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:16px">
+      <button class="btn btn-sm btn-ghost" onclick="quizPrev()" ${quizCurrent === 0 ? 'disabled style="visibility:hidden"' : ''}>← Previous</button>
+      ${quizCurrent < quizQs.length - 1
+        ? `<button class="btn btn-sm btn-primary" onclick="quizNext()">Next →</button>`
+        : `<button class="btn btn-primary" onclick="quizSubmit()">Submit Quiz</button>`
+      }
+    </div>
+    <div style="display:flex;gap:6px;justify-content:center;margin-top:16px">
+      ${quizQs.map((_, i) => `<div style="width:10px;height:10px;border-radius:50%;background:${quizAnswers[i] >= 0 ? 'var(--primary)' : 'var(--border)'};cursor:pointer" onclick="quizCurrent=${i};renderQuizQuestion()"></div>`).join('')}
+    </div>`;
+}
+
+function quizSelect(i) { quizAnswers[quizCurrent] = i; renderQuizQuestion(); }
+function quizPrev() { if (quizCurrent > 0) { quizCurrent--; renderQuizQuestion(); } }
+function quizNext() { if (quizCurrent < quizQs.length - 1) { quizCurrent++; renderQuizQuestion(); } }
+
+async function quizSubmit() {
+  if (quizAnswers.some(a => a < 0)) { toast('Please answer all questions', 'error'); return; }
+  const parts = S.pageArg.split('/');
+  const [levelId, week, day] = parts;
+  try {
+    const res = await api(`/api/curriculum/quiz/${levelId}/${week}/${day}`, {
+      method: 'POST', body: JSON.stringify({answers: quizAnswers})
+    });
+    quizSubmitted = true;
+    const area = document.getElementById('quizArea');
+    const pct = Math.round(res.score / res.total * 100);
+    const emoji = pct === 100 ? '🎉' : pct >= 67 ? '👍' : '📚';
+    area.innerHTML = `
+      <div class="quiz-result">
+        <div style="font-size:3rem;margin-bottom:8px">${emoji}</div>
+        <div class="quiz-score">${res.score} / ${res.total}</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--muted-fg);margin-top:8px;font-weight:600">${pct}% correct</div>
+        <div style="margin-top:16px">
+          ${res.results.map((r, i) => {
+            const q = quizQs[i];
+            return `<div style="text-align:left;padding:10px 0;border-bottom:1px solid var(--border)">
+              <div style="font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;color:${r.correct ? 'var(--primary)' : 'var(--destructive)'}">${r.correct ? '✓' : '✗'} ${esc(q.q)}</div>
+              <div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--muted-fg);margin-top:2px">Your answer: ${esc(q.options[r.user_answer])} ${r.correct ? '' : '→ Correct: ' + esc(q.options[r.correct_answer])}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Back to Lesson</button>
+        <button class="btn btn-primary" onclick="navigate('curriculum')">Curriculum</button>
+      </div>`;
+  } catch(e) { toast(e.message, 'error'); }
 }
 
 /* ═══ INIT ═══ */
