@@ -643,7 +643,9 @@ async function uploadAvatar(file) {
     const h = {};
     if (S.token) h['Authorization'] = 'Bearer ' + S.token;
     const r = await fetch('/api/users/me/avatar', { method: 'POST', headers: h, body: form });
-    const data = await r.json();
+    const text = await r.text();
+    let data;
+    try { data = JSON.parse(text); } catch { throw new Error('Server error: ' + text.substring(0, 100)); }
     if (!r.ok) throw new Error(data.detail || 'Upload failed');
     S.user = data;
     msg.innerHTML = '<p style="color:var(--primary);font-size:.75rem;font-weight:700">Photo updated!</p>';

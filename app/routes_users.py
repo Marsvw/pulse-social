@@ -5,8 +5,6 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from PIL import Image
-
 from app.database import get_db
 from app.models import User, Post, Comment, Like
 from app.schemas import UserOut, UserUpdate, PostOut
@@ -20,14 +18,7 @@ AVATAR_QUALITY = 80
 AVATAR_MAX_BYTES = 5 * 1024 * 1024  # 5MB upload limit
 
 
-@router.get("/{username}", response_model=UserOut)
-async def get_profile(username: str, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(User).where(User.username == username))
-    user = result.scalars().first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
+# ── Static /me routes FIRST (before /{username} wildcard) ──
 
 @router.patch("/me", response_model=UserOut)
 async def update_my_profile(
@@ -57,6 +48,7 @@ async def upload_avatar(
         raise HTTPException(status_code=400, detail="Image must be under 5MB")
 
     try:
+        from PIL import Image
         img = Image.open(io.BytesIO(data))
         img = img.convert("RGB")
         # Crop to square from center
@@ -72,12 +64,25 @@ async def upload_avatar(
         img.save(buf, format="JPEG", quality=AVATAR_QUALITY)
         b64 = base64.b64encode(buf.getvalue()).decode()
         data_url = f"data:image/jpeg;base64,{b64}"
-    except Exception:
-        raise HTTPException(status_code=400, detail="Could not process image")
+    except ImportError:
+        raise HTTPException(status_code=500, detail="Image processing library not available")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Could not process image: {str(e)}")
 
     user.avatar_url = data_url
     await db.commit()
     await db.refresh(user)
+    return user
+
+
+# ── Dynamic /{username} routes AFTER /me routes ──
+
+@router.get("/{username}", response_model=UserOut)
+async def get_profile(username: str, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(User).where(User.username == username))
+    user = result.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
     return user
 
 
