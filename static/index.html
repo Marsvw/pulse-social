@@ -3,150 +3,428 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Pulse</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet"/>
+<title>Pulse — The Daily Feed</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=block');
+
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#09090b;--surface:#131316;--surface2:#1a1a1f;--border:#27272a;
-  --text:#fafafa;--dim:#71717a;--accent:#a78bfa;--accent2:#818cf8;
-  --green:#34d399;--red:#f87171;--orange:#fb923c;
-  --radius:10px;--max-w:680px;
-}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
-
-/* ── NAV ── */
-nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px}
-.nav-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
-.nav-brand{font-family:'Fraunces',serif;font-size:1.4rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
-.nav-links{display:flex;gap:6px;align-items:center}
-.nav-links button,.nav-links .nav-btn{background:none;border:1px solid var(--border);color:var(--dim);padding:7px 14px;border-radius:999px;font-family:inherit;font-size:.82rem;cursor:pointer;transition:all .15s}
-.nav-links button:hover,.nav-links .nav-btn:hover{color:var(--text);border-color:var(--dim)}
-.nav-links .btn-accent{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
-.nav-links .btn-accent:hover{opacity:.9}
-.nav-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 10px;border-radius:999px;border:1px solid var(--border);transition:all .15s}
-.nav-user:hover{border-color:var(--dim)}
-.nav-avatar{width:26px;height:26px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:var(--bg)}
-.nav-username{font-size:.85rem;color:var(--text)}
-
-/* ── MAIN ── */
-main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
-
-/* ── CARDS ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;animation:fadeUp .3s ease-out}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── FORMS ── */
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:.82rem;color:var(--dim);margin-bottom:6px;font-weight:500}
-.form-group input,.form-group textarea{width:100%;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s;resize:vertical}
-.form-group input:focus,.form-group textarea:focus{border-color:var(--accent)}
-.form-group input::placeholder,.form-group textarea::placeholder{color:var(--dim)}
-.btn{padding:11px 22px;border:none;border-radius:8px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .15s}
-.btn-primary{background:var(--accent);color:var(--bg)}
-.btn-primary:hover{opacity:.9}
-.btn-danger{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.2)}
-.btn-danger:hover{background:rgba(248,113,113,0.25)}
-.btn-ghost{background:none;color:var(--dim);border:1px solid var(--border)}
-.btn-ghost:hover{color:var(--text);border-color:var(--dim)}
-.btn-sm{padding:6px 14px;font-size:.8rem}
-.error-msg{color:var(--red);font-size:.85rem;margin-top:8px}
-.success-msg{color:var(--green);font-size:.85rem;margin-top:8px}
-
-/* ── AUTH PAGES ── */
-.auth-wrap{max-width:400px;margin:60px auto}
-.auth-wrap h2{font-family:'Fraunces',serif;font-size:1.8rem;margin-bottom:6px}
-.auth-wrap p.sub{color:var(--dim);margin-bottom:28px;font-size:.9rem}
-.auth-footer{text-align:center;margin-top:20px;font-size:.85rem;color:var(--dim)}
-
-/* ── POST CARD ── */
-.post-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.post-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:600;color:var(--bg);flex-shrink:0}
-.post-meta{flex:1}
-.post-author{font-weight:500;font-size:.9rem;cursor:pointer}
-.post-author:hover{text-decoration:underline}
-.post-time{font-size:.78rem;color:var(--dim)}
-.post-title{font-size:1.15rem;font-weight:600;margin-bottom:8px;line-height:1.35}
-.post-body{color:#d4d4d8;font-size:.92rem;line-height:1.6;white-space:pre-wrap;word-break:break-word}
-.post-actions{display:flex;gap:16px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
-.post-action{background:none;border:none;color:var(--dim);font-family:inherit;font-size:.82rem;cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .15s}
-.post-action:hover{color:var(--text)}
-.post-action.liked{color:var(--red)}
-.post-action.liked:hover{color:var(--red)}
-
-/* ── COMMENTS ── */
-.comments-section{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
-.comment{padding:10px 0;border-bottom:1px solid rgba(39,39,42,0.5)}
-.comment:last-child{border-bottom:none}
-.comment-author{font-size:.82rem;font-weight:500}
-.comment-body{font-size:.85rem;color:#d4d4d8;margin-top:2px}
-.comment-time{font-size:.72rem;color:var(--dim);margin-top:2px}
-.comment-form{display:flex;gap:8px;margin-top:10px}
-.comment-form input{flex:1;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.85rem;outline:none}
-.comment-form input:focus{border-color:var(--accent)}
-.comment-form button{padding:8px 16px}
-.comment-delete{background:none;border:none;color:var(--dim);cursor:pointer;font-size:.75rem;float:right}
-.comment-delete:hover{color:var(--red)}
-
-/* ── WRITE POST ── */
-.compose-box{margin-bottom:24px}
-.compose-box textarea{min-height:60px}
-
-/* ── PROFILE ── */
-.profile-header{text-align:center;padding:30px 20px}
-.profile-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--bg);margin:0 auto 16px}
-.profile-name{font-size:1.5rem;font-weight:600}
-.profile-username{color:var(--dim);font-size:.9rem;margin-top:2px}
-.profile-bio{color:#d4d4d8;font-size:.9rem;margin-top:12px;max-width:400px;margin-left:auto;margin-right:auto}
-.profile-joined{color:var(--dim);font-size:.78rem;margin-top:10px}
-.profile-edit-btn{margin-top:16px}
-
-/* ── ADMIN ── */
-.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
-.stat-num{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.stat-label{font-size:.8rem;color:var(--dim);margin-top:4px}
-.admin-table{width:100%;border-collapse:collapse}
-.admin-table th{text-align:left;font-size:.78rem;color:var(--dim);padding:8px 12px;border-bottom:1px solid var(--border);font-weight:500}
-.admin-table td{padding:10px 12px;border-bottom:1px solid rgba(39,39,42,0.4);font-size:.88rem}
-.badge{padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:600}
-.badge-admin{background:rgba(167,139,250,0.15);color:var(--accent)}
-.badge-active{background:rgba(52,211,153,0.15);color:var(--green)}
-.badge-disabled{background:rgba(248,113,113,0.15);color:var(--red)}
-
-/* ── PAGE TITLE ── */
-.page-title{font-family:'Fraunces',serif;font-size:1.6rem;margin-bottom:20px}
-
-/* ── EMPTY ── */
-.empty-state{text-align:center;padding:50px 20px;color:var(--dim);font-size:.9rem}
-.empty-state span{display:block;font-size:2.5rem;margin-bottom:10px}
-
-/* ── MODAL ── */
-.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;width:100%;max-width:440px;animation:fadeUp .2s ease-out}
-.modal h3{font-size:1.1rem;margin-bottom:16px}
-
-/* ── RESPONSIVE ── */
-@media(max-width:600px){
-  .admin-stats{grid-template-columns:1fr}
-  .nav-username{display:none}
+  --bg:#F9F9F7;--fg:#111111;--muted:#E5E5E0;--accent:#CC0000;
+  --n100:#F5F5F5;--n200:#E5E5E5;--n400:#A3A3A3;--n500:#737373;
+  --n600:#525252;--n700:#404040;--max-w:780px;
 }
 </style>
 </head>
 <body>
+<style>
+body{
+  font-family:'Lora',Georgia,serif;
+  background:var(--bg);
+  color:var(--fg);
+  min-height:100vh;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23111111' fill-opacity='0.04' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+}
+a{color:var(--fg);text-decoration:none}
+a:hover{text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:4px;text-decoration-thickness:2px}
+::selection{background:var(--fg);color:var(--bg)}
+input,textarea,button{border-radius:0 !important}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--bg);
+  border-bottom:3px solid var(--fg);
+  padding:0 20px;
+}
+.nav-inner{
+  max-width:var(--max-w);margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:56px;
+}
+.nav-brand{
+  font-family:'Playfair Display',serif;
+  font-size:1.7rem;font-weight:900;
+  letter-spacing:-0.02em;
+  cursor:pointer;color:var(--fg);
+  transition:color .2s;
+}
+.nav-brand:hover{color:var(--accent)}
+.nav-edition{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;color:var(--n500);
+  text-transform:uppercase;letter-spacing:.15em;
+  margin-left:12px;
+  display:none;
+}
+@media(min-width:600px){.nav-edition{display:inline}}
+
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-links button,.nav-links .nav-btn{
+  background:none;border:1px solid var(--fg);color:var(--fg);
+  padding:6px 14px;font-family:'Inter',sans-serif;font-size:.7rem;
+  cursor:pointer;transition:all .15s;
+  text-transform:uppercase;letter-spacing:.12em;font-weight:600;
+}
+.nav-links button:hover{background:var(--fg);color:var(--bg)}
+.nav-links .btn-accent{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.nav-links .btn-accent:hover{background:var(--accent);border-color:var(--accent)}
+.nav-user{
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  padding:4px 10px;border:1px solid var(--fg);transition:all .15s;
+}
+.nav-user:hover{background:var(--fg);color:var(--bg)}
+.nav-user:hover .nav-avatar{background:var(--bg);color:var(--fg)}
+.nav-user:hover .nav-username{color:var(--bg)}
+.nav-avatar{
+  width:24px;height:24px;background:var(--fg);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;color:var(--bg);
+  font-family:'Inter',sans-serif;transition:all .15s;
+}
+.nav-username{
+  font-family:'Inter',sans-serif;font-size:.75rem;
+  color:var(--fg);font-weight:500;text-transform:uppercase;
+  letter-spacing:.08em;transition:color .15s;
+}
+
+/* ── MAIN ── */
+main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
+
+/* ── ORNAMENT ── */
+.ornament{
+  padding:20px 0;text-align:center;
+  font-family:'Playfair Display',serif;font-size:1.2rem;
+  color:var(--n400);letter-spacing:.6em;
+}
+
+/* ── CARDS ── */
+.card{
+  background:var(--bg);border:1px solid var(--fg);
+  padding:24px;margin-bottom:16px;
+  position:relative;
+  transition:box-shadow .2s,transform .2s;
+}
+.card-hover:hover{
+  box-shadow:4px 4px 0px 0px var(--fg);
+  transform:translate(-2px,-2px);
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card{animation:fadeUp .3s ease-out}
+
+/* ── FORMS ── */
+.form-group{margin-bottom:16px}
+.form-group label{
+  display:block;font-family:'Inter',sans-serif;
+  font-size:.65rem;color:var(--n500);margin-bottom:6px;
+  font-weight:600;text-transform:uppercase;letter-spacing:.15em;
+}
+.form-group input,.form-group textarea{
+  width:100%;padding:10px 0;
+  background:transparent;
+  border:none;border-bottom:2px solid var(--fg);
+  color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:.85rem;
+  outline:none;transition:all .2s;resize:vertical;
+}
+.form-group input:focus,.form-group textarea:focus{
+  background:var(--n100);padding:10px 12px;
+}
+.form-group input::placeholder,.form-group textarea::placeholder{
+  color:var(--n400);font-family:'Inter',sans-serif;
+  text-transform:uppercase;font-size:.7rem;letter-spacing:.1em;
+}
+.btn{
+  padding:10px 22px;border:1px solid var(--fg);
+  font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;
+  cursor:pointer;transition:all .15s;
+  text-transform:uppercase;letter-spacing:.12em;
+  background:transparent;color:var(--fg);
+}
+.btn-primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn-primary:hover{background:var(--accent);border-color:var(--accent)}
+.btn-danger{background:transparent;color:var(--accent);border-color:var(--accent)}
+.btn-danger:hover{background:var(--accent);color:var(--bg)}
+.btn-ghost{background:transparent;color:var(--fg);border-color:var(--muted)}
+.btn-ghost:hover{border-color:var(--fg);background:var(--n100)}
+.btn-sm{padding:5px 12px;font-size:.65rem}
+.error-msg{color:var(--accent);font-family:'Inter',sans-serif;font-size:.75rem;margin-top:8px;font-weight:600}
+.success-msg{color:#2d6a4f;font-family:'Inter',sans-serif;font-size:.75rem;margin-top:8px}
+
+/* ── AUTH PAGES ── */
+.auth-wrap{max-width:420px;margin:40px auto}
+.auth-wrap h2{
+  font-family:'Playfair Display',serif;font-size:2.8rem;
+  font-weight:900;line-height:.95;letter-spacing:-.03em;
+  margin-bottom:4px;
+}
+.auth-wrap p.sub{
+  color:var(--n500);margin-bottom:28px;
+  font-family:'Inter',sans-serif;font-size:.75rem;
+  text-transform:uppercase;letter-spacing:.15em;
+}
+.auth-footer{
+  text-align:center;margin-top:20px;
+  font-family:'Inter',sans-serif;font-size:.75rem;color:var(--n500);
+  text-transform:uppercase;letter-spacing:.08em;
+}
+
+/* ── POST CARD ── */
+.post-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.post-avatar{
+  width:32px;height:32px;background:var(--fg);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;color:var(--bg);
+  font-family:'Inter',sans-serif;flex-shrink:0;
+}
+.post-meta{flex:1}
+.post-author{
+  font-family:'Inter',sans-serif;font-weight:600;font-size:.75rem;
+  cursor:pointer;text-transform:uppercase;letter-spacing:.08em;
+}
+.post-author:hover{color:var(--accent)}
+.post-time{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--n500);letter-spacing:.05em;
+}
+.post-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem;font-weight:700;
+  margin-bottom:10px;line-height:1.2;
+  letter-spacing:-.01em;
+}
+.post-body{
+  color:var(--n600);font-size:.9rem;line-height:1.7;
+  white-space:pre-wrap;word-break:break-word;
+  text-align:justify;
+}
+.post-divider{
+  border:none;border-top:1px solid var(--fg);
+  margin:16px 0 12px;
+}
+.post-actions{display:flex;gap:16px;align-items:center}
+.post-action{
+  background:none;border:none;color:var(--n500);
+  font-family:'Inter',sans-serif;font-size:.7rem;
+  cursor:pointer;display:flex;align-items:center;gap:4px;
+  transition:color .15s;text-transform:uppercase;
+  letter-spacing:.08em;font-weight:500;
+}
+.post-action:hover{color:var(--fg)}
+.post-action.liked{color:var(--accent);font-weight:700}
+.post-action.liked:hover{color:var(--accent)}
+
+/* ── COMMENTS ── */
+.comments-section{margin-top:14px;padding-top:14px;border-top:1px solid var(--muted)}
+.comment{padding:10px 0;border-bottom:1px solid var(--muted)}
+.comment:last-child{border-bottom:none}
+.comment-author{
+  font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.08em;
+}
+.comment-body{font-size:.85rem;color:var(--n600);margin-top:3px;line-height:1.5}
+.comment-time{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--n500);margin-top:2px;
+}
+.comment-form{display:flex;gap:8px;margin-top:10px}
+.comment-form input{
+  flex:1;padding:8px 0;background:transparent;
+  border:none;border-bottom:2px solid var(--fg);
+  color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:.8rem;outline:none;
+}
+.comment-form input:focus{background:var(--n100);padding:8px 10px}
+.comment-form button{padding:8px 16px}
+.comment-delete{
+  background:none;border:none;color:var(--n400);cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:.6rem;float:right;
+  text-transform:uppercase;letter-spacing:.1em;
+}
+.comment-delete:hover{color:var(--accent)}
+
+/* ── COMPOSE ── */
+.compose-box{margin-bottom:24px}
+.compose-box textarea{min-height:60px}
+.compose-label{
+  font-family:'Playfair Display',serif;font-size:1.1rem;
+  font-weight:700;margin-bottom:16px;
+  padding-bottom:8px;border-bottom:3px solid var(--fg);
+}
+
+/* ── PROFILE ── */
+.profile-header{text-align:center;padding:30px 20px;border-bottom:3px solid var(--fg)}
+.profile-avatar{
+  width:72px;height:72px;background:var(--fg);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;font-weight:700;color:var(--bg);
+  font-family:'Playfair Display',serif;
+  margin:0 auto 16px;
+}
+.profile-name{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;letter-spacing:-.02em}
+.profile-username{
+  font-family:'JetBrains Mono',monospace;color:var(--n500);
+  font-size:.75rem;margin-top:2px;letter-spacing:.05em;
+}
+.profile-bio{color:var(--n600);font-size:.9rem;margin-top:12px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6;font-style:italic}
+.profile-joined{
+  font-family:'JetBrains Mono',monospace;color:var(--n500);
+  font-size:.65rem;margin-top:10px;text-transform:uppercase;letter-spacing:.1em;
+}
+.profile-edit-btn{margin-top:16px}
+
+/* ── ADMIN ── */
+.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-bottom:24px;border:1px solid var(--fg)}
+.stat-card{
+  padding:24px;text-align:center;
+  border-right:1px solid var(--fg);
+}
+.stat-card:last-child{border-right:none}
+.stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:2.5rem;font-weight:900;color:var(--fg);
+}
+.stat-label{
+  font-family:'Inter',sans-serif;font-size:.6rem;
+  color:var(--n500);margin-top:4px;
+  text-transform:uppercase;letter-spacing:.2em;
+}
+.admin-table{width:100%;border-collapse:collapse}
+.admin-table th{
+  text-align:left;font-family:'Inter',sans-serif;
+  font-size:.6rem;color:var(--n500);padding:8px 12px;
+  border-bottom:2px solid var(--fg);font-weight:600;
+  text-transform:uppercase;letter-spacing:.15em;
+}
+.admin-table td{
+  padding:10px 12px;border-bottom:1px solid var(--muted);
+  font-family:'Inter',sans-serif;font-size:.8rem;
+}
+.badge{
+  padding:2px 8px;font-family:'Inter',sans-serif;
+  font-size:.6rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;border:1px solid;
+}
+.badge-admin{border-color:var(--fg);background:var(--fg);color:var(--bg)}
+.badge-active{border-color:#2d6a4f;color:#2d6a4f;background:transparent}
+.badge-disabled{border-color:var(--accent);color:var(--accent);background:transparent}
+
+/* ── PAGE TITLE ── */
+.page-title{
+  font-family:'Playfair Display',serif;
+  font-size:2rem;font-weight:900;
+  margin-bottom:4px;
+  letter-spacing:-.02em;
+}
+.page-subtitle{
+  font-family:'Inter',sans-serif;font-size:.65rem;
+  color:var(--n500);text-transform:uppercase;
+  letter-spacing:.2em;margin-bottom:20px;
+  padding-bottom:12px;border-bottom:3px solid var(--fg);
+}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  text-align:center;padding:50px 20px;
+  color:var(--n500);font-family:'Inter',sans-serif;
+  font-size:.8rem;text-transform:uppercase;
+  letter-spacing:.15em;
+}
+.empty-state span{display:block;font-size:2rem;margin-bottom:10px}
+
+/* ── MODAL ── */
+.modal-bg{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(17,17,17,0.5);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.modal{
+  background:var(--bg);border:2px solid var(--fg);
+  padding:28px;width:100%;max-width:440px;
+  animation:fadeUp .2s ease-out;
+}
+.modal h3{
+  font-family:'Playfair Display',serif;
+  font-size:1.2rem;font-weight:700;margin-bottom:16px;
+}
+
+/* ── TICKER ── */
+.ticker{
+  background:var(--fg);color:var(--bg);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;
+  padding:5px 0;overflow:hidden;white-space:nowrap;
+  border-bottom:1px solid var(--n700);
+}
+.ticker-inner{
+  display:inline-block;
+  animation:scroll-left 30s linear infinite;
+}
+@keyframes scroll-left{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+.ticker-badge{
+  background:var(--accent);color:var(--bg);
+  padding:1px 6px;margin:0 12px;font-weight:700;
+}
+
+/* ── DROP CAP ── */
+.drop-cap::first-letter{
+  font-family:'Playfair Display',serif;
+  float:left;font-size:3.5rem;font-weight:900;
+  line-height:.8;padding:4px 10px 0 0;color:var(--fg);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .admin-stats{grid-template-columns:1fr}
+  .stat-card{border-right:none;border-bottom:1px solid var(--fg)}
+  .stat-card:last-child{border-bottom:none}
+  .nav-username{display:none}
+  .auth-wrap h2{font-size:2rem}
+  .post-title{font-size:1.15rem}
+}
+</style>
+
+<!-- TICKER BAR -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-badge">Live</span> Welcome to Pulse — The Social Blog Platform
+    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
+    Share your thoughts with the world
+    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
+    <span class="ticker-badge">New</span> Create your account today
+    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
+    Read &bull; Write &bull; Connect
+    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
+    <span class="ticker-badge">Live</span> Welcome to Pulse — The Social Blog Platform
+    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
+    Share your thoughts with the world
+    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
+    <span class="ticker-badge">New</span> Create your account today
+    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
+    Read &bull; Write &bull; Connect
+    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
+  </div>
+</div>
 
 <nav>
   <div class="nav-inner">
-    <div class="nav-brand" onclick="navigate('feed')">Pulse</div>
+    <div style="display:flex;align-items:baseline">
+      <div class="nav-brand" onclick="navigate('feed')">Pulse</div>
+      <span class="nav-edition" id="navEdition"></span>
+    </div>
     <div class="nav-links" id="navLinks"></div>
   </div>
 </nav>
 
 <main id="app"></main>
+
+<footer style="border-top:3px solid var(--fg);padding:24px 20px;text-align:center;margin-top:40px">
+  <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;margin-bottom:6px">Pulse</div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--n500);text-transform:uppercase;letter-spacing:.2em">
+    Edition: Vol 1.0 &nbsp;|&nbsp; Est. 2026 &nbsp;|&nbsp; All Rights Reserved
+  </div>
+</footer>
 
 <script>
 // ══════════════════════════════════════
@@ -155,6 +433,11 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
 let token = localStorage.getItem('token');
 let currentUser = null;
 let currentPage = 'feed';
+
+// Edition date
+const now = new Date();
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('navEdition').textContent = `Vol. 1 | ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 
 // ══════════════════════════════════════
 //  API
@@ -216,7 +499,6 @@ async function navigate(page, params = {}) {
   currentPage = page;
   const app = document.getElementById('app');
   renderNav();
-
   switch(page) {
     case 'login': renderLogin(app); break;
     case 'register': renderRegister(app); break;
@@ -235,21 +517,21 @@ async function navigate(page, params = {}) {
 function renderLogin(el) {
   el.innerHTML = `
     <div class="auth-wrap">
-      <h2>Welcome back</h2>
+      <h2>Welcome<br/>Back</h2>
       <p class="sub">Log in to your account</p>
       <div class="card">
         <div class="form-group">
           <label>Username</label>
-          <input id="loginUser" placeholder="username" autocomplete="username"/>
+          <input id="loginUser" placeholder="Enter username" autocomplete="username"/>
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input id="loginPass" type="password" placeholder="password" autocomplete="current-password"/>
+          <input id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password"/>
         </div>
         <div id="loginErr"></div>
         <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Log in</button>
       </div>
-      <div class="auth-footer">Don't have an account? <a href="#" onclick="navigate('register');return false">Sign up</a></div>
+      <div class="auth-footer">No account? <a href="#" onclick="navigate('register');return false">Sign up</a></div>
     </div>
   `;
   el.querySelector('#loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
@@ -276,12 +558,12 @@ async function doLogin() {
 function renderRegister(el) {
   el.innerHTML = `
     <div class="auth-wrap">
-      <h2>Create account</h2>
+      <h2>Create<br/>Account</h2>
       <p class="sub">Join the community</p>
       <div class="card">
         <div class="form-group">
           <label>Username</label>
-          <input id="regUser" placeholder="pick a username"/>
+          <input id="regUser" placeholder="Pick a username"/>
         </div>
         <div class="form-group">
           <label>Email</label>
@@ -289,14 +571,14 @@ function renderRegister(el) {
         </div>
         <div class="form-group">
           <label>Display Name</label>
-          <input id="regName" placeholder="how others see you"/>
+          <input id="regName" placeholder="How others see you"/>
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input id="regPass" type="password" placeholder="at least 6 characters"/>
+          <input id="regPass" type="password" placeholder="At least 6 characters"/>
         </div>
         <div id="regErr"></div>
-        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">Create account</button>
+        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">Create Account</button>
       </div>
       <div class="auth-footer">Already have an account? <a href="#" onclick="navigate('login');return false">Log in</a></div>
     </div>
@@ -312,7 +594,6 @@ async function doRegister() {
   if (password.length < 6) { document.getElementById('regErr').innerHTML = '<div class="error-msg">Password must be at least 6 characters</div>'; return; }
   try {
     await api('/api/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, display_name }) });
-    // Auto-login
     const data = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
     token = data.access_token;
     localStorage.setItem('token', token);
@@ -327,25 +608,28 @@ async function doRegister() {
 //  FEED
 // ══════════════════════════════════════
 async function renderFeed(el) {
-  let html = '<div class="page-title">Feed</div>';
-
+  let html = `
+    <div class="page-title">The Daily Feed</div>
+    <div class="page-subtitle">Latest dispatches from the community</div>
+  `;
   if (currentUser) {
     html += `
       <div class="card compose-box">
+        <div class="compose-label">Compose</div>
         <div class="form-group" style="margin-bottom:10px">
-          <input id="postTitle" placeholder="Title"/>
+          <input id="postTitle" placeholder="Headline"/>
         </div>
         <div class="form-group" style="margin-bottom:10px">
-          <textarea id="postBody" placeholder="What's on your mind?" rows="3"></textarea>
+          <textarea id="postBody" placeholder="Write your story..." rows="3"></textarea>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="doCreatePost()">Post</button>
+        <button class="btn btn-primary btn-sm" onclick="doCreatePost()">Publish</button>
         <span id="postErr"></span>
       </div>
+      <div class="ornament">&#x2727; &#x2727; &#x2727;</div>
     `;
   }
-  html += '<div id="postsList"><div class="empty-state">Loading...</div></div>';
+  html += '<div id="postsList"><div class="empty-state">Loading dispatches...</div></div>';
   el.innerHTML = html;
-
   try {
     const posts = await api('/api/posts/');
     renderPosts(document.getElementById('postsList'), posts);
@@ -370,7 +654,7 @@ async function doCreatePost() {
 
 function renderPosts(container, posts) {
   if (!posts || posts.length === 0) {
-    container.innerHTML = '<div class="empty-state"><span>&#x1f4ad;</span>No posts yet. Be the first!</div>';
+    container.innerHTML = '<div class="empty-state"><span>&#x270E;</span>No dispatches yet. Be the first to publish.</div>';
     return;
   }
   container.innerHTML = posts.map(p => postCard(p)).join('');
@@ -386,7 +670,7 @@ function postCard(p) {
     commentsHtml = p.comments.map(c => {
       const canDelComment = currentUser && (currentUser.id === c.author_id || currentUser.is_admin);
       return `<div class="comment">
-        ${canDelComment ? `<button class="comment-delete" onclick="doDeleteComment(${p.id},${c.id})">delete</button>` : ''}
+        ${canDelComment ? `<button class="comment-delete" onclick="doDeleteComment(${p.id},${c.id})">&#x2715;</button>` : ''}
         <div class="comment-author">${esc(c.author_username)}</div>
         <div class="comment-body">${esc(c.body)}</div>
         <div class="comment-time">${timeAgo(c.created_at)}</div>
@@ -395,9 +679,9 @@ function postCard(p) {
   }
 
   return `
-    <div class="card" id="post-${p.id}">
+    <div class="card card-hover" id="post-${p.id}">
       <div class="post-header">
-        <div class="post-avatar" style="background:${avatarColor(p.author_username)}">${initial}</div>
+        <div class="post-avatar">${initial}</div>
         <div class="post-meta">
           <div class="post-author" onclick="navigate('profile',{username:'${p.author_username}'})">${esc(p.author_display_name || p.author_username)}</div>
           <div class="post-time">${timeAgo(p.created_at)}</div>
@@ -405,15 +689,16 @@ function postCard(p) {
       </div>
       <div class="post-title">${esc(p.title)}</div>
       <div class="post-body">${esc(p.body)}</div>
+      <hr class="post-divider"/>
       <div class="post-actions">
         <button class="post-action ${p.liked_by_me ? 'liked' : ''}" onclick="doLike(${p.id})">
           ${p.liked_by_me ? '&#9829;' : '&#9825;'} ${p.like_count}
         </button>
         <button class="post-action" onclick="toggleComments(${p.id})">
-          &#x1f4ac; ${p.comment_count}
+          &#x2709; ${p.comment_count}
         </button>
-        ${canEdit ? `<button class="post-action" onclick="showEditPost(${p.id},'${esc(p.title).replace(/'/g,"\\'")}')">edit</button>` : ''}
-        ${canDelete ? `<button class="post-action" onclick="doDeletePost(${p.id})">delete</button>` : ''}
+        ${canEdit ? `<button class="post-action" onclick="showEditPost(${p.id},'${esc(p.title).replace(/'/g,"\\'")}')">Edit</button>` : ''}
+        ${canDelete ? `<button class="post-action" style="color:var(--accent)" onclick="doDeletePost(${p.id})">Delete</button>` : ''}
       </div>
       <div class="comments-section" id="comments-${p.id}" style="display:none">
         ${commentsHtml}
@@ -471,13 +756,12 @@ function showEditPost(postId, currentTitle) {
   const card = document.getElementById(`post-${postId}`);
   const bodyEl = card.querySelector('.post-body');
   const currentBody = bodyEl.textContent;
-
   const modal = document.createElement('div');
   modal.className = 'modal-bg';
   modal.onclick = e => { if(e.target === modal) modal.remove(); };
   modal.innerHTML = `
     <div class="modal">
-      <h3>Edit post</h3>
+      <h3>Edit Post</h3>
       <div class="form-group"><label>Title</label><input id="editTitle" value="${esc(currentTitle)}"/></div>
       <div class="form-group"><label>Body</label><textarea id="editBody" rows="4">${esc(currentBody)}</textarea></div>
       <div style="display:flex;gap:8px;justify-content:flex-end">
@@ -506,26 +790,25 @@ async function doEditPost(postId) {
 async function renderProfile(el, username) {
   if (!username && currentUser) username = currentUser.username;
   if (!username) { navigate('login'); return; }
-
   try {
     const user = await api(`/api/users/${username}`);
     const isMe = currentUser && currentUser.id === user.id;
     const initial = (user.display_name || user.username)[0].toUpperCase();
-
     let html = `
       <div class="card profile-header">
-        <div class="profile-avatar" style="background:${avatarColor(user.username)}">${initial}</div>
+        <div class="profile-avatar">${initial}</div>
         <div class="profile-name">${esc(user.display_name || user.username)}</div>
         <div class="profile-username">@${esc(user.username)}</div>
-        ${user.bio ? `<div class="profile-bio">${esc(user.bio)}</div>` : ''}
-        <div class="profile-joined">Joined ${new Date(user.created_at).toLocaleDateString('en-US', {month:'long',year:'numeric'})}</div>
-        ${isMe ? '<button class="btn btn-ghost btn-sm profile-edit-btn" onclick="navigate(\'edit-profile\')">Edit profile</button>' : ''}
+        ${user.bio ? `<div class="profile-bio">&ldquo;${esc(user.bio)}&rdquo;</div>` : ''}
+        <div class="profile-joined">Member since ${new Date(user.created_at).toLocaleDateString('en-US', {month:'long',year:'numeric'})}</div>
+        ${isMe ? '<button class="btn btn-ghost btn-sm profile-edit-btn" onclick="navigate(\'edit-profile\')">Edit Profile</button>' : ''}
       </div>
-      <div class="page-title" style="margin-top:20px">Posts</div>
+      <div class="ornament">&#x2727; &#x2727; &#x2727;</div>
+      <div class="page-title" style="margin-top:0">Posts</div>
+      <div class="page-subtitle">Published works by ${esc(user.display_name || user.username)}</div>
       <div id="profilePosts"><div class="empty-state">Loading...</div></div>
     `;
     el.innerHTML = html;
-
     const posts = await api(`/api/users/${username}/posts`);
     renderPosts(document.getElementById('profilePosts'), posts);
   } catch(e) {
@@ -540,8 +823,8 @@ function renderEditProfile(el) {
   if (!currentUser) { navigate('login'); return; }
   el.innerHTML = `
     <div class="auth-wrap">
-      <h2>Edit profile</h2>
-      <p class="sub">Update your public info</p>
+      <h2>Edit<br/>Profile</h2>
+      <p class="sub">Update your public information</p>
       <div class="card">
         <div class="form-group">
           <label>Display Name</label>
@@ -558,7 +841,7 @@ function renderEditProfile(el) {
         <div id="editErr"></div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-ghost" onclick="navigate('profile',{username:'${currentUser.username}'})">Cancel</button>
-          <button class="btn btn-primary" onclick="doEditProfile()">Save changes</button>
+          <button class="btn btn-primary" onclick="doEditProfile()">Save Changes</button>
         </div>
       </div>
     </div>
@@ -583,38 +866,37 @@ async function doEditProfile() {
 // ══════════════════════════════════════
 async function renderAdmin(el) {
   if (!currentUser || !currentUser.is_admin) { navigate('feed'); return; }
-
   try {
     const [stats, users] = await Promise.all([
       api('/api/admin/stats'),
       api('/api/admin/users'),
     ]);
-
     el.innerHTML = `
       <div class="page-title">Admin Panel</div>
+      <div class="page-subtitle">Platform oversight &amp; management</div>
       <div class="admin-stats">
         <div class="stat-card"><div class="stat-num">${stats.total_users}</div><div class="stat-label">Users</div></div>
         <div class="stat-card"><div class="stat-num">${stats.total_posts}</div><div class="stat-label">Posts</div></div>
         <div class="stat-card"><div class="stat-num">${stats.total_comments}</div><div class="stat-label">Comments</div></div>
       </div>
-      <div class="card">
-        <h3 style="margin-bottom:14px;font-size:1rem">All Users</h3>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:2px solid var(--fg);font-family:'Playfair Display',serif;font-weight:700;font-size:1rem">All Users</div>
         <div style="overflow-x:auto">
           <table class="admin-table">
             <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
               ${users.map(u => `
                 <tr>
-                  <td><strong>${esc(u.username)}</strong><br><span style="color:var(--dim);font-size:.78rem">${esc(u.display_name)}</span></td>
-                  <td>${esc(u.email)}</td>
-                  <td>${u.is_admin ? '<span class="badge badge-admin">Admin</span>' : '<span style="color:var(--dim);font-size:.8rem">User</span>'}</td>
+                  <td><strong>${esc(u.username)}</strong><br><span style="color:var(--n500);font-size:.65rem;text-transform:uppercase;letter-spacing:.08em">${esc(u.display_name)}</span></td>
+                  <td style="font-family:'JetBrains Mono',monospace;font-size:.7rem">${esc(u.email)}</td>
+                  <td>${u.is_admin ? '<span class="badge badge-admin">Admin</span>' : '<span style="color:var(--n500);font-size:.7rem">User</span>'}</td>
                   <td>${u.is_active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-disabled">Disabled</span>'}</td>
                   <td>
                     ${u.id !== currentUser.id ? `
                       <button class="btn btn-ghost btn-sm" style="margin:2px" onclick="adminToggleActive(${u.id},${!u.is_active})">${u.is_active ? 'Disable' : 'Enable'}</button>
                       <button class="btn btn-ghost btn-sm" style="margin:2px" onclick="adminToggleAdmin(${u.id},${!u.is_admin})">${u.is_admin ? 'Demote' : 'Promote'}</button>
                       <button class="btn btn-danger btn-sm" style="margin:2px" onclick="adminDeleteUser(${u.id},'${esc(u.username)}')">Delete</button>
-                    ` : '<span style="color:var(--dim);font-size:.8rem">You</span>'}
+                    ` : '<span style="color:var(--n500);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em">You</span>'}
                   </td>
                 </tr>
               `).join('')}
@@ -632,12 +914,10 @@ async function adminToggleActive(userId, active) {
   await api(`/api/admin/users/${userId}`, { method: 'PATCH', body: JSON.stringify({ is_active: active }) });
   navigate('admin');
 }
-
 async function adminToggleAdmin(userId, admin) {
   await api(`/api/admin/users/${userId}`, { method: 'PATCH', body: JSON.stringify({ is_admin: admin }) });
   navigate('admin');
 }
-
 async function adminDeleteUser(userId, username) {
   if (!confirm(`Delete user "${username}" and all their posts?`)) return;
   await api(`/api/admin/users/${userId}`, { method: 'DELETE' });
@@ -664,13 +944,6 @@ function timeAgo(iso) {
   const days = Math.floor(hrs / 24);
   if (days < 30) return `${days}d ago`;
   return new Date(iso).toLocaleDateString();
-}
-
-function avatarColor(str) {
-  const colors = ['#a78bfa','#818cf8','#34d399','#fb923c','#f87171','#38bdf8','#e879f9','#facc15'];
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  return colors[Math.abs(hash) % colors.length];
 }
 
 // ══════════════════════════════════════
