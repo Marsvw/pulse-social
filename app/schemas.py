@@ -96,6 +96,13 @@ class CommentCreate(BaseModel):
     body: str
 
 
+# ── Password Change ──
+
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
+
+
 # ── Admin Stats ──
 
 class AdminStats(BaseModel):

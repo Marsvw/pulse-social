@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.models import User
-from app.schemas import RegisterRequest, LoginRequest, Token, UserOut
+from app.schemas import RegisterRequest, LoginRequest, Token, UserOut, PasswordChange
 from app.auth import hash_password, verify_password, create_access_token, require_user
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
@@ -48,3 +48,18 @@ async def login(payload: LoginRequest, db: AsyncSession = Depends(get_db)):
 @router.get("/me", response_model=UserOut)
 async def me(user: User = Depends(require_user)):
     return user
+
+
+@router.post("/change-password")
+async def change_password(
+    payload: PasswordChange,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(require_user),
+):
+    if not verify_password(payload.current_password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    if len(payload.new_password) < 4:
+        raise HTTPException(status_code=400, detail="New password must be at least 4 characters")
+    user.hashed_password = hash_password(payload.new_password)
+    await db.commit()
+    return {"message": "Password changed successfully"}

@@ -44,7 +44,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:3px sol
 .nav-username{font-family:'Inter',sans-serif;font-size:.75rem;color:var(--fg);font-weight:500;text-transform:uppercase;letter-spacing:.08em;transition:color .15s}
 
 /* ── MAIN ── */
-main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
+main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px;min-height:calc(100vh - 200px)}
 
 /* ── TABS ── */
 .tab-bar{display:flex;border-bottom:3px solid var(--fg);margin-bottom:24px;gap:0}
@@ -96,7 +96,7 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
 .post-author:hover{color:var(--accent)}
 .post-time{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--n500);letter-spacing:.05em}
 .post-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:10px;line-height:1.2;letter-spacing:-.01em}
-.post-body{color:var(--n600);font-size:.9rem;line-height:1.7;white-space:pre-wrap;word-break:break-word;text-align:justify}
+.post-body{color:var(--n600);font-size:.9rem;line-height:1.7;white-space:pre-wrap;word-break:break-word;text-align:justify;font-family:'Lora','Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',serif}
 .post-link{display:inline-block;margin-top:10px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;color:var(--fg);border:1px solid var(--fg);padding:6px 14px;transition:all .15s;text-transform:uppercase;letter-spacing:.1em}
 .post-link:hover{background:var(--fg);color:var(--bg);text-decoration:none}
 .post-divider{border:none;border-top:1px solid var(--fg);margin:16px 0 12px}
@@ -159,6 +159,13 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
 @keyframes scroll-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-badge{background:var(--accent);color:var(--bg);padding:1px 6px;margin:0 12px;font-weight:700}
 
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:10px 24px;z-index:300;animation:toastIn .3s ease-out;border:1px solid var(--fg)}
+.toast-success{border-left:4px solid #2d6a4f}
+.toast-error{border-left:4px solid var(--accent)}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateX(-50%) translateY(20px)}}
+
 /* ── RESPONSIVE ── */
 @media(max-width:600px){
   .admin-stats{grid-template-columns:1fr}
@@ -210,7 +217,8 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
 <script>
 
 /* ═══ STATE ═══ */
-const S = { token: localStorage.getItem('token'), user: null, page: 'feed', pageArg: null, activeTab: 'discussion' };
+const S = { token: localStorage.getItem('token'), user: null, page: 'feed', pageArg: null, activeTab: 'material' };
+const postCache = {}; /* stores post data by id for safe edit modal access */
 
 /* ═══ API ═══ */
 const api = async (path, opts = {}) => {
@@ -227,17 +235,34 @@ const api = async (path, opts = {}) => {
 function updateNav() {
   const nl = document.getElementById('navLinks');
   if (S.user) {
-    const initial = (S.user.display_name || S.user.username)[0].toUpperCase();
     nl.innerHTML = `
       ${S.user.is_admin ? '<button onclick="navigate(\'admin\')">Admin</button>' : ''}
       <div class="nav-user" onclick="navigate('profile',S.user.username)">
-        <div class="nav-avatar">${initial}</div>
+        ${avatarHtml(S.user.avatar_url, S.user.display_name || S.user.username, 'nav-avatar')}
         <span class="nav-username">${S.user.username}</span>
       </div>
       <button onclick="logout()">Log out</button>`;
   } else {
     nl.innerHTML = `<button onclick="navigate('login')">Sign In</button><button class="btn-accent" onclick="navigate('register')">Register</button>`;
   }
+}
+
+/* ═══ TOAST ═══ */
+function toast(msg, type) {
+  const el = document.createElement('div');
+  el.className = 'toast toast-' + (type || 'success');
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => { el.style.animation = 'toastOut .3s ease-out forwards'; setTimeout(() => el.remove(), 300); }, 2500);
+}
+
+/* ═══ LOADING HELPER ═══ */
+async function withLoading(btnSelector, fn) {
+  const btn = typeof btnSelector === 'string' ? document.querySelector(btnSelector) : btnSelector;
+  if (!btn) return fn();
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = 'WAIT...'; btn.style.opacity = '0.6';
+  try { await fn(); } finally { btn.disabled = false; btn.innerHTML = orig; btn.style.opacity = '1'; }
 }
 
 /* ═══ AUTH ═══ */
@@ -273,56 +298,68 @@ function render() {
 function renderLogin(app) {
   app.innerHTML = `<div class="auth-wrap">
     <h2>Sign In</h2><p class="sub">Translation Classroom</p>
-    <div class="form-group"><label>Username</label><input id="lUser" placeholder="username"></div>
-    <div class="form-group"><label>Password</label><input id="lPass" type="password" placeholder="password"></div>
+    <div class="form-group"><label>Username</label><input id="lUser" placeholder="username" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="form-group"><label>Password</label><input id="lPass" type="password" placeholder="password" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div id="lErr"></div>
-    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Enter</button>
+    <button id="loginBtn" class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Enter</button>
     <p class="auth-footer">No account? <a href="#" onclick="navigate('register');return false" style="text-decoration:underline">Register</a></p>
   </div>`;
 }
 
 async function doLogin() {
-  try {
-    const res = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username: document.getElementById('lUser').value, password: document.getElementById('lPass').value }) });
-    S.token = res.access_token; localStorage.setItem('token', S.token);
-    await loadMe(); navigate('feed');
-  } catch (e) { document.getElementById('lErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
+  const user = document.getElementById('lUser').value.trim();
+  const pass = document.getElementById('lPass').value;
+  const err = document.getElementById('lErr');
+  if (!user) { err.innerHTML = '<p class="error-msg">Username is required</p>'; return; }
+  if (!pass) { err.innerHTML = '<p class="error-msg">Password is required</p>'; return; }
+  await withLoading('#loginBtn', async () => {
+    try {
+      const res = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username: user, password: pass }) });
+      S.token = res.access_token; localStorage.setItem('token', S.token);
+      await loadMe(); navigate('feed');
+    } catch (e) { err.innerHTML = `<p class="error-msg">${e.message}</p>`; }
+  });
 }
 
 /* ═══ REGISTER ═══ */
 function renderRegister(app) {
   app.innerHTML = `<div class="auth-wrap">
     <h2>Register</h2><p class="sub">Join the Classroom</p>
-    <div class="form-group"><label>Username</label><input id="rUser" placeholder="username"></div>
-    <div class="form-group"><label>Email</label><input id="rEmail" placeholder="email@example.com"></div>
-    <div class="form-group"><label>Display Name</label><input id="rName" placeholder="your name"></div>
-    <div class="form-group"><label>Password</label><input id="rPass" type="password" placeholder="password"></div>
+    <div class="form-group"><label>Username</label><input id="rUser" placeholder="username" onkeydown="if(event.key==='Enter')doRegister()"></div>
+    <div class="form-group"><label>Email</label><input id="rEmail" placeholder="email@example.com" onkeydown="if(event.key==='Enter')doRegister()"></div>
+    <div class="form-group"><label>Display Name</label><input id="rName" placeholder="your name" onkeydown="if(event.key==='Enter')doRegister()"></div>
+    <div class="form-group"><label>Password</label><input id="rPass" type="password" placeholder="password" onkeydown="if(event.key==='Enter')doRegister()"></div>
     <div id="rErr"></div>
-    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">Create Account</button>
+    <button id="regBtn" class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">Create Account</button>
     <p class="auth-footer">Have an account? <a href="#" onclick="navigate('login');return false" style="text-decoration:underline">Sign in</a></p>
   </div>`;
 }
 
 async function doRegister() {
-  try {
-    await api('/api/auth/register', { method: 'POST', body: JSON.stringify({
-      username: document.getElementById('rUser').value,
-      email: document.getElementById('rEmail').value,
-      display_name: document.getElementById('rName').value,
-      password: document.getElementById('rPass').value,
-    }) });
-    const res = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({
-      username: document.getElementById('rUser').value,
-      password: document.getElementById('rPass').value,
-    }) });
-    S.token = res.access_token; localStorage.setItem('token', S.token);
-    await loadMe(); navigate('feed');
-  } catch (e) { document.getElementById('rErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
+  const user = document.getElementById('rUser').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const name = document.getElementById('rName').value.trim();
+  const pass = document.getElementById('rPass').value;
+  const err = document.getElementById('rErr');
+  if (!user) { err.innerHTML = '<p class="error-msg">Username is required</p>'; return; }
+  if (user.length < 3) { err.innerHTML = '<p class="error-msg">Username must be at least 3 characters</p>'; return; }
+  if (!email || !email.includes('@')) { err.innerHTML = '<p class="error-msg">Valid email is required</p>'; return; }
+  if (!pass) { err.innerHTML = '<p class="error-msg">Password is required</p>'; return; }
+  if (pass.length < 4) { err.innerHTML = '<p class="error-msg">Password must be at least 4 characters</p>'; return; }
+  await withLoading('#regBtn', async () => {
+    try {
+      await api('/api/auth/register', { method: 'POST', body: JSON.stringify({ username: user, email, display_name: name || user, password: pass }) });
+      const res = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username: user, password: pass }) });
+      S.token = res.access_token; localStorage.setItem('token', S.token);
+      await loadMe(); navigate('feed');
+    } catch (e) { err.innerHTML = `<p class="error-msg">${e.message}</p>`; }
+  });
 }
 
 /* ═══ FEED (tabbed: Materials / Assignments / Discussion) ═══ */
 function renderFeed(app) {
   const tabs = [
+    { key: 'all', label: 'All' },
     { key: 'material', label: 'Materials' },
     { key: 'assignment', label: 'Assignments' },
     { key: 'discussion', label: 'Discussion' },
@@ -331,12 +368,12 @@ function renderFeed(app) {
     `<button class="tab ${S.activeTab === t.key ? 'active' : ''}" onclick="S.activeTab='${t.key}';renderFeed(document.getElementById('app'))">${t.label}</button>`
   ).join('');
 
-  const showCompose = S.user && (S.activeTab !== 'material' || S.user.is_admin);
+  const showCompose = S.user && S.activeTab !== 'all' && (S.activeTab !== 'material' || S.user.is_admin);
 
   app.innerHTML = `
     <div class="tab-bar">${tabHtml}</div>
     ${showCompose ? `<div class="card" style="margin-bottom:24px">
-      <div class="compose-label">New ${S.activeTab === 'material' ? 'Material' : S.activeTab === 'assignment' ? 'Assignment' : 'Post'}</div>
+      <div class="compose-label">New ${S.activeTab === 'material' ? 'Material' : S.activeTab === 'assignment' ? 'Assignment' : 'Discussion'}</div>
       <div class="form-group"><label>Title</label><input id="cTitle" placeholder="title"></div>
       <div class="form-group"><label>Content</label><textarea id="cBody" rows="3" placeholder="write something..."></textarea></div>
       <div class="form-group"><label>Link / Video URL (optional)</label><input id="cLink" placeholder="https://..."></div>
@@ -351,7 +388,8 @@ function renderFeed(app) {
 async function loadPosts() {
   const c = document.getElementById('postsContainer');
   try {
-    const posts = await api(`/api/posts/?category=${S.activeTab}`);
+    const url = S.activeTab === 'all' ? '/api/posts/' : `/api/posts/?category=${S.activeTab}`;
+    const posts = await api(url);
     if (!posts.length) { c.innerHTML = `<div class="empty-state"><span>&#9744;</span>No ${S.activeTab === 'material' ? 'materials' : S.activeTab === 'assignment' ? 'assignments' : 'posts'} yet</div>`; return; }
     c.innerHTML = posts.map(postCard).join('') + '<div class="ornament">&#x2766;</div>';
   } catch (e) { c.innerHTML = `<div class="error-msg">${e.message}</div>`; }
@@ -364,32 +402,34 @@ async function submitPost() {
   if (!title || !body) { document.getElementById('cErr').innerHTML = '<p class="error-msg">Title and content required</p>'; return; }
   try {
     await api('/api/posts/', { method: 'POST', body: JSON.stringify({ title, body, category: S.activeTab, link_url }) });
+    toast('Published!');
     renderFeed(document.getElementById('app'));
   } catch (e) { document.getElementById('cErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
 }
 
 /* ═══ POST CARD ═══ */
 function postCard(p) {
-  const initial = (p.author_display_name || p.author_username)[0].toUpperCase();
+  postCache[p.id] = p; /* cache for safe edit modal access */
+  const authorName = p.author_display_name || p.author_username;
   const catClass = p.category === 'material' ? 'cat-material' : p.category === 'assignment' ? 'cat-assignment' : 'cat-discussion';
   const catLabel = p.category === 'material' ? 'Material' : p.category === 'assignment' ? 'Assignment' : 'Discussion';
   const linkHtml = p.link_url ? `<a href="${esc(p.link_url)}" target="_blank" rel="noopener" class="post-link">&#9654; Open Link</a>` : '';
   const canEdit = S.user && (S.user.id === p.author_id || S.user.is_admin);
   const ago = timeAgo(p.created_at);
 
-  return `<div class="card card-hover">
+  return `<div class="card card-hover" id="post-${p.id}">
     <span class="cat-badge ${catClass}">${catLabel}</span>
     <div class="post-header">
-      <div class="post-avatar">${initial}</div>
+      ${avatarHtml(p.author_avatar_url, authorName, 'post-avatar')}
       <div class="post-meta">
-        <span class="post-author" onclick="navigate('profile','${p.author_username}')">${esc(p.author_display_name || p.author_username)}</span>
+        <span class="post-author" onclick="navigate('profile','${p.author_username}')">${esc(authorName)}</span>
         <div class="post-time">${ago}</div>
       </div>
-      ${canEdit ? `<button class="btn btn-sm btn-ghost" onclick="openEditModal(${p.id},'${esc(p.title)}',\`${esc(p.body)}\`,'${esc(p.link_url||'')}')">Edit</button>
+      ${canEdit ? `<button class="btn btn-sm btn-ghost" onclick="openEditModal(${p.id})">Edit</button>
         <button class="btn btn-sm btn-danger" onclick="deletePost(${p.id})">Del</button>` : ''}
     </div>
     <div class="post-title">${esc(p.title)}</div>
-    <div class="post-body">${esc(p.body)}</div>
+    <div class="post-body">${formatBody(p.body)}</div>
     ${linkHtml}
     <hr class="post-divider">
     <div class="post-actions">
@@ -417,24 +457,60 @@ function toggleComments(postId) {
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
+async function refreshPostComments(postId) {
+  try {
+    const post = await api(`/api/posts/${postId}`);
+    postCache[postId] = post;
+    const commentsDiv = document.getElementById('comments-' + postId);
+    if (commentsDiv) {
+      commentsDiv.innerHTML = renderComments(post);
+      commentsDiv.style.display = 'block';
+    }
+    /* Update comment count button */
+    const postEl = document.getElementById('post-' + postId);
+    if (postEl) {
+      const btns = postEl.querySelectorAll('.post-action');
+      if (btns[1]) btns[1].innerHTML = `&#9998; ${post.comment_count} comments`;
+    }
+  } catch (e) { alert(e.message); }
+}
+
 async function addComment(postId) {
   const input = document.getElementById('ci-' + postId);
   if (!input.value.trim()) return;
   try {
     await api(`/api/posts/${postId}/comments`, { method: 'POST', body: JSON.stringify({ body: input.value.trim() }) });
-    renderFeed(document.getElementById('app'));
+    await refreshPostComments(postId);
   } catch (e) { alert(e.message); }
 }
 
 async function deleteComment(postId, commentId) {
   if (!confirm('Delete comment?')) return;
-  try { await api(`/api/posts/${postId}/comments/${commentId}`, { method: 'DELETE' }); renderFeed(document.getElementById('app')); } catch (e) { alert(e.message); }
+  try {
+    await api(`/api/posts/${postId}/comments/${commentId}`, { method: 'DELETE' });
+    await refreshPostComments(postId);
+  } catch (e) { alert(e.message); }
 }
 
 /* ═══ LIKES ═══ */
 async function toggleLike(postId) {
   if (!S.user) { navigate('login'); return; }
-  try { await api(`/api/posts/${postId}/like`, { method: 'POST' }); renderFeed(document.getElementById('app')); } catch (e) { alert(e.message); }
+  try {
+    const res = await api(`/api/posts/${postId}/like`, { method: 'POST' });
+    /* Update just the like button in-place */
+    if (postCache[postId]) {
+      postCache[postId].liked_by_me = res.liked;
+      postCache[postId].like_count = res.like_count;
+    }
+    const postEl = document.getElementById('post-' + postId);
+    if (postEl) {
+      const likeBtn = postEl.querySelector('.post-action');
+      if (likeBtn) {
+        likeBtn.className = 'post-action' + (res.liked ? ' liked' : '');
+        likeBtn.innerHTML = `&#9829; ${res.like_count}`;
+      }
+    }
+  } catch (e) { alert(e.message); }
 }
 
 /* ═══ EDIT / DELETE POST ═══ */
@@ -443,31 +519,40 @@ async function deletePost(id) {
   try { await api(`/api/posts/${id}`, { method: 'DELETE' }); renderFeed(document.getElementById('app')); } catch (e) { alert(e.message); }
 }
 
-function openEditModal(id, title, body, link) {
+function openEditModal(id) {
+  const p = postCache[id];
+  if (!p) return;
   const modal = document.createElement('div');
   modal.className = 'modal-bg';
   modal.id = 'editModal';
   modal.innerHTML = `<div class="modal">
     <h3>Edit Post</h3>
-    <div class="form-group"><label>Title</label><input id="eTitle" value="${esc(title)}"></div>
-    <div class="form-group"><label>Content</label><textarea id="eBody" rows="4">${esc(body)}</textarea></div>
-    <div class="form-group"><label>Link URL</label><input id="eLink" value="${esc(link)}"></div>
+    <div class="form-group"><label>Title</label><input id="eTitle"></div>
+    <div class="form-group"><label>Content</label><textarea id="eBody" rows="4"></textarea></div>
+    <div class="form-group"><label>Link URL</label><input id="eLink"></div>
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
       <button class="btn btn-ghost" onclick="document.getElementById('editModal').remove()">Cancel</button>
       <button class="btn btn-primary" onclick="saveEdit(${id})">Save</button>
     </div>
   </div>`;
   document.body.appendChild(modal);
+  /* Set values safely via DOM instead of inline interpolation */
+  document.getElementById('eTitle').value = p.title;
+  document.getElementById('eBody').value = p.body;
+  document.getElementById('eLink').value = p.link_url || '';
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 }
 
 async function saveEdit(id) {
   try {
-    const payload = { title: document.getElementById('eTitle').value, body: document.getElementById('eBody').value };
-    const link = document.getElementById('eLink').value.trim();
-    if (link) payload.link_url = link;
+    const payload = {
+      title: document.getElementById('eTitle').value,
+      body: document.getElementById('eBody').value,
+      link_url: document.getElementById('eLink').value.trim() || null,
+    };
     await api(`/api/posts/${id}`, { method: 'PATCH', body: JSON.stringify(payload) });
     document.getElementById('editModal').remove();
+    toast('Post updated!');
     renderFeed(document.getElementById('app'));
   } catch (e) { alert(e.message); }
 }
@@ -478,12 +563,11 @@ async function renderProfile(app) {
   app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Loading...</div>';
   try {
     const [user, posts] = await Promise.all([api(`/api/users/${username}`), api(`/api/users/${username}/posts`)]);
-    const initial = (user.display_name || user.username)[0].toUpperCase();
     const isMe = S.user && S.user.id === user.id;
     const joined = new Date(user.created_at).toLocaleDateString('en-US', { year:'numeric', month:'long' });
 
     app.innerHTML = `<div class="profile-header">
-      <div class="profile-avatar">${initial}</div>
+      ${avatarHtml(user.avatar_url, user.display_name || user.username, 'profile-avatar')}
       <div class="profile-name">${esc(user.display_name || user.username)}</div>
       <div class="profile-username">@${esc(user.username)} ${user.is_admin ? '<span class="badge badge-admin">Teacher</span>' : ''}</div>
       ${user.bio ? `<div class="profile-bio">${esc(user.bio)}</div>` : ''}
@@ -501,22 +585,55 @@ function renderEditProfile(app) {
   if (!S.user) { navigate('login'); return; }
   app.innerHTML = `<div class="auth-wrap">
     <h2>Edit Profile</h2><p class="sub">Update your details</p>
-    <div class="form-group"><label>Display Name</label><input id="epName" value="${esc(S.user.display_name || '')}"></div>
-    <div class="form-group"><label>Bio</label><textarea id="epBio" rows="3">${esc(S.user.bio || '')}</textarea></div>
+    <div style="text-align:center;margin-bottom:20px">${avatarHtml(S.user.avatar_url, S.user.display_name || S.user.username, 'profile-avatar')}</div>
+    <div class="form-group"><label>Display Name</label><input id="epName"></div>
+    <div class="form-group"><label>Avatar URL</label><input id="epAvatar" placeholder="https://example.com/photo.jpg"></div>
+    <div class="form-group"><label>Bio</label><textarea id="epBio" rows="3"></textarea></div>
     <div id="epErr"></div>
     <div style="display:flex;gap:8px;margin-top:12px">
       <button class="btn btn-ghost" onclick="navigate('profile',S.user.username)">Cancel</button>
       <button class="btn btn-primary" onclick="saveProfile()">Save</button>
     </div>
+    <hr style="border:none;border-top:3px solid var(--fg);margin:28px 0 20px">
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:4px">Change Password</h2>
+    <p class="sub" style="margin-bottom:16px">Leave blank if you don't want to change it</p>
+    <div class="form-group"><label>Current Password</label><input id="epCurPass" type="password" placeholder="current password"></div>
+    <div class="form-group"><label>New Password</label><input id="epNewPass" type="password" placeholder="new password (min 4 chars)"></div>
+    <div id="epPassMsg"></div>
+    <button class="btn" style="margin-top:8px" onclick="changePassword()">Update Password</button>
   </div>`;
+  /* Set values safely via DOM */
+  document.getElementById('epName').value = S.user.display_name || '';
+  document.getElementById('epAvatar').value = S.user.avatar_url || '';
+  document.getElementById('epBio').value = S.user.bio || '';
 }
 
 async function saveProfile() {
   try {
-    const payload = { display_name: document.getElementById('epName').value, bio: document.getElementById('epBio').value };
+    const payload = {
+      display_name: document.getElementById('epName').value,
+      bio: document.getElementById('epBio').value,
+      avatar_url: document.getElementById('epAvatar').value.trim() || null,
+    };
     S.user = await api('/api/users/me', { method: 'PATCH', body: JSON.stringify(payload) });
+    toast('Profile updated!');
     navigate('profile', S.user.username);
   } catch (e) { document.getElementById('epErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
+}
+
+async function changePassword() {
+  const cur = document.getElementById('epCurPass').value;
+  const nw = document.getElementById('epNewPass').value;
+  const msg = document.getElementById('epPassMsg');
+  if (!cur || !nw) { msg.innerHTML = '<p class="error-msg">Both fields required</p>'; return; }
+  if (nw.length < 4) { msg.innerHTML = '<p class="error-msg">New password must be at least 4 characters</p>'; return; }
+  try {
+    await api('/api/auth/change-password', { method: 'POST', body: JSON.stringify({ current_password: cur, new_password: nw }) });
+    toast('Password changed!');
+    msg.innerHTML = '';
+    document.getElementById('epCurPass').value = '';
+    document.getElementById('epNewPass').value = '';
+  } catch (e) { msg.innerHTML = `<p class="error-msg">${e.message}</p>`; }
 }
 
 /* ═══ ADMIN ═══ */
@@ -561,6 +678,25 @@ async function adminDelete(id, name) {
 
 /* ═══ UTILS ═══ */
 function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function formatBody(text) {
+  if (!text) return '';
+  let s = esc(text);
+  /* Auto-link URLs */
+  s = s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="text-decoration:underline;text-decoration-color:var(--accent)">$1</a>');
+  /* **bold** */
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  /* *italic* */
+  s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  return s;
+}
+
+function avatarHtml(url, name, cssClass) {
+  const cls = cssClass || 'post-avatar';
+  if (url) return `<img src="${esc(url)}" alt="${esc(name)}" class="${cls}" style="object-fit:cover;border-radius:0">`;
+  const initial = (name || '?')[0].toUpperCase();
+  return `<div class="${cls}">${initial}</div>`;
+}
 
 function timeAgo(iso) {
   const diff = (Date.now() - new Date(iso).getTime()) / 1000;
