@@ -15,29 +15,16 @@ async def lifespan(app: FastAPI):
     from sqlalchemy import text
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        # Migrate: add new columns if they don't exist (safe to run repeatedly)
-        for col, coltype, default in [
-            ("category", "VARCHAR(20)", "'discussion'"),
-            ("link_url", "VARCHAR(1000)", "NULL"),
-        ]:
-            try:
-                await conn.execute(text(
-                    f"ALTER TABLE posts ADD COLUMN {col} {coltype} DEFAULT {default}"
-                ))
-            except Exception:
-                pass  # column already exists
-        # Migrate avatar_url from VARCHAR(500) to TEXT for base64 storage
+    # Run each migration in its own transaction to avoid PG aborting the whole batch
+    migrations = [
+        "ALTER TABLE posts ADD COLUMN IF NOT EXISTS category VARCHAR(20) DEFAULT 'discussion'",
+        "ALTER TABLE posts ADD COLUMN IF NOT EXISTS link_url VARCHAR(1000) DEFAULT NULL",
+        "ALTER TABLE users ALTER COLUMN avatar_url TYPE TEXT",
+    ]
+    for sql in migrations:
         try:
-            await conn.execute(text(
-                "ALTER TABLE users ALTER COLUMN avatar_url TYPE TEXT"
-            ))
-        except Exception:
-            pass
-        # Ensure avatar_url column exists as TEXT (fallback)
-        try:
-            await conn.execute(text(
-                "ALTER TABLE users ADD COLUMN avatar_url TEXT DEFAULT NULL"
-            ))
+            async with engine.begin() as conn:
+                await conn.execute(text(sql))
         except Exception:
             pass
     yield
