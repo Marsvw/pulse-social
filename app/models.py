@@ -31,6 +31,8 @@ class Post(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(300), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str] = mapped_column(String(20), default="discussion", nullable=False)
+    link_url: Mapped[str | None] = mapped_column(String(1000), default=None)
     author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     like_count: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime.datetime] = mapped_column(

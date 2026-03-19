@@ -52,11 +52,14 @@ class AdminUserUpdate(BaseModel):
 class PostCreate(BaseModel):
     title: str
     body: str
+    category: str = "discussion"
+    link_url: str | None = None
 
 
 class PostUpdate(BaseModel):
     title: str | None = None
     body: str | None = None
+    link_url: str | None = None
 
 
 class CommentOut(BaseModel):
@@ -73,6 +76,8 @@ class PostOut(BaseModel):
     id: int
     title: str
     body: str
+    category: str = "discussion"
+    link_url: str | None = None
     author_id: int
     author_username: str = ""
     author_display_name: str = ""

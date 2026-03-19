@@ -3,142 +3,76 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Pulse — The Daily Feed</title>
+<title>Pulse — Translation Classroom</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=block');
-
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#F9F9F7;--fg:#111111;--muted:#E5E5E0;--accent:#CC0000;
   --n100:#F5F5F5;--n200:#E5E5E5;--n400:#A3A3A3;--n500:#737373;
-  --n600:#525252;--n700:#404040;--max-w:780px;
+  --n600:#525252;--n700:#404040;--max-w:820px;
 }
-</style>
-</head>
-<body>
-<style>
 body{
-  font-family:'Lora',Georgia,serif;
-  background:var(--bg);
-  color:var(--fg);
-  min-height:100vh;
+  font-family:'Lora',Georgia,serif;background:var(--bg);color:var(--fg);min-height:100vh;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23111111' fill-opacity='0.04' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
 }
 a{color:var(--fg);text-decoration:none}
 a:hover{text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:4px;text-decoration-thickness:2px}
 ::selection{background:var(--fg);color:var(--bg)}
-input,textarea,button{border-radius:0 !important}
-
+input,textarea,button,select{border-radius:0 !important}
+</style>
+</head>
+<body>
+<style>
 /* ── NAV ── */
-nav{
-  position:sticky;top:0;z-index:100;
-  background:var(--bg);
-  border-bottom:3px solid var(--fg);
-  padding:0 20px;
-}
-.nav-inner{
-  max-width:var(--max-w);margin:0 auto;
-  display:flex;align-items:center;justify-content:space-between;
-  height:56px;
-}
-.nav-brand{
-  font-family:'Playfair Display',serif;
-  font-size:1.7rem;font-weight:900;
-  letter-spacing:-0.02em;
-  cursor:pointer;color:var(--fg);
-  transition:color .2s;
-}
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:3px solid var(--fg);padding:0 20px}
+.nav-inner{max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-brand{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;letter-spacing:-0.02em;cursor:pointer;color:var(--fg);transition:color .2s}
 .nav-brand:hover{color:var(--accent)}
-.nav-edition{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.65rem;color:var(--n500);
-  text-transform:uppercase;letter-spacing:.15em;
-  margin-left:12px;
-  display:none;
-}
-@media(min-width:600px){.nav-edition{display:inline}}
-
+.nav-sub{font-family:'Inter',sans-serif;font-size:.55rem;color:var(--n500);text-transform:uppercase;letter-spacing:.18em;margin-left:12px;display:none}
+@media(min-width:600px){.nav-sub{display:inline}}
 .nav-links{display:flex;gap:4px;align-items:center}
-.nav-links button,.nav-links .nav-btn{
-  background:none;border:1px solid var(--fg);color:var(--fg);
-  padding:6px 14px;font-family:'Inter',sans-serif;font-size:.7rem;
-  cursor:pointer;transition:all .15s;
-  text-transform:uppercase;letter-spacing:.12em;font-weight:600;
-}
+.nav-links button{background:none;border:1px solid var(--fg);color:var(--fg);padding:6px 14px;font-family:'Inter',sans-serif;font-size:.7rem;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.12em;font-weight:600}
 .nav-links button:hover{background:var(--fg);color:var(--bg)}
 .nav-links .btn-accent{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .nav-links .btn-accent:hover{background:var(--accent);border-color:var(--accent)}
-.nav-user{
-  display:flex;align-items:center;gap:8px;cursor:pointer;
-  padding:4px 10px;border:1px solid var(--fg);transition:all .15s;
-}
+.nav-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 10px;border:1px solid var(--fg);transition:all .15s}
 .nav-user:hover{background:var(--fg);color:var(--bg)}
 .nav-user:hover .nav-avatar{background:var(--bg);color:var(--fg)}
 .nav-user:hover .nav-username{color:var(--bg)}
-.nav-avatar{
-  width:24px;height:24px;background:var(--fg);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.65rem;font-weight:700;color:var(--bg);
-  font-family:'Inter',sans-serif;transition:all .15s;
-}
-.nav-username{
-  font-family:'Inter',sans-serif;font-size:.75rem;
-  color:var(--fg);font-weight:500;text-transform:uppercase;
-  letter-spacing:.08em;transition:color .15s;
-}
+.nav-avatar{width:24px;height:24px;background:var(--fg);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
+.nav-username{font-family:'Inter',sans-serif;font-size:.75rem;color:var(--fg);font-weight:500;text-transform:uppercase;letter-spacing:.08em;transition:color .15s}
 
 /* ── MAIN ── */
 main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
 
-/* ── ORNAMENT ── */
-.ornament{
-  padding:20px 0;text-align:center;
-  font-family:'Playfair Display',serif;font-size:1.2rem;
-  color:var(--n400);letter-spacing:.6em;
-}
+/* ── TABS ── */
+.tab-bar{display:flex;border-bottom:3px solid var(--fg);margin-bottom:24px;gap:0}
+.tab{font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;padding:12px 20px;cursor:pointer;border:none;background:transparent;color:var(--n500);transition:all .15s;border-bottom:3px solid transparent;margin-bottom:-3px;position:relative}
+.tab:hover{color:var(--fg)}
+.tab.active{color:var(--fg);border-bottom-color:var(--accent);background:var(--n100)}
+.tab-badge{background:var(--accent);color:var(--bg);font-size:.55rem;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:middle}
 
 /* ── CARDS ── */
-.card{
-  background:var(--bg);border:1px solid var(--fg);
-  padding:24px;margin-bottom:16px;
-  position:relative;
-  transition:box-shadow .2s,transform .2s;
-}
-.card-hover:hover{
-  box-shadow:4px 4px 0px 0px var(--fg);
-  transform:translate(-2px,-2px);
-}
+.card{background:var(--bg);border:1px solid var(--fg);padding:24px;margin-bottom:16px;position:relative;transition:box-shadow .2s,transform .2s}
+.card-hover:hover{box-shadow:4px 4px 0px 0px var(--fg);transform:translate(-2px,-2px)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .card{animation:fadeUp .3s ease-out}
 
+/* ── CATEGORY BADGE ── */
+.cat-badge{font-family:'Inter',sans-serif;font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:3px 8px;border:1px solid;display:inline-block;margin-bottom:10px}
+.cat-material{border-color:#1a56db;color:#1a56db;background:rgba(26,86,219,0.06)}
+.cat-assignment{border-color:#9333ea;color:#9333ea;background:rgba(147,51,234,0.06)}
+.cat-discussion{border-color:var(--n500);color:var(--n500)}
+
 /* ── FORMS ── */
 .form-group{margin-bottom:16px}
-.form-group label{
-  display:block;font-family:'Inter',sans-serif;
-  font-size:.65rem;color:var(--n500);margin-bottom:6px;
-  font-weight:600;text-transform:uppercase;letter-spacing:.15em;
-}
-.form-group input,.form-group textarea{
-  width:100%;padding:10px 0;
-  background:transparent;
-  border:none;border-bottom:2px solid var(--fg);
-  color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:.85rem;
-  outline:none;transition:all .2s;resize:vertical;
-}
-.form-group input:focus,.form-group textarea:focus{
-  background:var(--n100);padding:10px 12px;
-}
-.form-group input::placeholder,.form-group textarea::placeholder{
-  color:var(--n400);font-family:'Inter',sans-serif;
-  text-transform:uppercase;font-size:.7rem;letter-spacing:.1em;
-}
-.btn{
-  padding:10px 22px;border:1px solid var(--fg);
-  font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;
-  cursor:pointer;transition:all .15s;
-  text-transform:uppercase;letter-spacing:.12em;
-  background:transparent;color:var(--fg);
-}
+.form-group label{display:block;font-family:'Inter',sans-serif;font-size:.65rem;color:var(--n500);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.15em}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 0;background:transparent;border:none;border-bottom:2px solid var(--fg);color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:.85rem;outline:none;transition:all .2s;resize:vertical}
+.form-group select{padding:10px 4px;cursor:pointer;font-size:.8rem}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{background:var(--n100);padding:10px 12px}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--n400);font-family:'Inter',sans-serif;text-transform:uppercase;font-size:.7rem;letter-spacing:.1em}
+.btn{padding:10px 22px;border:1px solid var(--fg);font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.12em;background:transparent;color:var(--fg)}
 .btn-primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .btn-primary:hover{background:var(--accent);border-color:var(--accent)}
 .btn-danger{background:transparent;color:var(--accent);border-color:var(--accent)}
@@ -147,232 +81,83 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
 .btn-ghost:hover{border-color:var(--fg);background:var(--n100)}
 .btn-sm{padding:5px 12px;font-size:.65rem}
 .error-msg{color:var(--accent);font-family:'Inter',sans-serif;font-size:.75rem;margin-top:8px;font-weight:600}
-.success-msg{color:#2d6a4f;font-family:'Inter',sans-serif;font-size:.75rem;margin-top:8px}
 
-/* ── AUTH PAGES ── */
+/* ── AUTH ── */
 .auth-wrap{max-width:420px;margin:40px auto}
-.auth-wrap h2{
-  font-family:'Playfair Display',serif;font-size:2.8rem;
-  font-weight:900;line-height:.95;letter-spacing:-.03em;
-  margin-bottom:4px;
-}
-.auth-wrap p.sub{
-  color:var(--n500);margin-bottom:28px;
-  font-family:'Inter',sans-serif;font-size:.75rem;
-  text-transform:uppercase;letter-spacing:.15em;
-}
-.auth-footer{
-  text-align:center;margin-top:20px;
-  font-family:'Inter',sans-serif;font-size:.75rem;color:var(--n500);
-  text-transform:uppercase;letter-spacing:.08em;
-}
+.auth-wrap h2{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:.95;letter-spacing:-.03em;margin-bottom:4px}
+.auth-wrap p.sub{color:var(--n500);margin-bottom:28px;font-family:'Inter',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.15em}
+.auth-footer{text-align:center;margin-top:20px;font-family:'Inter',sans-serif;font-size:.75rem;color:var(--n500);text-transform:uppercase;letter-spacing:.08em}
 
 /* ── POST CARD ── */
-.post-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.post-avatar{
-  width:32px;height:32px;background:var(--fg);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.7rem;font-weight:700;color:var(--bg);
-  font-family:'Inter',sans-serif;flex-shrink:0;
-}
+.post-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.post-avatar{width:32px;height:32px;background:var(--fg);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--bg);font-family:'Inter',sans-serif;flex-shrink:0}
 .post-meta{flex:1}
-.post-author{
-  font-family:'Inter',sans-serif;font-weight:600;font-size:.75rem;
-  cursor:pointer;text-transform:uppercase;letter-spacing:.08em;
-}
+.post-author{font-family:'Inter',sans-serif;font-weight:600;font-size:.75rem;cursor:pointer;text-transform:uppercase;letter-spacing:.08em}
 .post-author:hover{color:var(--accent)}
-.post-time{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.6rem;color:var(--n500);letter-spacing:.05em;
-}
-.post-title{
-  font-family:'Playfair Display',serif;
-  font-size:1.4rem;font-weight:700;
-  margin-bottom:10px;line-height:1.2;
-  letter-spacing:-.01em;
-}
-.post-body{
-  color:var(--n600);font-size:.9rem;line-height:1.7;
-  white-space:pre-wrap;word-break:break-word;
-  text-align:justify;
-}
-.post-divider{
-  border:none;border-top:1px solid var(--fg);
-  margin:16px 0 12px;
-}
+.post-time{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--n500);letter-spacing:.05em}
+.post-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:10px;line-height:1.2;letter-spacing:-.01em}
+.post-body{color:var(--n600);font-size:.9rem;line-height:1.7;white-space:pre-wrap;word-break:break-word;text-align:justify}
+.post-link{display:inline-block;margin-top:10px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;color:var(--fg);border:1px solid var(--fg);padding:6px 14px;transition:all .15s;text-transform:uppercase;letter-spacing:.1em}
+.post-link:hover{background:var(--fg);color:var(--bg);text-decoration:none}
+.post-divider{border:none;border-top:1px solid var(--fg);margin:16px 0 12px}
 .post-actions{display:flex;gap:16px;align-items:center}
-.post-action{
-  background:none;border:none;color:var(--n500);
-  font-family:'Inter',sans-serif;font-size:.7rem;
-  cursor:pointer;display:flex;align-items:center;gap:4px;
-  transition:color .15s;text-transform:uppercase;
-  letter-spacing:.08em;font-weight:500;
-}
+.post-action{background:none;border:none;color:var(--n500);font-family:'Inter',sans-serif;font-size:.7rem;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color .15s;text-transform:uppercase;letter-spacing:.08em;font-weight:500}
 .post-action:hover{color:var(--fg)}
 .post-action.liked{color:var(--accent);font-weight:700}
-.post-action.liked:hover{color:var(--accent)}
 
 /* ── COMMENTS ── */
 .comments-section{margin-top:14px;padding-top:14px;border-top:1px solid var(--muted)}
 .comment{padding:10px 0;border-bottom:1px solid var(--muted)}
 .comment:last-child{border-bottom:none}
-.comment-author{
-  font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;
-  text-transform:uppercase;letter-spacing:.08em;
-}
+.comment-author{font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
 .comment-body{font-size:.85rem;color:var(--n600);margin-top:3px;line-height:1.5}
-.comment-time{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.6rem;color:var(--n500);margin-top:2px;
-}
+.comment-time{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--n500);margin-top:2px}
 .comment-form{display:flex;gap:8px;margin-top:10px}
-.comment-form input{
-  flex:1;padding:8px 0;background:transparent;
-  border:none;border-bottom:2px solid var(--fg);
-  color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:.8rem;outline:none;
-}
+.comment-form input{flex:1;padding:8px 0;background:transparent;border:none;border-bottom:2px solid var(--fg);color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:.8rem;outline:none}
 .comment-form input:focus{background:var(--n100);padding:8px 10px}
-.comment-form button{padding:8px 16px}
-.comment-delete{
-  background:none;border:none;color:var(--n400);cursor:pointer;
-  font-family:'Inter',sans-serif;font-size:.6rem;float:right;
-  text-transform:uppercase;letter-spacing:.1em;
-}
+.comment-delete{background:none;border:none;color:var(--n400);cursor:pointer;font-family:'Inter',sans-serif;font-size:.6rem;float:right;text-transform:uppercase;letter-spacing:.1em}
 .comment-delete:hover{color:var(--accent)}
 
 /* ── COMPOSE ── */
-.compose-box{margin-bottom:24px}
-.compose-box textarea{min-height:60px}
-.compose-label{
-  font-family:'Playfair Display',serif;font-size:1.1rem;
-  font-weight:700;margin-bottom:16px;
-  padding-bottom:8px;border-bottom:3px solid var(--fg);
-}
+.compose-label{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:3px solid var(--fg)}
 
 /* ── PROFILE ── */
 .profile-header{text-align:center;padding:30px 20px;border-bottom:3px solid var(--fg)}
-.profile-avatar{
-  width:72px;height:72px;background:var(--fg);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.8rem;font-weight:700;color:var(--bg);
-  font-family:'Playfair Display',serif;
-  margin:0 auto 16px;
-}
+.profile-avatar{width:72px;height:72px;background:var(--fg);display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;color:var(--bg);font-family:'Playfair Display',serif;margin:0 auto 16px}
 .profile-name{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;letter-spacing:-.02em}
-.profile-username{
-  font-family:'JetBrains Mono',monospace;color:var(--n500);
-  font-size:.75rem;margin-top:2px;letter-spacing:.05em;
-}
+.profile-username{font-family:'JetBrains Mono',monospace;color:var(--n500);font-size:.75rem;margin-top:2px;letter-spacing:.05em}
 .profile-bio{color:var(--n600);font-size:.9rem;margin-top:12px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6;font-style:italic}
-.profile-joined{
-  font-family:'JetBrains Mono',monospace;color:var(--n500);
-  font-size:.65rem;margin-top:10px;text-transform:uppercase;letter-spacing:.1em;
-}
-.profile-edit-btn{margin-top:16px}
+.profile-joined{font-family:'JetBrains Mono',monospace;color:var(--n500);font-size:.65rem;margin-top:10px;text-transform:uppercase;letter-spacing:.1em}
 
 /* ── ADMIN ── */
 .admin-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-bottom:24px;border:1px solid var(--fg)}
-.stat-card{
-  padding:24px;text-align:center;
-  border-right:1px solid var(--fg);
-}
+.stat-card{padding:24px;text-align:center;border-right:1px solid var(--fg)}
 .stat-card:last-child{border-right:none}
-.stat-num{
-  font-family:'Playfair Display',serif;
-  font-size:2.5rem;font-weight:900;color:var(--fg);
-}
-.stat-label{
-  font-family:'Inter',sans-serif;font-size:.6rem;
-  color:var(--n500);margin-top:4px;
-  text-transform:uppercase;letter-spacing:.2em;
-}
+.stat-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--fg)}
+.stat-label{font-family:'Inter',sans-serif;font-size:.6rem;color:var(--n500);margin-top:4px;text-transform:uppercase;letter-spacing:.2em}
 .admin-table{width:100%;border-collapse:collapse}
-.admin-table th{
-  text-align:left;font-family:'Inter',sans-serif;
-  font-size:.6rem;color:var(--n500);padding:8px 12px;
-  border-bottom:2px solid var(--fg);font-weight:600;
-  text-transform:uppercase;letter-spacing:.15em;
-}
-.admin-table td{
-  padding:10px 12px;border-bottom:1px solid var(--muted);
-  font-family:'Inter',sans-serif;font-size:.8rem;
-}
-.badge{
-  padding:2px 8px;font-family:'Inter',sans-serif;
-  font-size:.6rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:.1em;border:1px solid;
-}
+.admin-table th{text-align:left;font-family:'Inter',sans-serif;font-size:.6rem;color:var(--n500);padding:8px 12px;border-bottom:2px solid var(--fg);font-weight:600;text-transform:uppercase;letter-spacing:.15em}
+.admin-table td{padding:10px 12px;border-bottom:1px solid var(--muted);font-family:'Inter',sans-serif;font-size:.8rem}
+.badge{padding:2px 8px;font-family:'Inter',sans-serif;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;border:1px solid}
 .badge-admin{border-color:var(--fg);background:var(--fg);color:var(--bg)}
-.badge-active{border-color:#2d6a4f;color:#2d6a4f;background:transparent}
-.badge-disabled{border-color:var(--accent);color:var(--accent);background:transparent}
+.badge-active{border-color:#2d6a4f;color:#2d6a4f}
+.badge-disabled{border-color:var(--accent);color:var(--accent)}
 
-/* ── PAGE TITLE ── */
-.page-title{
-  font-family:'Playfair Display',serif;
-  font-size:2rem;font-weight:900;
-  margin-bottom:4px;
-  letter-spacing:-.02em;
-}
-.page-subtitle{
-  font-family:'Inter',sans-serif;font-size:.65rem;
-  color:var(--n500);text-transform:uppercase;
-  letter-spacing:.2em;margin-bottom:20px;
-  padding-bottom:12px;border-bottom:3px solid var(--fg);
-}
-
-/* ── EMPTY STATE ── */
-.empty-state{
-  text-align:center;padding:50px 20px;
-  color:var(--n500);font-family:'Inter',sans-serif;
-  font-size:.8rem;text-transform:uppercase;
-  letter-spacing:.15em;
-}
+/* ── MISC ── */
+.page-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;margin-bottom:4px;letter-spacing:-.02em}
+.page-subtitle{font-family:'Inter',sans-serif;font-size:.65rem;color:var(--n500);text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px;padding-bottom:12px;border-bottom:3px solid var(--fg)}
+.ornament{padding:20px 0;text-align:center;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--n400);letter-spacing:.6em}
+.empty-state{text-align:center;padding:50px 20px;color:var(--n500);font-family:'Inter',sans-serif;font-size:.8rem;text-transform:uppercase;letter-spacing:.15em}
 .empty-state span{display:block;font-size:2rem;margin-bottom:10px}
-
-/* ── MODAL ── */
-.modal-bg{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  background:rgba(17,17,17,0.5);z-index:200;
-  display:flex;align-items:center;justify-content:center;padding:20px;
-}
-.modal{
-  background:var(--bg);border:2px solid var(--fg);
-  padding:28px;width:100%;max-width:440px;
-  animation:fadeUp .2s ease-out;
-}
-.modal h3{
-  font-family:'Playfair Display',serif;
-  font-size:1.2rem;font-weight:700;margin-bottom:16px;
-}
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(17,17,17,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--bg);border:2px solid var(--fg);padding:28px;width:100%;max-width:440px;animation:fadeUp .2s ease-out}
+.modal h3{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:16px}
 
 /* ── TICKER ── */
-.ticker{
-  background:var(--fg);color:var(--bg);
-  font-family:'JetBrains Mono',monospace;
-  font-size:.6rem;letter-spacing:.12em;
-  text-transform:uppercase;
-  padding:5px 0;overflow:hidden;white-space:nowrap;
-  border-bottom:1px solid var(--n700);
-}
-.ticker-inner{
-  display:inline-block;
-  animation:scroll-left 30s linear infinite;
-}
-@keyframes scroll-left{
-  0%{transform:translateX(0)}
-  100%{transform:translateX(-50%)}
-}
-.ticker-badge{
-  background:var(--accent);color:var(--bg);
-  padding:1px 6px;margin:0 12px;font-weight:700;
-}
-
-/* ── DROP CAP ── */
-.drop-cap::first-letter{
-  font-family:'Playfair Display',serif;
-  float:left;font-size:3.5rem;font-weight:900;
-  line-height:.8;padding:4px 10px 0 0;color:var(--fg);
-}
+.ticker{background:var(--fg);color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-block;animation:scroll-left 30s linear infinite}
+@keyframes scroll-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-badge{background:var(--accent);color:var(--bg);padding:1px 6px;margin:0 12px;font-weight:700}
 
 /* ── RESPONSIVE ── */
 @media(max-width:600px){
@@ -382,27 +167,23 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
   .nav-username{display:none}
   .auth-wrap h2{font-size:2rem}
   .post-title{font-size:1.15rem}
+  .tab{padding:10px 12px;font-size:.6rem}
 }
 </style>
 
-<!-- TICKER BAR -->
 <div class="ticker">
   <div class="ticker-inner">
-    <span class="ticker-badge">Live</span> Welcome to Pulse — The Social Blog Platform
+    <span class="ticker-badge">Classroom</span> Translation Studies &mdash; Pulse Learning Platform
     &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
-    Share your thoughts with the world
+    Materials &bull; Assignments &bull; Discussion
     &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
-    <span class="ticker-badge">New</span> Create your account today
+    <span class="ticker-badge">Active</span> Share your work and learn together
     &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
-    Read &bull; Write &bull; Connect
+    <span class="ticker-badge">Classroom</span> Translation Studies &mdash; Pulse Learning Platform
     &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
-    <span class="ticker-badge">Live</span> Welcome to Pulse — The Social Blog Platform
+    Materials &bull; Assignments &bull; Discussion
     &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
-    Share your thoughts with the world
-    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
-    <span class="ticker-badge">New</span> Create your account today
-    &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
-    Read &bull; Write &bull; Connect
+    <span class="ticker-badge">Active</span> Share your work and learn together
     &nbsp;&nbsp;&#x2727;&nbsp;&nbsp;
   </div>
 </div>
@@ -411,7 +192,7 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
   <div class="nav-inner">
     <div style="display:flex;align-items:baseline">
       <div class="nav-brand" onclick="navigate('feed')">Pulse</div>
-      <span class="nav-edition" id="navEdition"></span>
+      <span class="nav-sub">Translation Classroom</span>
     </div>
     <div class="nav-links" id="navLinks"></div>
   </div>
@@ -422,536 +203,378 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
 <footer style="border-top:3px solid var(--fg);padding:24px 20px;text-align:center;margin-top:40px">
   <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;margin-bottom:6px">Pulse</div>
   <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--n500);text-transform:uppercase;letter-spacing:.2em">
-    Edition: Vol 1.0 &nbsp;|&nbsp; Est. 2026 &nbsp;|&nbsp; All Rights Reserved
+    Translation Classroom &nbsp;|&nbsp; Est. 2026
   </div>
 </footer>
 
 <script>
-// ══════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════
-let token = localStorage.getItem('token');
-let currentUser = null;
-let currentPage = 'feed';
 
-// Edition date
-const now = new Date();
-const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-document.getElementById('navEdition').textContent = `Vol. 1 | ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+/* ═══ STATE ═══ */
+const S = { token: localStorage.getItem('token'), user: null, page: 'feed', pageArg: null, activeTab: 'discussion' };
 
-// ══════════════════════════════════════
-//  API
-// ══════════════════════════════════════
-async function api(path, opts = {}) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(path, { headers, ...opts });
-  if (res.status === 204) return null;
-  if (res.status === 401) { logout(); return null; }
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.detail || 'Something went wrong');
+/* ═══ API ═══ */
+const api = async (path, opts = {}) => {
+  const h = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  if (S.token) h['Authorization'] = 'Bearer ' + S.token;
+  const r = await fetch(path, { ...opts, headers: h });
+  if (r.status === 204) return null;
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.detail || 'Request failed');
   return data;
-}
+};
 
-// ══════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════
-async function loadUser() {
-  if (!token) { currentUser = null; return; }
-  try {
-    currentUser = await api('/api/auth/me');
-  } catch { currentUser = null; token = null; localStorage.removeItem('token'); }
-}
-
-function logout() {
-  token = null; currentUser = null;
-  localStorage.removeItem('token');
-  navigate('login');
-}
-
-// ══════════════════════════════════════
-//  NAV
-// ══════════════════════════════════════
-function renderNav() {
-  const nav = document.getElementById('navLinks');
-  if (currentUser) {
-    nav.innerHTML = `
-      <button onclick="navigate('feed')">Feed</button>
-      ${currentUser.is_admin ? '<button onclick="navigate(\'admin\')">Admin</button>' : ''}
-      <div class="nav-user" onclick="navigate('profile',{username:'${currentUser.username}'})">
-        <div class="nav-avatar">${currentUser.display_name[0].toUpperCase()}</div>
-        <span class="nav-username">${currentUser.display_name}</span>
+/* ═══ NAV ═══ */
+function updateNav() {
+  const nl = document.getElementById('navLinks');
+  if (S.user) {
+    const initial = (S.user.display_name || S.user.username)[0].toUpperCase();
+    nl.innerHTML = `
+      ${S.user.is_admin ? '<button onclick="navigate(\'admin\')">Admin</button>' : ''}
+      <div class="nav-user" onclick="navigate('profile',S.user.username)">
+        <div class="nav-avatar">${initial}</div>
+        <span class="nav-username">${S.user.username}</span>
       </div>
-      <button onclick="logout()">Log out</button>
-    `;
+      <button onclick="logout()">Log out</button>`;
   } else {
-    nav.innerHTML = `
-      <button onclick="navigate('login')">Log in</button>
-      <button class="btn-accent" onclick="navigate('register')">Sign up</button>
-    `;
+    nl.innerHTML = `<button onclick="navigate('login')">Sign In</button><button class="btn-accent" onclick="navigate('register')">Register</button>`;
   }
 }
 
-// ══════════════════════════════════════
-//  ROUTER
-// ══════════════════════════════════════
-async function navigate(page, params = {}) {
-  currentPage = page;
+/* ═══ AUTH ═══ */
+function logout() { S.token = null; S.user = null; localStorage.removeItem('token'); updateNav(); navigate('login'); }
+
+async function loadMe() {
+  if (!S.token) return;
+  try { S.user = await api('/api/auth/me'); } catch { logout(); }
+}
+
+/* ═══ ROUTER ═══ */
+function navigate(page, arg) {
+  S.page = page; S.pageArg = arg || null;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function render() {
+  updateNav();
   const app = document.getElementById('app');
-  renderNav();
-  switch(page) {
-    case 'login': renderLogin(app); break;
-    case 'register': renderRegister(app); break;
-    case 'feed': await renderFeed(app); break;
-    case 'profile': await renderProfile(app, params.username); break;
-    case 'edit-profile': renderEditProfile(app); break;
-    case 'admin': await renderAdmin(app); break;
-    default: await renderFeed(app);
+  switch (S.page) {
+    case 'feed': return renderFeed(app);
+    case 'login': return renderLogin(app);
+    case 'register': return renderRegister(app);
+    case 'profile': return renderProfile(app);
+    case 'edit-profile': return renderEditProfile(app);
+    case 'admin': return renderAdmin(app);
+    default: return renderFeed(app);
   }
-  window.scrollTo(0, 0);
 }
 
-// ══════════════════════════════════════
-//  LOGIN
-// ══════════════════════════════════════
-function renderLogin(el) {
-  el.innerHTML = `
-    <div class="auth-wrap">
-      <h2>Welcome<br/>Back</h2>
-      <p class="sub">Log in to your account</p>
-      <div class="card">
-        <div class="form-group">
-          <label>Username</label>
-          <input id="loginUser" placeholder="Enter username" autocomplete="username"/>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password"/>
-        </div>
-        <div id="loginErr"></div>
-        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Log in</button>
-      </div>
-      <div class="auth-footer">No account? <a href="#" onclick="navigate('register');return false">Sign up</a></div>
-    </div>
-  `;
-  el.querySelector('#loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+/* ═══ LOGIN ═══ */
+function renderLogin(app) {
+  app.innerHTML = `<div class="auth-wrap">
+    <h2>Sign In</h2><p class="sub">Translation Classroom</p>
+    <div class="form-group"><label>Username</label><input id="lUser" placeholder="username"></div>
+    <div class="form-group"><label>Password</label><input id="lPass" type="password" placeholder="password"></div>
+    <div id="lErr"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Enter</button>
+    <p class="auth-footer">No account? <a href="#" onclick="navigate('register');return false" style="text-decoration:underline">Register</a></p>
+  </div>`;
 }
 
 async function doLogin() {
-  const username = document.getElementById('loginUser').value.trim();
-  const password = document.getElementById('loginPass').value;
-  if (!username || !password) return;
   try {
-    const data = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
-    token = data.access_token;
-    localStorage.setItem('token', token);
-    await loadUser();
-    navigate('feed');
-  } catch(e) {
-    document.getElementById('loginErr').innerHTML = `<div class="error-msg">${esc(e.message)}</div>`;
-  }
+    const res = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username: document.getElementById('lUser').value, password: document.getElementById('lPass').value }) });
+    S.token = res.access_token; localStorage.setItem('token', S.token);
+    await loadMe(); navigate('feed');
+  } catch (e) { document.getElementById('lErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
 }
 
-// ══════════════════════════════════════
-//  REGISTER
-// ══════════════════════════════════════
-function renderRegister(el) {
-  el.innerHTML = `
-    <div class="auth-wrap">
-      <h2>Create<br/>Account</h2>
-      <p class="sub">Join the community</p>
-      <div class="card">
-        <div class="form-group">
-          <label>Username</label>
-          <input id="regUser" placeholder="Pick a username"/>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input id="regEmail" type="email" placeholder="you@example.com"/>
-        </div>
-        <div class="form-group">
-          <label>Display Name</label>
-          <input id="regName" placeholder="How others see you"/>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input id="regPass" type="password" placeholder="At least 6 characters"/>
-        </div>
-        <div id="regErr"></div>
-        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">Create Account</button>
-      </div>
-      <div class="auth-footer">Already have an account? <a href="#" onclick="navigate('login');return false">Log in</a></div>
-    </div>
-  `;
+/* ═══ REGISTER ═══ */
+function renderRegister(app) {
+  app.innerHTML = `<div class="auth-wrap">
+    <h2>Register</h2><p class="sub">Join the Classroom</p>
+    <div class="form-group"><label>Username</label><input id="rUser" placeholder="username"></div>
+    <div class="form-group"><label>Email</label><input id="rEmail" placeholder="email@example.com"></div>
+    <div class="form-group"><label>Display Name</label><input id="rName" placeholder="your name"></div>
+    <div class="form-group"><label>Password</label><input id="rPass" type="password" placeholder="password"></div>
+    <div id="rErr"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">Create Account</button>
+    <p class="auth-footer">Have an account? <a href="#" onclick="navigate('login');return false" style="text-decoration:underline">Sign in</a></p>
+  </div>`;
 }
 
 async function doRegister() {
-  const username = document.getElementById('regUser').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const display_name = document.getElementById('regName').value.trim();
-  const password = document.getElementById('regPass').value;
-  if (!username || !email || !password) return;
-  if (password.length < 6) { document.getElementById('regErr').innerHTML = '<div class="error-msg">Password must be at least 6 characters</div>'; return; }
   try {
-    await api('/api/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, display_name }) });
-    const data = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
-    token = data.access_token;
-    localStorage.setItem('token', token);
-    await loadUser();
-    navigate('feed');
-  } catch(e) {
-    document.getElementById('regErr').innerHTML = `<div class="error-msg">${esc(e.message)}</div>`;
-  }
+    await api('/api/auth/register', { method: 'POST', body: JSON.stringify({
+      username: document.getElementById('rUser').value,
+      email: document.getElementById('rEmail').value,
+      display_name: document.getElementById('rName').value,
+      password: document.getElementById('rPass').value,
+    }) });
+    const res = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({
+      username: document.getElementById('rUser').value,
+      password: document.getElementById('rPass').value,
+    }) });
+    S.token = res.access_token; localStorage.setItem('token', S.token);
+    await loadMe(); navigate('feed');
+  } catch (e) { document.getElementById('rErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
 }
 
-// ══════════════════════════════════════
-//  FEED
-// ══════════════════════════════════════
-async function renderFeed(el) {
-  let html = `
-    <div class="page-title">The Daily Feed</div>
-    <div class="page-subtitle">Latest dispatches from the community</div>
-  `;
-  if (currentUser) {
-    html += `
-      <div class="card compose-box">
-        <div class="compose-label">Compose</div>
-        <div class="form-group" style="margin-bottom:10px">
-          <input id="postTitle" placeholder="Headline"/>
-        </div>
-        <div class="form-group" style="margin-bottom:10px">
-          <textarea id="postBody" placeholder="Write your story..." rows="3"></textarea>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="doCreatePost()">Publish</button>
-        <span id="postErr"></span>
-      </div>
-      <div class="ornament">&#x2727; &#x2727; &#x2727;</div>
-    `;
-  }
-  html += '<div id="postsList"><div class="empty-state">Loading dispatches...</div></div>';
-  el.innerHTML = html;
+/* ═══ FEED (tabbed: Materials / Assignments / Discussion) ═══ */
+function renderFeed(app) {
+  const tabs = [
+    { key: 'material', label: 'Materials' },
+    { key: 'assignment', label: 'Assignments' },
+    { key: 'discussion', label: 'Discussion' },
+  ];
+  const tabHtml = tabs.map(t =>
+    `<button class="tab ${S.activeTab === t.key ? 'active' : ''}" onclick="S.activeTab='${t.key}';renderFeed(document.getElementById('app'))">${t.label}</button>`
+  ).join('');
+
+  const showCompose = S.user && (S.activeTab !== 'material' || S.user.is_admin);
+
+  app.innerHTML = `
+    <div class="tab-bar">${tabHtml}</div>
+    ${showCompose ? `<div class="card" style="margin-bottom:24px">
+      <div class="compose-label">New ${S.activeTab === 'material' ? 'Material' : S.activeTab === 'assignment' ? 'Assignment' : 'Post'}</div>
+      <div class="form-group"><label>Title</label><input id="cTitle" placeholder="title"></div>
+      <div class="form-group"><label>Content</label><textarea id="cBody" rows="3" placeholder="write something..."></textarea></div>
+      <div class="form-group"><label>Link / Video URL (optional)</label><input id="cLink" placeholder="https://..."></div>
+      <div style="text-align:right"><button class="btn btn-primary" onclick="submitPost()">Publish</button></div>
+      <div id="cErr"></div>
+    </div>` : ''}
+    ${!S.user ? '<div style="margin-bottom:20px;font-family:Inter,sans-serif;font-size:.75rem;color:var(--n500);text-transform:uppercase;letter-spacing:.1em"><a href="#" onclick="navigate(\'login\');return false" style="text-decoration:underline">Sign in</a> to post and interact</div>' : ''}
+    <div id="postsContainer"><div class="empty-state"><span>&#8987;</span>Loading...</div></div>`;
+  loadPosts();
+}
+
+async function loadPosts() {
+  const c = document.getElementById('postsContainer');
   try {
-    const posts = await api('/api/posts/');
-    renderPosts(document.getElementById('postsList'), posts);
-  } catch(e) {
-    document.getElementById('postsList').innerHTML = `<div class="empty-state">Could not load posts</div>`;
-  }
+    const posts = await api(`/api/posts/?category=${S.activeTab}`);
+    if (!posts.length) { c.innerHTML = `<div class="empty-state"><span>&#9744;</span>No ${S.activeTab === 'material' ? 'materials' : S.activeTab === 'assignment' ? 'assignments' : 'posts'} yet</div>`; return; }
+    c.innerHTML = posts.map(postCard).join('') + '<div class="ornament">&#x2766;</div>';
+  } catch (e) { c.innerHTML = `<div class="error-msg">${e.message}</div>`; }
 }
 
-async function doCreatePost() {
-  const title = document.getElementById('postTitle').value.trim();
-  const body = document.getElementById('postBody').value.trim();
-  if (!title || !body) return;
+async function submitPost() {
+  const title = document.getElementById('cTitle').value.trim();
+  const body = document.getElementById('cBody').value.trim();
+  const link_url = document.getElementById('cLink').value.trim() || null;
+  if (!title || !body) { document.getElementById('cErr').innerHTML = '<p class="error-msg">Title and content required</p>'; return; }
   try {
-    await api('/api/posts/', { method: 'POST', body: JSON.stringify({ title, body }) });
-    document.getElementById('postTitle').value = '';
-    document.getElementById('postBody').value = '';
-    navigate('feed');
-  } catch(e) {
-    document.getElementById('postErr').innerHTML = ` <span class="error-msg">${esc(e.message)}</span>`;
-  }
+    await api('/api/posts/', { method: 'POST', body: JSON.stringify({ title, body, category: S.activeTab, link_url }) });
+    renderFeed(document.getElementById('app'));
+  } catch (e) { document.getElementById('cErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
 }
 
-function renderPosts(container, posts) {
-  if (!posts || posts.length === 0) {
-    container.innerHTML = '<div class="empty-state"><span>&#x270E;</span>No dispatches yet. Be the first to publish.</div>';
-    return;
-  }
-  container.innerHTML = posts.map(p => postCard(p)).join('');
-}
-
+/* ═══ POST CARD ═══ */
 function postCard(p) {
   const initial = (p.author_display_name || p.author_username)[0].toUpperCase();
-  const canDelete = currentUser && (currentUser.id === p.author_id || currentUser.is_admin);
-  const canEdit = currentUser && currentUser.id === p.author_id;
+  const catClass = p.category === 'material' ? 'cat-material' : p.category === 'assignment' ? 'cat-assignment' : 'cat-discussion';
+  const catLabel = p.category === 'material' ? 'Material' : p.category === 'assignment' ? 'Assignment' : 'Discussion';
+  const linkHtml = p.link_url ? `<a href="${esc(p.link_url)}" target="_blank" rel="noopener" class="post-link">&#9654; Open Link</a>` : '';
+  const canEdit = S.user && (S.user.id === p.author_id || S.user.is_admin);
+  const ago = timeAgo(p.created_at);
 
-  let commentsHtml = '';
-  if (p.comments && p.comments.length > 0) {
-    commentsHtml = p.comments.map(c => {
-      const canDelComment = currentUser && (currentUser.id === c.author_id || currentUser.is_admin);
-      return `<div class="comment">
-        ${canDelComment ? `<button class="comment-delete" onclick="doDeleteComment(${p.id},${c.id})">&#x2715;</button>` : ''}
-        <div class="comment-author">${esc(c.author_username)}</div>
-        <div class="comment-body">${esc(c.body)}</div>
-        <div class="comment-time">${timeAgo(c.created_at)}</div>
-      </div>`;
-    }).join('');
-  }
-
-  return `
-    <div class="card card-hover" id="post-${p.id}">
-      <div class="post-header">
-        <div class="post-avatar">${initial}</div>
-        <div class="post-meta">
-          <div class="post-author" onclick="navigate('profile',{username:'${p.author_username}'})">${esc(p.author_display_name || p.author_username)}</div>
-          <div class="post-time">${timeAgo(p.created_at)}</div>
-        </div>
+  return `<div class="card card-hover">
+    <span class="cat-badge ${catClass}">${catLabel}</span>
+    <div class="post-header">
+      <div class="post-avatar">${initial}</div>
+      <div class="post-meta">
+        <span class="post-author" onclick="navigate('profile','${p.author_username}')">${esc(p.author_display_name || p.author_username)}</span>
+        <div class="post-time">${ago}</div>
       </div>
-      <div class="post-title">${esc(p.title)}</div>
-      <div class="post-body">${esc(p.body)}</div>
-      <hr class="post-divider"/>
-      <div class="post-actions">
-        <button class="post-action ${p.liked_by_me ? 'liked' : ''}" onclick="doLike(${p.id})">
-          ${p.liked_by_me ? '&#9829;' : '&#9825;'} ${p.like_count}
-        </button>
-        <button class="post-action" onclick="toggleComments(${p.id})">
-          &#x2709; ${p.comment_count}
-        </button>
-        ${canEdit ? `<button class="post-action" onclick="showEditPost(${p.id},'${esc(p.title).replace(/'/g,"\\'")}')">Edit</button>` : ''}
-        ${canDelete ? `<button class="post-action" style="color:var(--accent)" onclick="doDeletePost(${p.id})">Delete</button>` : ''}
-      </div>
-      <div class="comments-section" id="comments-${p.id}" style="display:none">
-        ${commentsHtml}
-        ${currentUser ? `
-          <div class="comment-form">
-            <input id="commentInput-${p.id}" placeholder="Write a comment..." onkeydown="if(event.key==='Enter')doComment(${p.id})"/>
-            <button class="btn btn-primary btn-sm" onclick="doComment(${p.id})">Send</button>
-          </div>
-        ` : ''}
-      </div>
+      ${canEdit ? `<button class="btn btn-sm btn-ghost" onclick="openEditModal(${p.id},'${esc(p.title)}',\`${esc(p.body)}\`,'${esc(p.link_url||'')}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deletePost(${p.id})">Del</button>` : ''}
     </div>
-  `;
+    <div class="post-title">${esc(p.title)}</div>
+    <div class="post-body">${esc(p.body)}</div>
+    ${linkHtml}
+    <hr class="post-divider">
+    <div class="post-actions">
+      <button class="post-action ${p.liked_by_me ? 'liked' : ''}" onclick="toggleLike(${p.id})">&#9829; ${p.like_count}</button>
+      <button class="post-action" onclick="toggleComments(${p.id})">&#9998; ${p.comment_count} comments</button>
+    </div>
+    <div id="comments-${p.id}" style="display:none">${renderComments(p)}</div>
+  </div>`;
+}
+
+/* ═══ COMMENTS ═══ */
+function renderComments(p) {
+  const list = (p.comments || []).map(c => `<div class="comment">
+    ${S.user && (S.user.id === c.author_id || S.user.is_admin) ? `<button class="comment-delete" onclick="deleteComment(${p.id},${c.id})">&#x2715;</button>` : ''}
+    <span class="comment-author">${esc(c.author_username)}</span>
+    <div class="comment-body">${esc(c.body)}</div>
+    <div class="comment-time">${timeAgo(c.created_at)}</div>
+  </div>`).join('');
+  const form = S.user ? `<div class="comment-form"><input id="ci-${p.id}" placeholder="add a comment..." onkeydown="if(event.key==='Enter')addComment(${p.id})"><button class="btn btn-sm btn-primary" onclick="addComment(${p.id})">Send</button></div>` : '';
+  return `<div class="comments-section">${list}${form}</div>`;
 }
 
 function toggleComments(postId) {
-  const el = document.getElementById(`comments-${postId}`);
+  const el = document.getElementById('comments-' + postId);
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
-async function doLike(postId) {
-  if (!currentUser) { navigate('login'); return; }
+async function addComment(postId) {
+  const input = document.getElementById('ci-' + postId);
+  if (!input.value.trim()) return;
   try {
-    await api(`/api/posts/${postId}/like`, { method: 'POST' });
-    navigate(currentPage, currentPage === 'profile' ? { username: document.querySelector('.profile-username')?.textContent.replace('@','') } : {});
-  } catch {}
+    await api(`/api/posts/${postId}/comments`, { method: 'POST', body: JSON.stringify({ body: input.value.trim() }) });
+    renderFeed(document.getElementById('app'));
+  } catch (e) { alert(e.message); }
 }
 
-async function doComment(postId) {
-  const input = document.getElementById(`commentInput-${postId}`);
-  const body = input.value.trim();
-  if (!body) return;
-  try {
-    await api(`/api/posts/${postId}/comments`, { method: 'POST', body: JSON.stringify({ body }) });
-    input.value = '';
-    navigate(currentPage, currentPage === 'profile' ? { username: document.querySelector('.profile-username')?.textContent.replace('@','') } : {});
-  } catch {}
+async function deleteComment(postId, commentId) {
+  if (!confirm('Delete comment?')) return;
+  try { await api(`/api/posts/${postId}/comments/${commentId}`, { method: 'DELETE' }); renderFeed(document.getElementById('app')); } catch (e) { alert(e.message); }
 }
 
-async function doDeletePost(postId) {
+/* ═══ LIKES ═══ */
+async function toggleLike(postId) {
+  if (!S.user) { navigate('login'); return; }
+  try { await api(`/api/posts/${postId}/like`, { method: 'POST' }); renderFeed(document.getElementById('app')); } catch (e) { alert(e.message); }
+}
+
+/* ═══ EDIT / DELETE POST ═══ */
+async function deletePost(id) {
   if (!confirm('Delete this post?')) return;
-  try {
-    await api(`/api/posts/${postId}`, { method: 'DELETE' });
-    document.getElementById(`post-${postId}`)?.remove();
-  } catch {}
+  try { await api(`/api/posts/${id}`, { method: 'DELETE' }); renderFeed(document.getElementById('app')); } catch (e) { alert(e.message); }
 }
 
-async function doDeleteComment(postId, commentId) {
-  try {
-    await api(`/api/posts/${postId}/comments/${commentId}`, { method: 'DELETE' });
-    navigate(currentPage);
-  } catch {}
-}
-
-function showEditPost(postId, currentTitle) {
-  const card = document.getElementById(`post-${postId}`);
-  const bodyEl = card.querySelector('.post-body');
-  const currentBody = bodyEl.textContent;
+function openEditModal(id, title, body, link) {
   const modal = document.createElement('div');
   modal.className = 'modal-bg';
-  modal.onclick = e => { if(e.target === modal) modal.remove(); };
-  modal.innerHTML = `
-    <div class="modal">
-      <h3>Edit Post</h3>
-      <div class="form-group"><label>Title</label><input id="editTitle" value="${esc(currentTitle)}"/></div>
-      <div class="form-group"><label>Body</label><textarea id="editBody" rows="4">${esc(currentBody)}</textarea></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn btn-ghost btn-sm" onclick="this.closest('.modal-bg').remove()">Cancel</button>
-        <button class="btn btn-primary btn-sm" onclick="doEditPost(${postId})">Save</button>
-      </div>
+  modal.id = 'editModal';
+  modal.innerHTML = `<div class="modal">
+    <h3>Edit Post</h3>
+    <div class="form-group"><label>Title</label><input id="eTitle" value="${esc(title)}"></div>
+    <div class="form-group"><label>Content</label><textarea id="eBody" rows="4">${esc(body)}</textarea></div>
+    <div class="form-group"><label>Link URL</label><input id="eLink" value="${esc(link)}"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button class="btn btn-ghost" onclick="document.getElementById('editModal').remove()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit(${id})">Save</button>
     </div>
-  `;
+  </div>`;
   document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 }
 
-async function doEditPost(postId) {
-  const title = document.getElementById('editTitle').value.trim();
-  const body = document.getElementById('editBody').value.trim();
-  if (!title || !body) return;
+async function saveEdit(id) {
   try {
-    await api(`/api/posts/${postId}`, { method: 'PATCH', body: JSON.stringify({ title, body }) });
-    document.querySelector('.modal-bg')?.remove();
-    navigate(currentPage);
-  } catch {}
+    const payload = { title: document.getElementById('eTitle').value, body: document.getElementById('eBody').value };
+    const link = document.getElementById('eLink').value.trim();
+    if (link) payload.link_url = link;
+    await api(`/api/posts/${id}`, { method: 'PATCH', body: JSON.stringify(payload) });
+    document.getElementById('editModal').remove();
+    renderFeed(document.getElementById('app'));
+  } catch (e) { alert(e.message); }
 }
 
-// ══════════════════════════════════════
-//  PROFILE
-// ══════════════════════════════════════
-async function renderProfile(el, username) {
-  if (!username && currentUser) username = currentUser.username;
-  if (!username) { navigate('login'); return; }
+/* ═══ PROFILE ═══ */
+async function renderProfile(app) {
+  const username = S.pageArg;
+  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Loading...</div>';
   try {
-    const user = await api(`/api/users/${username}`);
-    const isMe = currentUser && currentUser.id === user.id;
+    const [user, posts] = await Promise.all([api(`/api/users/${username}`), api(`/api/users/${username}/posts`)]);
     const initial = (user.display_name || user.username)[0].toUpperCase();
-    let html = `
-      <div class="card profile-header">
-        <div class="profile-avatar">${initial}</div>
-        <div class="profile-name">${esc(user.display_name || user.username)}</div>
-        <div class="profile-username">@${esc(user.username)}</div>
-        ${user.bio ? `<div class="profile-bio">&ldquo;${esc(user.bio)}&rdquo;</div>` : ''}
-        <div class="profile-joined">Member since ${new Date(user.created_at).toLocaleDateString('en-US', {month:'long',year:'numeric'})}</div>
-        ${isMe ? '<button class="btn btn-ghost btn-sm profile-edit-btn" onclick="navigate(\'edit-profile\')">Edit Profile</button>' : ''}
-      </div>
-      <div class="ornament">&#x2727; &#x2727; &#x2727;</div>
-      <div class="page-title" style="margin-top:0">Posts</div>
-      <div class="page-subtitle">Published works by ${esc(user.display_name || user.username)}</div>
-      <div id="profilePosts"><div class="empty-state">Loading...</div></div>
-    `;
-    el.innerHTML = html;
-    const posts = await api(`/api/users/${username}/posts`);
-    renderPosts(document.getElementById('profilePosts'), posts);
-  } catch(e) {
-    el.innerHTML = `<div class="empty-state">User not found</div>`;
-  }
-}
+    const isMe = S.user && S.user.id === user.id;
+    const joined = new Date(user.created_at).toLocaleDateString('en-US', { year:'numeric', month:'long' });
 
-// ══════════════════════════════════════
-//  EDIT PROFILE
-// ══════════════════════════════════════
-function renderEditProfile(el) {
-  if (!currentUser) { navigate('login'); return; }
-  el.innerHTML = `
-    <div class="auth-wrap">
-      <h2>Edit<br/>Profile</h2>
-      <p class="sub">Update your public information</p>
-      <div class="card">
-        <div class="form-group">
-          <label>Display Name</label>
-          <input id="editDisplayName" value="${esc(currentUser.display_name || '')}"/>
-        </div>
-        <div class="form-group">
-          <label>Bio</label>
-          <textarea id="editBio" rows="3" placeholder="Tell people about yourself">${esc(currentUser.bio || '')}</textarea>
-        </div>
-        <div class="form-group">
-          <label>Avatar URL</label>
-          <input id="editAvatar" value="${esc(currentUser.avatar_url || '')}" placeholder="https://..."/>
-        </div>
-        <div id="editErr"></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost" onclick="navigate('profile',{username:'${currentUser.username}'})">Cancel</button>
-          <button class="btn btn-primary" onclick="doEditProfile()">Save Changes</button>
-        </div>
-      </div>
+    app.innerHTML = `<div class="profile-header">
+      <div class="profile-avatar">${initial}</div>
+      <div class="profile-name">${esc(user.display_name || user.username)}</div>
+      <div class="profile-username">@${esc(user.username)} ${user.is_admin ? '<span class="badge badge-admin">Teacher</span>' : ''}</div>
+      ${user.bio ? `<div class="profile-bio">${esc(user.bio)}</div>` : ''}
+      <div class="profile-joined">Joined ${joined}</div>
+      ${isMe ? '<button class="btn btn-sm" style="margin-top:12px" onclick="navigate(\'edit-profile\')">Edit Profile</button>' : ''}
     </div>
-  `;
+    <h2 class="page-title" style="margin-top:24px">Posts</h2>
+    <div class="page-subtitle">${posts.length} contribution${posts.length !== 1 ? 's' : ''}</div>
+    ${posts.length ? posts.map(postCard).join('') : '<div class="empty-state"><span>&#9744;</span>No posts yet</div>'}`;
+  } catch (e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
 }
 
-async function doEditProfile() {
-  const display_name = document.getElementById('editDisplayName').value.trim();
-  const bio = document.getElementById('editBio').value.trim();
-  const avatar_url = document.getElementById('editAvatar').value.trim() || null;
-  try {
-    const updated = await api('/api/users/me', { method: 'PATCH', body: JSON.stringify({ display_name, bio, avatar_url }) });
-    currentUser = updated;
-    navigate('profile', { username: currentUser.username });
-  } catch(e) {
-    document.getElementById('editErr').innerHTML = `<div class="error-msg">${esc(e.message)}</div>`;
-  }
+/* ═══ EDIT PROFILE ═══ */
+function renderEditProfile(app) {
+  if (!S.user) { navigate('login'); return; }
+  app.innerHTML = `<div class="auth-wrap">
+    <h2>Edit Profile</h2><p class="sub">Update your details</p>
+    <div class="form-group"><label>Display Name</label><input id="epName" value="${esc(S.user.display_name || '')}"></div>
+    <div class="form-group"><label>Bio</label><textarea id="epBio" rows="3">${esc(S.user.bio || '')}</textarea></div>
+    <div id="epErr"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-ghost" onclick="navigate('profile',S.user.username)">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProfile()">Save</button>
+    </div>
+  </div>`;
 }
 
-// ══════════════════════════════════════
-//  ADMIN
-// ══════════════════════════════════════
-async function renderAdmin(el) {
-  if (!currentUser || !currentUser.is_admin) { navigate('feed'); return; }
+async function saveProfile() {
   try {
-    const [stats, users] = await Promise.all([
-      api('/api/admin/stats'),
-      api('/api/admin/users'),
-    ]);
-    el.innerHTML = `
-      <div class="page-title">Admin Panel</div>
-      <div class="page-subtitle">Platform oversight &amp; management</div>
+    const payload = { display_name: document.getElementById('epName').value, bio: document.getElementById('epBio').value };
+    S.user = await api('/api/users/me', { method: 'PATCH', body: JSON.stringify(payload) });
+    navigate('profile', S.user.username);
+  } catch (e) { document.getElementById('epErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
+}
+
+/* ═══ ADMIN ═══ */
+async function renderAdmin(app) {
+  if (!S.user || !S.user.is_admin) { navigate('feed'); return; }
+  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Loading...</div>';
+  try {
+    const [stats, users] = await Promise.all([api('/api/admin/stats'), api('/api/admin/users')]);
+    app.innerHTML = `
+      <h2 class="page-title">Admin Panel</h2>
+      <div class="page-subtitle">Teacher Dashboard</div>
       <div class="admin-stats">
-        <div class="stat-card"><div class="stat-num">${stats.total_users}</div><div class="stat-label">Users</div></div>
+        <div class="stat-card"><div class="stat-num">${stats.total_users}</div><div class="stat-label">Students</div></div>
         <div class="stat-card"><div class="stat-num">${stats.total_posts}</div><div class="stat-label">Posts</div></div>
         <div class="stat-card"><div class="stat-num">${stats.total_comments}</div><div class="stat-label">Comments</div></div>
       </div>
-      <div class="card" style="padding:0;overflow:hidden">
-        <div style="padding:16px 20px;border-bottom:2px solid var(--fg);font-family:'Playfair Display',serif;font-weight:700;font-size:1rem">All Users</div>
-        <div style="overflow-x:auto">
-          <table class="admin-table">
-            <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody>
-              ${users.map(u => `
-                <tr>
-                  <td><strong>${esc(u.username)}</strong><br><span style="color:var(--n500);font-size:.65rem;text-transform:uppercase;letter-spacing:.08em">${esc(u.display_name)}</span></td>
-                  <td style="font-family:'JetBrains Mono',monospace;font-size:.7rem">${esc(u.email)}</td>
-                  <td>${u.is_admin ? '<span class="badge badge-admin">Admin</span>' : '<span style="color:var(--n500);font-size:.7rem">User</span>'}</td>
-                  <td>${u.is_active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-disabled">Disabled</span>'}</td>
-                  <td>
-                    ${u.id !== currentUser.id ? `
-                      <button class="btn btn-ghost btn-sm" style="margin:2px" onclick="adminToggleActive(${u.id},${!u.is_active})">${u.is_active ? 'Disable' : 'Enable'}</button>
-                      <button class="btn btn-ghost btn-sm" style="margin:2px" onclick="adminToggleAdmin(${u.id},${!u.is_admin})">${u.is_admin ? 'Demote' : 'Promote'}</button>
-                      <button class="btn btn-danger btn-sm" style="margin:2px" onclick="adminDeleteUser(${u.id},'${esc(u.username)}')">Delete</button>
-                    ` : '<span style="color:var(--n500);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em">You</span>'}
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-  } catch(e) {
-    el.innerHTML = `<div class="error-msg">Failed to load admin data</div>`;
-  }
+      <table class="admin-table">
+        <tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr>
+        ${users.map(u => `<tr>
+          <td><strong>${esc(u.username)}</strong></td>
+          <td>${esc(u.email)}</td>
+          <td>${u.is_admin ? '<span class="badge badge-admin">Teacher</span>' : '<span class="badge badge-active">Student</span>'}</td>
+          <td>${u.is_active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-disabled">Disabled</span>'}</td>
+          <td>${u.id !== S.user.id ? `
+            <button class="btn btn-sm btn-ghost" onclick="adminToggle(${u.id},${!u.is_active})">${u.is_active ? 'Disable' : 'Enable'}</button>
+            <button class="btn btn-sm btn-danger" onclick="adminDelete(${u.id},'${esc(u.username)}')">Delete</button>` : '—'}</td>
+        </tr>`).join('')}
+      </table>`;
+  } catch (e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
 }
 
-async function adminToggleActive(userId, active) {
-  await api(`/api/admin/users/${userId}`, { method: 'PATCH', body: JSON.stringify({ is_active: active }) });
-  navigate('admin');
-}
-async function adminToggleAdmin(userId, admin) {
-  await api(`/api/admin/users/${userId}`, { method: 'PATCH', body: JSON.stringify({ is_admin: admin }) });
-  navigate('admin');
-}
-async function adminDeleteUser(userId, username) {
-  if (!confirm(`Delete user "${username}" and all their posts?`)) return;
-  await api(`/api/admin/users/${userId}`, { method: 'DELETE' });
-  navigate('admin');
+async function adminToggle(id, activate) {
+  try { await api(`/api/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify({ is_active: activate }) }); renderAdmin(document.getElementById('app')); }
+  catch (e) { alert(e.message); }
 }
 
-// ══════════════════════════════════════
-//  UTILS
-// ══════════════════════════════════════
-function esc(s) {
-  if (!s) return '';
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
+async function adminDelete(id, name) {
+  if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
+  try { await api(`/api/admin/users/${id}`, { method: 'DELETE' }); renderAdmin(document.getElementById('app')); }
+  catch (e) { alert(e.message); }
 }
+
+/* ═══ UTILS ═══ */
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
 function timeAgo(iso) {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  if (days < 30) return `${days}d ago`;
+  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
   return new Date(iso).toLocaleDateString();
 }
 
-// ══════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════
+/* ═══ INIT ═══ */
 (async () => {
-  await loadUser();
-  navigate(currentUser ? 'feed' : 'login');
+  await loadMe();
+  navigate('feed');
 })();
 </script>
 </body>

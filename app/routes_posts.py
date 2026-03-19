@@ -30,6 +30,8 @@ def post_to_out(post: Post, current_user_id: int | None = None) -> PostOut:
         id=post.id,
         title=post.title,
         body=post.body,
+        category=post.category or "discussion",
+        link_url=post.link_url,
         author_id=post.author_id,
         author_username=post.author.username,
         author_display_name=post.author.display_name or post.author.username,
@@ -47,18 +49,20 @@ def post_to_out(post: Post, current_user_id: int | None = None) -> PostOut:
 async def list_posts(
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
+    category: str | None = Query(None),
     db: AsyncSession = Depends(get_db),
     current_user: User | None = Depends(get_current_user),
 ):
     offset = (page - 1) * limit
+    query = select(Post).options(
+        selectinload(Post.author),
+        selectinload(Post.comments).selectinload(Comment.author),
+        selectinload(Post.likes),
+    )
+    if category:
+        query = query.where(Post.category == category)
     result = await db.execute(
-        select(Post)
-        .options(
-            selectinload(Post.author),
-            selectinload(Post.comments).selectinload(Comment.author),
-            selectinload(Post.likes),
-        )
-        .order_by(desc(Post.created_at))
+        query.order_by(desc(Post.created_at))
         .offset(offset)
         .limit(limit)
     )
@@ -73,7 +77,16 @@ async def create_post(
     db: AsyncSession = Depends(get_db),
     user: User = Depends(require_user),
 ):
-    post = Post(title=payload.title, body=payload.body, author_id=user.id)
+    # Only admins (teachers) can post materials
+    if payload.category == "material" and not user.is_admin:
+        raise HTTPException(status_code=403, detail="Only the teacher can post materials")
+    post = Post(
+        title=payload.title,
+        body=payload.body,
+        category=payload.category,
+        link_url=payload.link_url,
+        author_id=user.id,
+    )
     db.add(post)
     await db.commit()
 
