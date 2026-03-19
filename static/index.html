@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#09090b;--surface:#131316;--surface2:#1a1a1f;--border:#27272a;
+  --text:#fafafa;--dim:#71717a;--accent:#a78bfa;--accent2:#818cf8;
+  --green:#34d399;--red:#f87171;--orange:#fb923c;
+  --radius:10px;--max-w:680px;
+}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px}
+.nav-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-brand{font-family:'Fraunces',serif;font-size:1.4rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links button,.nav-links .nav-btn{background:none;border:1px solid var(--border);color:var(--dim);padding:7px 14px;border-radius:999px;font-family:inherit;font-size:.82rem;cursor:pointer;transition:all .15s}
+.nav-links button:hover,.nav-links .nav-btn:hover{color:var(--text);border-color:var(--dim)}
+.nav-links .btn-accent{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
+.nav-links .btn-accent:hover{opacity:.9}
+.nav-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 10px;border-radius:999px;border:1px solid var(--border);transition:all .15s}
+.nav-user:hover{border-color:var(--dim)}
+.nav-avatar{width:26px;height:26px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:var(--bg)}
+.nav-username{font-size:.85rem;color:var(--text)}
+
+/* ── MAIN ── */
+main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;animation:fadeUp .3s ease-out}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── FORMS ── */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.82rem;color:var(--dim);margin-bottom:6px;font-weight:500}
+.form-group input,.form-group textarea{width:100%;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s;resize:vertical}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--dim)}
+.btn{padding:11px 22px;border:none;border-radius:8px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--accent);color:var(--bg)}
+.btn-primary:hover{opacity:.9}
+.btn-danger{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.2)}
+.btn-danger:hover{background:rgba(248,113,113,0.25)}
+.btn-ghost{background:none;color:var(--dim);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--dim)}
+.btn-sm{padding:6px 14px;font-size:.8rem}
+.error-msg{color:var(--red);font-size:.85rem;margin-top:8px}
+.success-msg{color:var(--green);font-size:.85rem;margin-top:8px}
+
+/* ── AUTH PAGES ── */
+.auth-wrap{max-width:400px;margin:60px auto}
+.auth-wrap h2{font-family:'Fraunces',serif;font-size:1.8rem;margin-bottom:6px}
+.auth-wrap p.sub{color:var(--dim);margin-bottom:28px;font-size:.9rem}
+.auth-footer{text-align:center;margin-top:20px;font-size:.85rem;color:var(--dim)}
+
+/* ── POST CARD ── */
+.post-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.post-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:600;color:var(--bg);flex-shrink:0}
+.post-meta{flex:1}
+.post-author{font-weight:500;font-size:.9rem;cursor:pointer}
+.post-author:hover{text-decoration:underline}
+.post-time{font-size:.78rem;color:var(--dim)}
+.post-title{font-size:1.15rem;font-weight:600;margin-bottom:8px;line-height:1.35}
+.post-body{color:#d4d4d8;font-size:.92rem;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.post-actions{display:flex;gap:16px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.post-action{background:none;border:none;color:var(--dim);font-family:inherit;font-size:.82rem;cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .15s}
+.post-action:hover{color:var(--text)}
+.post-action.liked{color:var(--red)}
+.post-action.liked:hover{color:var(--red)}
+
+/* ── COMMENTS ── */
+.comments-section{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.comment{padding:10px 0;border-bottom:1px solid rgba(39,39,42,0.5)}
+.comment:last-child{border-bottom:none}
+.comment-author{font-size:.82rem;font-weight:500}
+.comment-body{font-size:.85rem;color:#d4d4d8;margin-top:2px}
+.comment-time{font-size:.72rem;color:var(--dim);margin-top:2px}
+.comment-form{display:flex;gap:8px;margin-top:10px}
+.comment-form input{flex:1;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.85rem;outline:none}
+.comment-form input:focus{border-color:var(--accent)}
+.comment-form button{padding:8px 16px}
+.comment-delete{background:none;border:none;color:var(--dim);cursor:pointer;font-size:.75rem;float:right}
+.comment-delete:hover{color:var(--red)}
+
+/* ── WRITE POST ── */
+.compose-box{margin-bottom:24px}
+.compose-box textarea{min-height:60px}
+
+/* ── PROFILE ── */
+.profile-header{text-align:center;padding:30px 20px}
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--bg);margin:0 auto 16px}
+.profile-name{font-size:1.5rem;font-weight:600}
+.profile-username{color:var(--dim);font-size:.9rem;margin-top:2px}
+.profile-bio{color:#d4d4d8;font-size:.9rem;margin-top:12px;max-width:400px;margin-left:auto;margin-right:auto}
+.profile-joined{color:var(--dim);font-size:.78rem;margin-top:10px}
+.profile-edit-btn{margin-top:16px}
+
+/* ── ADMIN ── */
+.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
+.stat-num{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.8rem;color:var(--dim);margin-top:4px}
+.admin-table{width:100%;border-collapse:collapse}
+.admin-table th{text-align:left;font-size:.78rem;color:var(--dim);padding:8px 12px;border-bottom:1px solid var(--border);font-weight:500}
+.admin-table td{padding:10px 12px;border-bottom:1px solid rgba(39,39,42,0.4);font-size:.88rem}
+.badge{padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:600}
+.badge-admin{background:rgba(167,139,250,0.15);color:var(--accent)}
+.badge-active{background:rgba(52,211,153,0.15);color:var(--green)}
+.badge-disabled{background:rgba(248,113,113,0.15);color:var(--red)}
+
+/* ── PAGE TITLE ── */
+.page-title{font-family:'Fraunces',serif;font-size:1.6rem;margin-bottom:20px}
+
+/* ── EMPTY ── */
+.empty-state{text-align:center;padding:50px 20px;color:var(--dim);font-size:.9rem}
+.empty-state span{display:block;font-size:2.5rem;margin-bottom:10px}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;width:100%;max-width:440px;animation:fadeUp .2s ease-out}
+.modal h3{font-size:1.1rem;margin-bottom:16px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .admin-stats{grid-template-columns:1fr}
+  .nav-username{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand" onclick="navigate('feed')">Pulse</div>
+    <div class="nav-links" id="navLinks"></div>
+  </div>
+</nav>
+
+<main id="app"></main>
+
+<script>
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let token = localStorage.getItem('token');
+let currentUser = null;
+let currentPage = 'feed';
+
+// ══════════════════════════════════════
+//  API
+// ══════════════════════════════════════
+async function api(path, opts = {}) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(path, { headers, ...opts });
+  if (res.status === 204) return null;
+  if (res.status === 401) { logout(); return null; }
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail || 'Something went wrong');
+  return data;
+}
+
+// ══════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════
+async function loadUser() {
+  if (!token) { currentUser = null; return; }
+  try {
+    currentUser = await api('/api/auth/me');
+  } catch { currentUser = null; token = null; localStorage.removeItem('token'); }
+}
+
+function logout() {
+  token = null; currentUser = null;
+  localStorage.removeItem('token');
+  navigate('login');
+}
+
+// ══════════════════════════════════════
+//  NAV
+// ══════════════════════════════════════
+function renderNav() {
+  const nav = document.getElementById('navLinks');
+  if (currentUser) {
+    nav.innerHTML = `
+      <button onclick="navigate('feed')">Feed</button>
+      ${currentUser.is_admin ? '<button onclick="navigate(\'admin\')">Admin</button>' : ''}
+      <div class="nav-user" onclick="navigate('profile',{username:'${currentUser.username}'})">
+        <div class="nav-avatar">${currentUser.display_name[0].toUpperCase()}</div>
+        <span class="nav-username">${currentUser.display_name}</span>
+      </div>
+      <button onclick="logout()">Log out</button>
+    `;
+  } else {
+    nav.innerHTML = `
+      <button onclick="navigate('login')">Log in</button>
+      <button class="btn-accent" onclick="navigate('register')">Sign up</button>
+    `;
+  }
+}
+
+// ══════════════════════════════════════
+//  ROUTER
+// ══════════════════════════════════════
+async function navigate(page, params = {}) {
+  currentPage = page;
+  const app = document.getElementById('app');
+  renderNav();
+
+  switch(page) {
+    case 'login': renderLogin(app); break;
+    case 'register': renderRegister(app); break;
+    case 'feed': await renderFeed(app); break;
+    case 'profile': await renderProfile(app, params.username); break;
+    case 'edit-profile': renderEditProfile(app); break;
+    case 'admin': await renderAdmin(app); break;
+    default: await renderFeed(app);
+  }
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════
+function renderLogin(el) {
+  el.innerHTML = `
+    <div class="auth-wrap">
+      <h2>Welcome back</h2>
+      <p class="sub">Log in to your account</p>
+      <div class="card">
+        <div class="form-group">
+          <label>Username</label>
+          <input id="loginUser" placeholder="username" autocomplete="username"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input id="loginPass" type="password" placeholder="password" autocomplete="current-password"/>
+        </div>
+        <div id="loginErr"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Log in</button>
+      </div>
+      <div class="auth-footer">Don't have an account? <a href="#" onclick="navigate('register');return false">Sign up</a></div>
+    </div>
+  `;
+  el.querySelector('#loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+}
+
+async function doLogin() {
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value;
+  if (!username || !password) return;
+  try {
+    const data = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+    token = data.access_token;
+    localStorage.setItem('token', token);
+    await loadUser();
+    navigate('feed');
+  } catch(e) {
+    document.getElementById('loginErr').innerHTML = `<div class="error-msg">${esc(e.message)}</div>`;
+  }
+}
+
+// ══════════════════════════════════════
+//  REGISTER
+// ══════════════════════════════════════
+function renderRegister(el) {
+  el.innerHTML = `
+    <div class="auth-wrap">
+      <h2>Create account</h2>
+      <p class="sub">Join the community</p>
+      <div class="card">
+        <div class="form-group">
+          <label>Username</label>
+          <input id="regUser" placeholder="pick a username"/>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input id="regEmail" type="email" placeholder="you@example.com"/>
+        </div>
+        <div class="form-group">
+          <label>Display Name</label>
+          <input id="regName" placeholder="how others see you"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input id="regPass" type="password" placeholder="at least 6 characters"/>
+        </div>
+        <div id="regErr"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">Create account</button>
+      </div>
+      <div class="auth-footer">Already have an account? <a href="#" onclick="navigate('login');return false">Log in</a></div>
+    </div>
+  `;
+}
+
+async function doRegister() {
+  const username = document.getElementById('regUser').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const display_name = document.getElementById('regName').value.trim();
+  const password = document.getElementById('regPass').value;
+  if (!username || !email || !password) return;
+  if (password.length < 6) { document.getElementById('regErr').innerHTML = '<div class="error-msg">Password must be at least 6 characters</div>'; return; }
+  try {
+    await api('/api/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, display_name }) });
+    // Auto-login
+    const data = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+    token = data.access_token;
+    localStorage.setItem('token', token);
+    await loadUser();
+    navigate('feed');
+  } catch(e) {
+    document.getElementById('regErr').innerHTML = `<div class="error-msg">${esc(e.message)}</div>`;
+  }
+}
+
+// ══════════════════════════════════════
+//  FEED
+// ══════════════════════════════════════
+async function renderFeed(el) {
+  let html = '<div class="page-title">Feed</div>';
+
+  if (currentUser) {
+    html += `
+      <div class="card compose-box">
+        <div class="form-group" style="margin-bottom:10px">
+          <input id="postTitle" placeholder="Title"/>
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+          <textarea id="postBody" placeholder="What's on your mind?" rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="doCreatePost()">Post</button>
+        <span id="postErr"></span>
+      </div>
+    `;
+  }
+  html += '<div id="postsList"><div class="empty-state">Loading...</div></div>';
+  el.innerHTML = html;
+
+  try {
+    const posts = await api('/api/posts/');
+    renderPosts(document.getElementById('postsList'), posts);
+  } catch(e) {
+    document.getElementById('postsList').innerHTML = `<div class="empty-state">Could not load posts</div>`;
+  }
+}
+
+async function doCreatePost() {
+  const title = document.getElementById('postTitle').value.trim();
+  const body = document.getElementById('postBody').value.trim();
+  if (!title || !body) return;
+  try {
+    await api('/api/posts/', { method: 'POST', body: JSON.stringify({ title, body }) });
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postBody').value = '';
+    navigate('feed');
+  } catch(e) {
+    document.getElementById('postErr').innerHTML = ` <span class="error-msg">${esc(e.message)}</span>`;
+  }
+}
+
+function renderPosts(container, posts) {
+  if (!posts || posts.length === 0) {
+    container.innerHTML = '<div class="empty-state"><span>&#x1f4ad;</span>No posts yet. Be the first!</div>';
+    return;
+  }
+  container.innerHTML = posts.map(p => postCard(p)).join('');
+}
+
+function postCard(p) {
+  const initial = (p.author_display_name || p.author_username)[0].toUpperCase();
+  const canDelete = currentUser && (currentUser.id === p.author_id || currentUser.is_admin);
+  const canEdit = currentUser && currentUser.id === p.author_id;
+
+  let commentsHtml = '';
+  if (p.comments && p.comments.length > 0) {
+    commentsHtml = p.comments.map(c => {
+      const canDelComment = currentUser && (currentUser.id === c.author_id || currentUser.is_admin);
+      return `<div class="comment">
+        ${canDelComment ? `<button class="comment-delete" onclick="doDeleteComment(${p.id},${c.id})">delete</button>` : ''}
+        <div class="comment-author">${esc(c.author_username)}</div>
+        <div class="comment-body">${esc(c.body)}</div>
+        <div class="comment-time">${timeAgo(c.created_at)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  return `
+    <div class="card" id="post-${p.id}">
+      <div class="post-header">
+        <div class="post-avatar" style="background:${avatarColor(p.author_username)}">${initial}</div>
+        <div class="post-meta">
+          <div class="post-author" onclick="navigate('profile',{username:'${p.author_username}'})">${esc(p.author_display_name || p.author_username)}</div>
+          <div class="post-time">${timeAgo(p.created_at)}</div>
+        </div>
+      </div>
+      <div class="post-title">${esc(p.title)}</div>
+      <div class="post-body">${esc(p.body)}</div>
+      <div class="post-actions">
+        <button class="post-action ${p.liked_by_me ? 'liked' : ''}" onclick="doLike(${p.id})">
+          ${p.liked_by_me ? '&#9829;' : '&#9825;'} ${p.like_count}
+        </button>
+        <button class="post-action" onclick="toggleComments(${p.id})">
+          &#x1f4ac; ${p.comment_count}
+        </button>
+        ${canEdit ? `<button class="post-action" onclick="showEditPost(${p.id},'${esc(p.title).replace(/'/g,"\\'")}')">edit</button>` : ''}
+        ${canDelete ? `<button class="post-action" onclick="doDeletePost(${p.id})">delete</button>` : ''}
+      </div>
+      <div class="comments-section" id="comments-${p.id}" style="display:none">
+        ${commentsHtml}
+        ${currentUser ? `
+          <div class="comment-form">
+            <input id="commentInput-${p.id}" placeholder="Write a comment..." onkeydown="if(event.key==='Enter')doComment(${p.id})"/>
+            <button class="btn btn-primary btn-sm" onclick="doComment(${p.id})">Send</button>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function toggleComments(postId) {
+  const el = document.getElementById(`comments-${postId}`);
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+async function doLike(postId) {
+  if (!currentUser) { navigate('login'); return; }
+  try {
+    await api(`/api/posts/${postId}/like`, { method: 'POST' });
+    navigate(currentPage, currentPage === 'profile' ? { username: document.querySelector('.profile-username')?.textContent.replace('@','') } : {});
+  } catch {}
+}
+
+async function doComment(postId) {
+  const input = document.getElementById(`commentInput-${postId}`);
+  const body = input.value.trim();
+  if (!body) return;
+  try {
+    await api(`/api/posts/${postId}/comments`, { method: 'POST', body: JSON.stringify({ body }) });
+    input.value = '';
+    navigate(currentPage, currentPage === 'profile' ? { username: document.querySelector('.profile-username')?.textContent.replace('@','') } : {});
+  } catch {}
+}
+
+async function doDeletePost(postId) {
+  if (!confirm('Delete this post?')) return;
+  try {
+    await api(`/api/posts/${postId}`, { method: 'DELETE' });
+    document.getElementById(`post-${postId}`)?.remove();
+  } catch {}
+}
+
+async function doDeleteComment(postId, commentId) {
+  try {
+    await api(`/api/posts/${postId}/comments/${commentId}`, { method: 'DELETE' });
+    navigate(currentPage);
+  } catch {}
+}
+
+function showEditPost(postId, currentTitle) {
+  const card = document.getElementById(`post-${postId}`);
+  const bodyEl = card.querySelector('.post-body');
+  const currentBody = bodyEl.textContent;
+
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.onclick = e => { if(e.target === modal) modal.remove(); };
+  modal.innerHTML = `
+    <div class="modal">
+      <h3>Edit post</h3>
+      <div class="form-group"><label>Title</label><input id="editTitle" value="${esc(currentTitle)}"/></div>
+      <div class="form-group"><label>Body</label><textarea id="editBody" rows="4">${esc(currentBody)}</textarea></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn btn-ghost btn-sm" onclick="this.closest('.modal-bg').remove()">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="doEditPost(${postId})">Save</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+async function doEditPost(postId) {
+  const title = document.getElementById('editTitle').value.trim();
+  const body = document.getElementById('editBody').value.trim();
+  if (!title || !body) return;
+  try {
+    await api(`/api/posts/${postId}`, { method: 'PATCH', body: JSON.stringify({ title, body }) });
+    document.querySelector('.modal-bg')?.remove();
+    navigate(currentPage);
+  } catch {}
+}
+
+// ══════════════════════════════════════
+//  PROFILE
+// ══════════════════════════════════════
+async function renderProfile(el, username) {
+  if (!username && currentUser) username = currentUser.username;
+  if (!username) { navigate('login'); return; }
+
+  try {
+    const user = await api(`/api/users/${username}`);
+    const isMe = currentUser && currentUser.id === user.id;
+    const initial = (user.display_name || user.username)[0].toUpperCase();
+
+    let html = `
+      <div class="card profile-header">
+        <div class="profile-avatar" style="background:${avatarColor(user.username)}">${initial}</div>
+        <div class="profile-name">${esc(user.display_name || user.username)}</div>
+        <div class="profile-username">@${esc(user.username)}</div>
+        ${user.bio ? `<div class="profile-bio">${esc(user.bio)}</div>` : ''}
+        <div class="profile-joined">Joined ${new Date(user.created_at).toLocaleDateString('en-US', {month:'long',year:'numeric'})}</div>
+        ${isMe ? '<button class="btn btn-ghost btn-sm profile-edit-btn" onclick="navigate(\'edit-profile\')">Edit profile</button>' : ''}
+      </div>
+      <div class="page-title" style="margin-top:20px">Posts</div>
+      <div id="profilePosts"><div class="empty-state">Loading...</div></div>
+    `;
+    el.innerHTML = html;
+
+    const posts = await api(`/api/users/${username}/posts`);
+    renderPosts(document.getElementById('profilePosts'), posts);
+  } catch(e) {
+    el.innerHTML = `<div class="empty-state">User not found</div>`;
+  }
+}
+
+// ══════════════════════════════════════
+//  EDIT PROFILE
+// ══════════════════════════════════════
+function renderEditProfile(el) {
+  if (!currentUser) { navigate('login'); return; }
+  el.innerHTML = `
+    <div class="auth-wrap">
+      <h2>Edit profile</h2>
+      <p class="sub">Update your public info</p>
+      <div class="card">
+        <div class="form-group">
+          <label>Display Name</label>
+          <input id="editDisplayName" value="${esc(currentUser.display_name || '')}"/>
+        </div>
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea id="editBio" rows="3" placeholder="Tell people about yourself">${esc(currentUser.bio || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Avatar URL</label>
+          <input id="editAvatar" value="${esc(currentUser.avatar_url || '')}" placeholder="https://..."/>
+        </div>
+        <div id="editErr"></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="navigate('profile',{username:'${currentUser.username}'})">Cancel</button>
+          <button class="btn btn-primary" onclick="doEditProfile()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function doEditProfile() {
+  const display_name = document.getElementById('editDisplayName').value.trim();
+  const bio = document.getElementById('editBio').value.trim();
+  const avatar_url = document.getElementById('editAvatar').value.trim() || null;
+  try {
+    const updated = await api('/api/users/me', { method: 'PATCH', body: JSON.stringify({ display_name, bio, avatar_url }) });
+    currentUser = updated;
+    navigate('profile', { username: currentUser.username });
+  } catch(e) {
+    document.getElementById('editErr').innerHTML = `<div class="error-msg">${esc(e.message)}</div>`;
+  }
+}
+
+// ══════════════════════════════════════
+//  ADMIN
+// ══════════════════════════════════════
+async function renderAdmin(el) {
+  if (!currentUser || !currentUser.is_admin) { navigate('feed'); return; }
+
+  try {
+    const [stats, users] = await Promise.all([
+      api('/api/admin/stats'),
+      api('/api/admin/users'),
+    ]);
+
+    el.innerHTML = `
+      <div class="page-title">Admin Panel</div>
+      <div class="admin-stats">
+        <div class="stat-card"><div class="stat-num">${stats.total_users}</div><div class="stat-label">Users</div></div>
+        <div class="stat-card"><div class="stat-num">${stats.total_posts}</div><div class="stat-label">Posts</div></div>
+        <div class="stat-card"><div class="stat-num">${stats.total_comments}</div><div class="stat-label">Comments</div></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:14px;font-size:1rem">All Users</h3>
+        <div style="overflow-x:auto">
+          <table class="admin-table">
+            <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${users.map(u => `
+                <tr>
+                  <td><strong>${esc(u.username)}</strong><br><span style="color:var(--dim);font-size:.78rem">${esc(u.display_name)}</span></td>
+                  <td>${esc(u.email)}</td>
+                  <td>${u.is_admin ? '<span class="badge badge-admin">Admin</span>' : '<span style="color:var(--dim);font-size:.8rem">User</span>'}</td>
+                  <td>${u.is_active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-disabled">Disabled</span>'}</td>
+                  <td>
+                    ${u.id !== currentUser.id ? `
+                      <button class="btn btn-ghost btn-sm" style="margin:2px" onclick="adminToggleActive(${u.id},${!u.is_active})">${u.is_active ? 'Disable' : 'Enable'}</button>
+                      <button class="btn btn-ghost btn-sm" style="margin:2px" onclick="adminToggleAdmin(${u.id},${!u.is_admin})">${u.is_admin ? 'Demote' : 'Promote'}</button>
+                      <button class="btn btn-danger btn-sm" style="margin:2px" onclick="adminDeleteUser(${u.id},'${esc(u.username)}')">Delete</button>
+                    ` : '<span style="color:var(--dim);font-size:.8rem">You</span>'}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  } catch(e) {
+    el.innerHTML = `<div class="error-msg">Failed to load admin data</div>`;
+  }
+}
+
+async function adminToggleActive(userId, active) {
+  await api(`/api/admin/users/${userId}`, { method: 'PATCH', body: JSON.stringify({ is_active: active }) });
+  navigate('admin');
+}
+
+async function adminToggleAdmin(userId, admin) {
+  await api(`/api/admin/users/${userId}`, { method: 'PATCH', body: JSON.stringify({ is_admin: admin }) });
+  navigate('admin');
+}
+
+async function adminDeleteUser(userId, username) {
+  if (!confirm(`Delete user "${username}" and all their posts?`)) return;
+  await api(`/api/admin/users/${userId}`, { method: 'DELETE' });
+  navigate('admin');
+}
+
+// ══════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function timeAgo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return `${days}d ago`;
+  return new Date(iso).toLocaleDateString();
+}
+
+function avatarColor(str) {
+  const colors = ['#a78bfa','#818cf8','#34d399','#fb923c','#f87171','#38bdf8','#e879f9','#facc15'];
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  return colors[Math.abs(hash) % colors.length];
+}
+
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
+(async () => {
+  await loadUser();
+  navigate(currentUser ? 'feed' : 'login');
+})();
+</script>
+</body>
+</html>
