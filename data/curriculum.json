@@ -9504,7 +9504,6 @@
               "day": 4,
               "topic_es": "Presente Continuo — Lo que Está Pasando Ahora",
               "topic_en": "Present Continuous: What's Happening Now",
-              "objetivo_es": "Podrás describir acciones que están sucediendo en este momento.",
               "grammar_label": "Present Continuous",
               "grammar_es": "El presente continuo describe una acción que está ocurriendo AHORA. Se forma con 'to be' + [verbo + -ing]. Conjugación: I am going, you are going, he/she/it is going, we are going, they are going. Contracciones: I'm, you're, he's, she's, it's, we're, they're. Negativo: I'm not going, you aren't going, he isn't going. Preguntas: 'Are you going?' (¿Estás yendo?), 'Is she eating?' (¿Está comiendo?). Respuestas cortas: 'Yes, I am / No, I'm not', 'Yes, she is / No, she isn't'. Regla de spelling para -ing: la mayoría añade -ing directamente (go→going, eat→eating, play→playing). Si termina en 'e', quitalo y añade -ing (make→making, write→writing). Si termina en consonante + vocal + consonante, duplica la última consonante (run→running, swim→swimming). IMPORTANTE: el presente continuo describe 'ahora mismo', mientras que presente simple describe hábitos ('I eat' = como (siempre), 'I am eating' = estoy comiendo (ahora)).",
               "vocabulary": [
@@ -9781,13 +9780,13 @@
                   ],
                   "answer": 1
                 }
-              ]
+              ],
+              "objective_es": "Podrás describir acciones que están sucediendo en este momento."
             },
             {
               "day": 5,
               "topic_es": "Repaso y Práctica de la Semana 7",
               "topic_en": "Week 7 Review & Practice",
-              "objetivo_es": "Habrás repasado can/can't, can/could para permiso, imperativos, y presente continuo. Podrás expresarte en situaciones variadas.",
               "grammar_label": "Review: Ability, Permission, Imperatives, Continuous",
               "grammar_es": "Esta semana consolidaste cuatro temas clave. Primero, 'can' para habilidad (presente) y 'could' para peticiones educadas. 'Can't' para incapacidad. Luego, el imperativo positivo y negativo para órdenes y señales (STOP, DO NOT ENTER). Finalmente, el presente continuo (am/is/are + verbo + -ing) para acciones en progreso. Todos estos se combinan: 'Can you help me? I'm trying to finish this. Don't touch anything! Can I use your computer?' Estos son bloques fundamentales para conversaciones cotidianas.",
               "vocabulary": [
@@ -10017,7 +10016,8 @@
                   ],
                   "answer": 0
                 }
-              ]
+              ],
+              "objective_es": "Habrás repasado can/can't, can/could para permiso, imperativos, y presente continuo. Podrás expresarte en situaciones variadas."
             }
           ]
         },
@@ -10878,7 +10878,6 @@
               "day": 4,
               "topic_es": "Pasado Simple — Negativo y Preguntas",
               "topic_en": "Simple Past: Negation & Questions",
-              "objetivo_es": "Podrás hacer preguntas y negaciones en pasado simple.",
               "grammar_label": "Past Simple Questions & Negatives",
               "grammar_es": "Negativo: 'didn't' + verbo base (infinitivo). Ejemplos: 'I didn't work', 'She didn't go', 'They didn't eat'. IMPORTANTE: después de 'didn't', SIEMPRE usas el verbo en forma BASE, no pasada. 'I didn't went' es INCORRECTO — es 'I didn't go'. Preguntas: 'Did' + sujeto + verbo base? Ejemplos: 'Did you go?', 'Did he work?', 'Did they eat?' Respuestas cortas: 'Yes, I did / No, I didn't', 'Yes, she did / No, she didn't'. Respuestas largas: puedes repetir el verbo en pasado o solo 'did': 'Did you go? Yes, I went / Yes, I did' (ambas correctas). Palabras interrogativas: 'What did you do?', 'Where did they go?', 'When did you arrive?', 'Why did he leave?', 'Who did you see?'",
               "vocabulary": [
@@ -11155,274 +11154,283 @@
                   ],
                   "answer": 1
                 }
-              ]
+              ],
+              "objective_es": "Podrás hacer preguntas y negaciones en pasado simple."
             },
             {
               "day": 5,
-              "topic_es": "Repaso y Práctica de la Semana 8 + Semanas 9-10 Resumen",
-              "topic_en": "Review & Final Summary",
-              "objetivo_es": "Habrás completado un curso A1 completo. Podrás mantener conversaciones básicas en inglés.",
-              "grammar_label": "Complete A1 Review",
-              "grammar_es": "Has completado 50 lecciones de inglés A1. Dominaste: saludos, pronombres, 'to be', presente simple, presente continuo, 'have got', familia, adjetivos, demostrativos, posesivos, números, artículos, 'there is/are', palabras interrogativas, preposiciones, 'can/could', imperativos, comparativos, y pasado simple (was/were + regulares + irregulares). Puedes: presentarte, describir gente y cosas, hablar de rutinas, contar historias simples, pedir permiso, dar direcciones, ordenar comida, comprar, y más. El inglés es un viaje — este A1 es el principio. Sigue practicando, viendo películas, leyendo libros fáciles, y hablando con otros.",
+              "topic_es": "Repaso del Pasado Simple",
+              "topic_en": "Past Simple Review",
+              "objective_es": "Practicar todo lo aprendido sobre el pasado simple: verbos regulares, irregulares, preguntas y negaciones.",
+              "grammar_label": "Past Simple - Full Review",
+              "grammar_es": "El pasado simple se usa para hablar de acciones terminadas en el pasado.\n\nVerbos regulares: se añade -ed al verbo base. worked, played, watched, studied.\n\nVerbos irregulares: tienen formas especiales. went (go), had (have), saw (see), ate (eat), made (make), took (take), came (come), got (get).\n\nNegaciones: sujeto + did not (didn't) + verbo base. I didn't go. She didn't eat.\n\nPreguntas: Did + sujeto + verbo base? Did you go? Did she eat?\n\nRespuestas cortas: Yes, I did. / No, I didn't.\n\nPalabras de tiempo: yesterday, last week, last month, last year, ago, in 2020.",
+              "tip_es": "Cuando usas 'did' en preguntas o negaciones, el verbo principal siempre va en forma base: Did you GO (no 'went'). I didn't EAT (no 'ate').",
               "vocabulary": [
                 {
-                  "en": "complete",
-                  "es": "completo",
-                  "pronunciation": "kəmplit",
-                  "example_en": "I completed the course.",
-                  "example_es": "Completé el curso."
+                  "en": "yesterday",
+                  "es": "ayer",
+                  "pronunciation": "YES-ter-day",
+                  "example_en": "I went to the park yesterday.",
+                  "example_es": "Fui al parque ayer."
                 },
                 {
-                  "en": "learn",
-                  "es": "aprender",
-                  "pronunciation": "lern",
-                  "example_en": "I learned English.",
-                  "example_es": "Aprendí inglés."
+                  "en": "last week",
+                  "es": "la semana pasada",
+                  "pronunciation": "last wiik",
+                  "example_en": "We visited my parents last week.",
+                  "example_es": "Visitamos a mis padres la semana pasada."
                 },
                 {
-                  "en": "practice",
-                  "es": "practicar",
-                  "pronunciation": "práktis",
-                  "example_en": "Practice every day.",
-                  "example_es": "Practica cada día."
+                  "en": "ago",
+                  "es": "hace (tiempo)",
+                  "pronunciation": "a-GOH",
+                  "example_en": "I moved here two years ago.",
+                  "example_es": "Me mudé aquí hace dos años."
                 },
                 {
-                  "en": "conversation",
-                  "es": "conversación",
-                  "pronunciation": "konverséshen",
-                  "example_en": "I can have conversations.",
-                  "example_es": "Puedo tener conversaciones."
+                  "en": "forgot",
+                  "es": "olvidé",
+                  "pronunciation": "for-GOT",
+                  "example_en": "I forgot my keys at home.",
+                  "example_es": "Olvidé mis llaves en casa."
                 },
                 {
-                  "en": "fluent",
-                  "es": "fluido",
-                  "pronunciation": "flúənt",
-                  "example_en": "I'm not fluent yet.",
-                  "example_es": "Aún no soy fluido."
+                  "en": "found",
+                  "es": "encontré",
+                  "pronunciation": "faund",
+                  "example_en": "She found a good restaurant.",
+                  "example_es": "Ella encontró un buen restaurante."
                 },
                 {
-                  "en": "journey",
-                  "es": "viaje",
-                  "pronunciation": "jérni",
-                  "example_en": "Learning is a journey.",
-                  "example_es": "Aprender es un viaje."
+                  "en": "spent",
+                  "es": "gasté / pasé (tiempo)",
+                  "pronunciation": "spent",
+                  "example_en": "We spent the weekend at the beach.",
+                  "example_es": "Pasamos el fin de semana en la playa."
                 },
                 {
-                  "en": "progress",
-                  "es": "progreso",
-                  "pronunciation": "prógrés",
-                  "example_en": "You made good progress!",
-                  "example_es": "¡Hiciste buen progreso!"
+                  "en": "brought",
+                  "es": "traje",
+                  "pronunciation": "brot",
+                  "example_en": "He brought food to the party.",
+                  "example_es": "Él trajo comida a la fiesta."
                 },
                 {
-                  "en": "continue",
-                  "es": "continuar",
-                  "pronunciation": "kəntíniu",
-                  "example_en": "Continue learning.",
-                  "example_es": "Sigue aprendiendo."
-                },
-                {
-                  "en": "congratulations",
-                  "es": "felicidades",
-                  "pronunciation": "kəngrächuléishenz",
-                  "example_en": "Congratulations!",
-                  "example_es": "¡Felicidades!"
-                },
-                {
-                  "en": "achieve",
-                  "es": "lograr",
-                  "pronunciation": "əchív",
-                  "example_en": "You achieved A1!",
-                  "example_es": "¡Lograste A1!"
+                  "en": "told",
+                  "es": "dije / conté",
+                  "pronunciation": "tohld",
+                  "example_en": "She told me the news.",
+                  "example_es": "Ella me contó la noticia."
                 }
               ],
               "dialogue": {
-                "context_es": "Un estudiante reflecciona sobre lo que aprendió.",
+                "context_es": "Dos amigos hablan sobre lo que hicieron el fin de semana.",
                 "lines": [
                   {
-                    "speaker": "Student",
-                    "en": "I can't believe I learned so much English!",
-                    "es": "¡No puedo creer que aprendí tanto inglés!"
+                    "speaker": "A",
+                    "en": "What did you do last weekend?",
+                    "es": "¿Qué hiciste el fin de semana pasado?",
+                    "note_es": "'What did you do' = pregunta en pasado simple"
                   },
                   {
-                    "speaker": "Teacher",
-                    "en": "You did great! You can now have basic conversations, tell stories, and ask for directions.",
-                    "es": "¡Lo hiciste excelente! Ahora puedes tener conversaciones básicas, contar historias, y pedir direcciones."
+                    "speaker": "B",
+                    "en": "I went to the beach with my family.",
+                    "es": "Fui a la playa con mi familia.",
+                    "note_es": "'went' es el pasado irregular de 'go'"
                   },
                   {
-                    "speaker": "Student",
-                    "en": "What should I do next?",
-                    "es": "¿Qué debo hacer después?"
+                    "speaker": "A",
+                    "en": "Nice! Did you swim in the ocean?",
+                    "es": "¡Qué bien! ¿Nadaste en el océano?",
+                    "note_es": "'Did you swim' = pregunta con did + verbo base"
                   },
                   {
-                    "speaker": "Teacher",
-                    "en": "Continue practicing. Watch English movies, read books, and talk to English speakers. You're on the right path!",
-                    "es": "Sigue practicando. Mira películas en inglés, lee libros, y habla con hablantes de inglés. ¡Estás en el camino correcto!"
+                    "speaker": "B",
+                    "en": "Yes, I did. The water was warm.",
+                    "es": "Sí. El agua estaba caliente.",
+                    "note_es": "'was' es el pasado de 'is'"
                   },
                   {
-                    "speaker": "Student",
-                    "en": "Thank you so much! I'm excited to continue my journey.",
-                    "es": "¡Gracias! Estoy emocionado de continuar mi viaje."
+                    "speaker": "A",
+                    "en": "I didn't go anywhere. I stayed home and watched movies.",
+                    "es": "Yo no fui a ningún lado. Me quedé en casa y vi películas.",
+                    "note_es": "'didn't go' = negación, 'stayed' = regular, 'watched' = regular"
+                  },
+                  {
+                    "speaker": "B",
+                    "en": "That sounds relaxing. What did you watch?",
+                    "es": "Eso suena relajante. ¿Qué viste?",
+                    "note_es": "'What did you watch' = pregunta sobre el pasado"
+                  },
+                  {
+                    "speaker": "A",
+                    "en": "I watched a Spanish movie. I didn't understand everything, but I liked it.",
+                    "es": "Vi una película española. No entendí todo, pero me gustó.",
+                    "note_es": "'didn't understand' = negación, 'liked' = regular"
                   }
                 ]
               },
               "examples": [
                 {
-                  "en": "I learned to introduce myself in English.",
-                  "es": "Aprendí a presentarme en inglés.",
-                  "note_es": "Logro."
+                  "en": "I worked late yesterday.",
+                  "es": "Trabajé hasta tarde ayer.",
+                  "note_es": "'worked' = verbo regular + ed"
                 },
                 {
-                  "en": "Now I can understand simple conversations.",
-                  "es": "Ahora puedo entender conversaciones simples.",
-                  "note_es": "Capacidad."
+                  "en": "She didn't call me last night.",
+                  "es": "Ella no me llamó anoche.",
+                  "note_es": "Negación: didn't + call (forma base)"
                 },
                 {
-                  "en": "I can tell the time, order food, and ask for directions.",
-                  "es": "Puedo decir la hora, ordenar comida, y pedir direcciones.",
-                  "note_es": "Habilidades prácticas."
+                  "en": "Did they arrive on time?",
+                  "es": "¿Llegaron a tiempo?",
+                  "note_es": "Pregunta: Did + they + arrive (forma base)"
                 },
                 {
-                  "en": "I made progress from no English to A1 level.",
-                  "es": "Hice progreso de nada de inglés a nivel A1.",
-                  "note_es": "Progreso."
+                  "en": "We ate dinner at a new restaurant.",
+                  "es": "Cenamos en un restaurante nuevo.",
+                  "note_es": "'ate' = pasado irregular de 'eat'"
                 },
                 {
-                  "en": "Continue learning new words every day.",
-                  "es": "Sigue aprendiendo nuevas palabras cada día.",
-                  "note_es": "Continuidad."
+                  "en": "He forgot his phone at the office.",
+                  "es": "Él olvidó su teléfono en la oficina.",
+                  "note_es": "'forgot' = pasado irregular de 'forget'"
                 },
                 {
-                  "en": "Congratulations on completing this course!",
-                  "es": "¡Felicidades por completar este curso!",
-                  "note_es": "Celebración."
+                  "en": "I didn't have time to cook.",
+                  "es": "No tuve tiempo para cocinar.",
+                  "note_es": "Negación: didn't + have (forma base, no 'had')"
+                },
+                {
+                  "en": "Did you enjoy the concert?",
+                  "es": "¿Disfrutaste el concierto?",
+                  "note_es": "Pregunta: Did + you + enjoy"
+                },
+                {
+                  "en": "They spent two weeks in Mexico.",
+                  "es": "Pasaron dos semanas en México.",
+                  "note_es": "'spent' = pasado irregular de 'spend'"
                 }
               ],
-              "tip_es": "¡Felicidades! Completaste 50 lecciones de inglés A1. Este es un LOGRO IMPORTANTE. Ahora: (1) Practica diariamente — incluso 15 minutos es mejor que nada. (2) Expón te a inglés real: películas, music, podcasts. (3) Habla con otros — aplicaciones, clubes de idiomas, conversaciones. (4) Lee — comienza con libros fáciles (Graded Readers). (5) Escribe — diarios, emails, mensajes. (6) No tengas miedo de cometer errores — son parte del proceso. ¡Tu viaje continúa! A1 es solo el principio. Hay A2, B1, B2, C1, C2 — y cada nivel abre puertas. ¡Sigue adelante!",
               "practice": [
                 {
-                  "instruction_es": "Reflexión:",
-                  "prompt": "3+ cosas que aprendiste.",
-                  "answer": "I learned to introduce myself. I learned to tell stories. I learned to order food."
+                  "instruction_es": "Completa con la forma correcta del pasado simple.",
+                  "prompt": "I _____ (go) to the store yesterday.",
+                  "answer": "went"
                 },
                 {
-                  "instruction_es": "Habilidades:",
-                  "prompt": "5 cosas que puedes hacer ahora.",
-                  "answer": "I can speak English. I can understand conversations. I can read simple texts. I can ask questions. I can give directions."
+                  "instruction_es": "Escribe la negación.",
+                  "prompt": "She _____ (not/like) the movie.",
+                  "answer": "didn't like"
                 },
                 {
-                  "instruction_es": "Planes futuros:",
-                  "prompt": "Cómo vas a continuar.",
-                  "answer": "I will watch English movies. I will read books. I will practice every day. I will speak with English speakers."
+                  "instruction_es": "Forma la pregunta.",
+                  "prompt": "_____ you _____ (see) the news?",
+                  "answer": "Did you see"
                 },
                 {
-                  "instruction_es": "Logro:",
-                  "prompt": "Celebra completar A1.",
-                  "answer": "I completed A1 English course! I'm proud of my progress."
+                  "instruction_es": "Completa con el pasado del verbo.",
+                  "prompt": "We _____ (eat) breakfast at 7 AM.",
+                  "answer": "ate"
                 },
                 {
-                  "instruction_es": "Siguiente nivel:",
-                  "prompt": "¿Qué viene después?",
-                  "answer": "Next is A2. Then B1, B2, C1, and C2. But I'm proud of reaching A1 first!"
-                },
-                {
-                  "instruction_es": "Consejo final:",
-                  "prompt": "Anima a otros a aprender inglés.",
-                  "answer": "Learning English is a journey, not a race. Everyone can learn. Keep practicing and don't give up!"
+                  "instruction_es": "Escribe la negación.",
+                  "prompt": "They _____ (not/bring) the documents.",
+                  "answer": "didn't bring"
                 }
               ],
               "flashcards": [
                 {
-                  "front": "aprendí inglés",
-                  "back": "I learned English"
+                  "front": "go (pasado)",
+                  "back": "went"
                 },
                 {
-                  "front": "puedo hablar",
-                  "back": "I can speak"
+                  "front": "eat (pasado)",
+                  "back": "ate"
                 },
                 {
-                  "front": "estoy orgulloso/a",
-                  "back": "I'm proud"
+                  "front": "forget (pasado)",
+                  "back": "forgot"
                 },
                 {
-                  "front": "tengo éxito",
-                  "back": "I succeeded"
+                  "front": "bring (pasado)",
+                  "back": "brought"
                 },
                 {
-                  "front": "lograste A1",
-                  "back": "You achieved A1"
+                  "front": "spend (pasado)",
+                  "back": "spent"
                 },
                 {
-                  "front": "continúa practicando",
-                  "back": "Keep practicing"
+                  "front": "find (pasado)",
+                  "back": "found"
                 },
                 {
-                  "front": "eres excelente",
-                  "back": "You're great"
+                  "front": "tell (pasado)",
+                  "back": "told"
                 },
                 {
-                  "front": "no te rindas",
-                  "back": "Don't give up"
+                  "front": "make (pasado)",
+                  "back": "made"
                 },
                 {
-                  "front": "sigue adelante",
-                  "back": "Keep going"
+                  "front": "did not + verbo base",
+                  "back": "didn't (negación en pasado)"
                 },
                 {
-                  "front": "¡felicidades!",
-                  "back": "Congratulations!"
+                  "front": "Did + sujeto + verbo base?",
+                  "back": "Pregunta en pasado simple"
                 }
               ],
               "quiz": [
                 {
-                  "q_es": "¿Qué nivel completaste?",
+                  "q_es": "¿Cuál es la forma correcta? 'I _____ to the park yesterday.'",
                   "options": [
-                    "A0",
-                    "A1",
-                    "A2",
-                    "B1"
+                    "go",
+                    "went",
+                    "goed",
+                    "going"
                   ],
                   "answer": 1
                 },
                 {
-                  "q_es": "¿Qué PUEDES hacer ahora?",
+                  "q_es": "¿Cuál es la negación correcta? 'She _____ the test.'",
                   "options": [
-                    "Hablar inglés fluido",
-                    "Entender películas complejas",
-                    "Tener conversaciones básicas",
-                    "Escribir libros"
+                    "didn't passed",
+                    "didn't pass",
+                    "not passed",
+                    "don't pass"
+                  ],
+                  "answer": 1
+                },
+                {
+                  "q_es": "¿Cuál es la pregunta correcta?",
+                  "options": [
+                    "Did you went?",
+                    "Do you went?",
+                    "Did you go?",
+                    "You did go?"
                   ],
                   "answer": 2
                 },
                 {
-                  "q_es": "¿Cómo continuar?",
+                  "q_es": "¿Cuál es el pasado de 'eat'?",
                   "options": [
-                    "Dejar de estudiar",
-                    "Ver películas, leer, practicar",
-                    "Esperar a olvidar",
-                    "Buscar otro idioma"
+                    "eated",
+                    "eat",
+                    "ate",
+                    "aten"
                   ],
-                  "answer": 1
+                  "answer": 2
                 },
                 {
-                  "q_es": "¿Cuál es el nivel después de A1?",
+                  "q_es": "Completa: 'They _____ two hours ago.'",
                   "options": [
-                    "A0",
-                    "A2",
-                    "B0",
-                    "Fin"
+                    "arrived",
+                    "did arrived",
+                    "arriving",
+                    "arrives"
                   ],
-                  "answer": 1
-                },
-                {
-                  "q_es": "¿Cuál es la clave del éxito?",
-                  "options": [
-                    "Estudiar 8 horas diarias",
-                    "Practicar regularmente",
-                    "Memorizar todo",
-                    "Aprender sin hablar"
-                  ],
-                  "answer": 1
+                  "answer": 0
                 }
               ]
             }
