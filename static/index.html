@@ -54,7 +54,7 @@ nav{position:sticky;top:12px;z-index:100;max-width:var(--max-w);margin:0 auto;pa
 .nav-user:hover{background:var(--primary);border-color:var(--primary);transform:scale(1.05)}
 .nav-user:hover .nav-avatar{background:var(--primary-fg);color:var(--primary)}
 .nav-user:hover .nav-username{color:var(--primary-fg)}
-.nav-avatar{width:28px;height:28px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--primary-fg);font-family:'Nunito',sans-serif;transition:all .3s;border-radius:60% 40% 30% 70%/60% 30% 70% 40%;object-fit:cover}
+.nav-avatar{width:28px;height:28px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--primary-fg);font-family:'Nunito',sans-serif;transition:all .3s;border-radius:6px;object-fit:cover}
 .nav-username{font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--fg);font-weight:600;transition:color .3s}
 
 /* ── MAIN ── */
@@ -105,7 +105,7 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px;min-height:calc
 .auth-footer{text-align:center;margin-top:20px;font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg)}
 /* ── POST CARD ── */
 .post-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.post-avatar{width:36px;height:36px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--primary-fg);font-family:'Nunito',sans-serif;flex-shrink:0;border-radius:60% 40% 30% 70%/60% 30% 70% 40%;object-fit:cover;transition:all .3s}
+.post-avatar{width:36px;height:36px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--primary-fg);font-family:'Nunito',sans-serif;flex-shrink:0;border-radius:8px;object-fit:cover;transition:all .3s}
 .post-meta{flex:1}
 .post-author{font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;color:var(--fg);transition:color .3s}
 .post-author:hover{color:var(--primary)}
@@ -136,7 +136,7 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px;min-height:calc
 .compose-label{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--primary);color:var(--primary)}
 /* ── PROFILE ── */
 .profile-header{text-align:center;padding:30px 20px;border-bottom:2px solid var(--border);margin-bottom:24px}
-.profile-avatar{width:80px;height:80px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--primary-fg);font-family:'Fraunces',serif;margin:0 auto 16px;border-radius:60% 40% 30% 70%/60% 30% 70% 40%;object-fit:cover;transition:all .3s}
+.profile-avatar{width:80px;height:80px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--primary-fg);font-family:'Fraunces',serif;margin:0 auto 16px;border-radius:12px;object-fit:cover;transition:all .3s}
 .profile-name{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:800;color:var(--fg)}
 .profile-username{font-family:'Nunito',sans-serif;color:var(--muted-fg);font-size:.8rem;margin-top:2px;font-weight:600}
 .profile-bio{color:var(--accent-fg);font-size:.9rem;margin-top:12px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6;font-style:italic}
@@ -290,6 +290,7 @@ function updateNav() {
   const nl = document.getElementById('navLinks');
   if (S.user) {
     nl.innerHTML = `
+      <button onclick="navigate('feed')">Feed</button>
       <button onclick="navigate('curriculum')">Learn</button>
       ${S.user.is_admin ? '<button onclick="navigate(\'admin\')">Admin</button>' : ''}
       <div class="nav-user" onclick="navigate('profile',S.user.username)">
@@ -431,6 +432,7 @@ function renderFeed(app) {
 
   app.innerHTML = `
     <div class="tab-bar">${tabHtml}</div>
+    <div style="margin-bottom:16px"><input id="feedSearch" placeholder="Search posts..." style="width:100%;padding:10px 20px;border:2px solid var(--border);background:rgba(255,255,255,0.5);color:var(--fg);font-family:'Nunito',sans-serif;font-size:.85rem;outline:none;border-radius:9999px;transition:all .3s" oninput="filterFeedPosts()" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(93,112,82,0.15)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"></div>
     ${showCompose ? `<div class="card" style="margin-bottom:24px">
       <div class="compose-label">New ${S.activeTab === 'material' ? 'Material' : S.activeTab === 'assignment' ? 'Assignment' : 'Discussion'}</div>
       <div class="form-group"><label>Title</label><input id="cTitle" placeholder="title"></div>
@@ -444,15 +446,37 @@ function renderFeed(app) {
   loadPosts();
 }
 
+let feedPosts = [];
+
 async function loadPosts() {
   const c = document.getElementById('postsContainer');
   try {
     const url = S.activeTab === 'all' ? '/api/posts/' : `/api/posts/?category=${S.activeTab}`;
-    const posts = await api(url);
-    if (!posts.length) { c.innerHTML = `<div class="empty-state"><span>&#9744;</span>No ${S.activeTab === 'material' ? 'materials' : S.activeTab === 'assignment' ? 'assignments' : 'posts'} yet</div>`; return; }
-    c.innerHTML = posts.map(postCard).join('') + '<div class="ornament">&#x2766;</div>';
+    feedPosts = await api(url);
+    renderFilteredPosts();
   } catch (e) { c.innerHTML = `<div class="error-msg">${e.message}</div>`; }
 }
+
+function renderFilteredPosts() {
+  const c = document.getElementById('postsContainer');
+  if (!c) return;
+  const search = (document.getElementById('feedSearch')?.value || '').toLowerCase().trim();
+  const filtered = search ? feedPosts.filter(p =>
+    p.title.toLowerCase().includes(search) ||
+    p.body.toLowerCase().includes(search) ||
+    p.author_username.toLowerCase().includes(search) ||
+    (p.author_display_name || '').toLowerCase().includes(search)
+  ) : feedPosts;
+  if (!filtered.length) {
+    c.innerHTML = search
+      ? `<div class="empty-state"><span>&#128269;</span>No posts matching "${esc(search)}"</div>`
+      : `<div class="empty-state"><span>&#9744;</span>No ${S.activeTab === 'material' ? 'materials' : S.activeTab === 'assignment' ? 'assignments' : 'posts'} yet</div>`;
+    return;
+  }
+  c.innerHTML = filtered.map(postCard).join('') + '<div class="ornament">&#x2766;</div>';
+}
+
+function filterFeedPosts() { renderFilteredPosts(); }
 
 async function submitPost() {
   const title = document.getElementById('cTitle').value.trim();
@@ -681,7 +705,7 @@ function previewAvatar(input) {
   }
   const reader = new FileReader();
   reader.onload = e => {
-    document.getElementById('avatarPreview').innerHTML = `<img src="${e.target.result}" class="profile-avatar" style="object-fit:cover;border-radius:0">`;
+    document.getElementById('avatarPreview').innerHTML = `<img src="${e.target.result}" class="profile-avatar" style="object-fit:cover">`;
   };
   reader.readAsDataURL(file);
   /* Upload immediately */
