@@ -53,7 +53,8 @@ async def list_levels(
                     completed_count += 1
                 days_summary.append({
                     "day": day["day"],
-                    "topic": day["topic"],
+                    "topic": day.get("topic_es") or day.get("topic", ""),
+                    "topic_en": day.get("topic_en", ""),
                     "completed": is_done,
                     "quiz_score": prog.get("quiz_score"),
                     "quiz_total": prog.get("quiz_total"),

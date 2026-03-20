@@ -200,14 +200,33 @@ main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px;min-height:calc
 .day-btn.completed:hover{background:#4a5d42}
 .lesson-section{background:var(--card-bg);border:1px solid rgba(222,216,207,0.5);padding:24px;margin-bottom:16px;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft)}
 .lesson-section h3{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:12px}
-.vocab-grid{display:flex;flex-wrap:wrap;gap:8px}
-.vocab-chip{background:rgba(93,112,82,0.08);color:var(--primary);padding:6px 14px;border-radius:9999px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:600}
+.vocab-grid{display:grid;grid-template-columns:1fr;gap:0}
+.vocab-item{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 0;border-bottom:1px solid rgba(222,216,207,0.3);align-items:start}
+.vocab-item:last-child{border-bottom:none}
+.vocab-en{font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--fg)}
+.vocab-pron{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--secondary);font-style:italic;margin-top:1px}
+.vocab-es{font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--muted-fg)}
+.vocab-example{font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--accent-fg);margin-top:4px;font-style:italic}
 .example-row{padding:10px 0;border-bottom:1px solid rgba(222,216,207,0.3)}
 .example-row:last-child{border-bottom:none}
 .example-en{font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;color:var(--fg)}
 .example-es{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);font-style:italic;margin-top:2px}
+.example-note{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--secondary);margin-top:2px}
+.dialogue-line{padding:10px 0;border-bottom:1px solid rgba(222,216,207,0.15)}
+.dialogue-line:last-child{border-bottom:none}
+.dialogue-speaker{font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.05em}
+.dialogue-en{font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--fg);margin-top:2px}
+.dialogue-es{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);font-style:italic;margin-top:1px}
+.dialogue-note{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--secondary);margin-top:2px;padding:3px 8px;background:rgba(193,140,93,0.08);border-radius:6px;display:inline-block}
 .tip-box{background:rgba(193,140,93,0.1);border:2px solid rgba(193,140,93,0.25);padding:16px 20px;border-radius:var(--radius-lg);margin-bottom:16px}
 .tip-box p{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--secondary);font-weight:600;line-height:1.5}
+/* ── STEP WIZARD ── */
+.wizard-steps{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.wizard-step{font-family:'Nunito',sans-serif;font-size:.65rem;font-weight:700;padding:6px 14px;border:2px solid var(--border);background:transparent;color:var(--muted-fg);cursor:pointer;transition:all .3s;border-radius:9999px;text-transform:uppercase;letter-spacing:.05em}
+.wizard-step:hover{border-color:var(--primary);color:var(--primary)}
+.wizard-step.active{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+.wizard-step.visited{background:rgba(93,112,82,0.1);color:var(--primary);border-color:var(--primary)}
+.wizard-nav{display:flex;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:2px solid var(--border)}
 .flashcard-container{perspective:800px;margin:0 auto 16px;max-width:380px}
 .flashcard{position:relative;width:100%;height:200px;cursor:pointer;transition:transform .6s;transform-style:preserve-3d}
 .flashcard.flipped{transform:rotateY(180deg)}
@@ -852,8 +871,8 @@ async function renderCurriculum(app) {
     const levels = data.levels;
 
     app.innerHTML = `
-      <h2 class="page-title">English Curriculum</h2>
-      <div class="page-subtitle">For Spanish speakers — A1 to B2</div>
+      <h2 class="page-title">Curso de Inglés</h2>
+      <div class="page-subtitle">Para hispanohablantes — Nivel A1</div>
       <div class="level-grid">
         ${levels.map(l => {
           const totalDays = l.weeks.reduce((s,w) => s + w.total_days, 0);
@@ -895,59 +914,212 @@ function openLevel(levelId) {
   det.scrollIntoView({behavior:'smooth'});
 }
 
+/* ── LESSON WIZARD STATE ── */
+let lessonData = null;
+let wizardStep = 0;
+const WIZARD_STEPS = [
+  {key:'intro', label:'Intro', icon:'📖'},
+  {key:'vocab', label:'Vocabulario', icon:'📝'},
+  {key:'dialogue', label:'Diálogo', icon:'💬'},
+  {key:'grammar', label:'Gramática', icon:'📐'},
+  {key:'examples', label:'Ejemplos', icon:'💡'},
+  {key:'practice', label:'Práctica', icon:'✏️'},
+  {key:'flashcards', label:'Tarjetas', icon:'🃏'},
+  {key:'quiz', label:'Quiz', icon:'📋'},
+];
+
 async function renderLesson(app) {
   const parts = S.pageArg ? S.pageArg.split('/') : [];
   if (parts.length < 3) { navigate('curriculum'); return; }
   const [levelId, week, day] = parts;
-  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Loading lesson...</div>';
+  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Cargando lección...</div>';
   try {
-    const lesson = await api(`/api/curriculum/lesson/${levelId}/${week}/${day}`);
-    const notesHtml = lesson.notes ? lesson.notes.split('\n').filter(p=>p.trim()).map(p => `<p style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--fg);line-height:1.7;margin-bottom:10px">${formatBody(p)}</p>`).join('') : '';
-    const practiceHtml = (lesson.practice && lesson.practice.length) ? `
-      <div class="lesson-section">
-        <h3>✏️ Practice Exercises</h3>
-        ${lesson.practice.map((p, i) => `<div style="padding:12px 0;border-bottom:1px solid rgba(222,216,207,0.3)">
-          <div style="font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:700;color:var(--muted-fg);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">${esc(p.instruction || 'Translate')}</div>
-          <div style="font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--fg);margin-bottom:6px">${esc(p.prompt)}</div>
-          <button class="btn btn-sm btn-ghost" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Show Answer</button>
-          <div style="display:none;font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--primary);font-weight:700;padding:8px 14px;background:rgba(93,112,82,0.06);border-radius:var(--radius);margin-top:4px">${esc(p.answer)}</div>
-        </div>`).join('')}
-      </div>` : '';
-    const maxWeek = 10;
-    app.innerHTML = `
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
-        <button class="btn btn-sm btn-ghost" onclick="navigate('curriculum')">← Curriculum</button>
-        <div>
-          <span class="cat-badge cat-material">${levelId.toUpperCase()} — Week ${week}, Day ${day}</span>
-          <h2 class="page-title" style="margin-top:6px">${esc(lesson.topic)}</h2>
-          <div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--muted-fg);font-weight:600;margin-top:2px">${esc(lesson.grammar)}</div>
-        </div>
-      </div>
-      <div class="tip-box"><p>💡 ${esc(lesson.tip)}</p></div>
-      ${notesHtml ? `<div class="lesson-section"><h3>📖 Grammar Notes</h3>${notesHtml}</div>` : ''}
-      <div class="lesson-section">
-        <h3>📝 Vocabulary</h3>
-        <div class="vocab-grid">${lesson.vocabulary.map(v => `<span class="vocab-chip">${esc(v)}</span>`).join('')}</div>
-      </div>
-      <div class="lesson-section">
-        <h3>💬 Examples</h3>
-        ${lesson.examples.map(ex => `<div class="example-row">
-          <div class="example-en">${esc(ex.en)}</div>
-          <div class="example-es">${esc(ex.es)}</div>
-        </div>`).join('')}
-      </div>
-      ${practiceHtml}
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:2px solid var(--border)">
-        <button class="btn btn-primary" onclick="navigate('flashcards','${levelId}/${week}/${day}')">🃏 Flashcards</button>
-        <button class="btn" onclick="navigate('quiz','${levelId}/${week}/${day}')">📋 Take Quiz</button>
-        ${S.user ? `<button class="btn btn-ghost" onclick="markComplete('${levelId}',${week},${day})">✓ Mark Complete</button>` : ''}
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:16px">
-        ${parseInt(day) > 1 ? `<button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${levelId}/${week}/${parseInt(day)-1}')">← Day ${parseInt(day)-1}</button>` : '<div></div>'}
-        ${parseInt(day) < 5 ? `<button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${levelId}/${week}/${parseInt(day)+1}')">Day ${parseInt(day)+1} →</button>` : ''}
-        ${parseInt(day) === 5 && parseInt(week) < maxWeek ? `<button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${levelId}/${parseInt(week)+1}/1')">Week ${parseInt(week)+1} →</button>` : ''}
-      </div>`;
+    lessonData = await api(`/api/curriculum/lesson/${levelId}/${week}/${day}`);
+    wizardStep = 0;
+    renderLessonWizard(app);
   } catch(e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
+}
+
+function renderLessonWizard(app) {
+  if (!app) app = document.getElementById('app');
+  const L = lessonData;
+  const parts = S.pageArg.split('/');
+  const [levelId, week, day] = parts;
+  const topicEs = L.topic_es || L.topic || '';
+  const topicEn = L.topic_en || '';
+
+  app.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+      <button class="btn btn-sm btn-ghost" onclick="navigate('curriculum')">← Curriculum</button>
+      <div style="flex:1">
+        <span class="cat-badge cat-material">${levelId.toUpperCase()} — Semana ${week}, Día ${day}</span>
+        <h2 class="page-title" style="margin-top:6px">${esc(topicEs)}</h2>
+        ${topicEn ? `<div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--muted-fg);font-weight:600;margin-top:2px">${esc(topicEn)}</div>` : ''}
+      </div>
+    </div>
+    <div class="wizard-steps">
+      ${WIZARD_STEPS.map((s,i) => `<button class="wizard-step ${i===wizardStep?'active':i<wizardStep?'visited':''}" onclick="wizardStep=${i};renderLessonWizard()">${s.icon} ${s.label}</button>`).join('')}
+    </div>
+    <div id="wizardContent"></div>
+    <div class="wizard-nav">
+      ${wizardStep > 0 ? `<button class="btn btn-ghost" onclick="wizardStep--;renderLessonWizard()">← ${WIZARD_STEPS[wizardStep-1].label}</button>` : '<div></div>'}
+      ${wizardStep < WIZARD_STEPS.length - 1 ? `<button class="btn btn-primary" onclick="wizardStep++;renderLessonWizard()">${WIZARD_STEPS[wizardStep+1].label} →</button>` : `<div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${S.user ? `<button class="btn btn-ghost" onclick="markComplete('${levelId}',${week},${day})">✓ Completar</button>` : ''}
+        ${parseInt(day)<5 ? `<button class="btn btn-primary" onclick="navigate('lesson','${levelId}/${week}/${parseInt(day)+1}')">Día ${parseInt(day)+1} →</button>` : parseInt(week)<10 ? `<button class="btn btn-primary" onclick="navigate('lesson','${levelId}/${parseInt(week)+1}/1')">Semana ${parseInt(week)+1} →</button>` : ''}
+      </div>`}
+    </div>
+    ${parseInt(day) > 1 ? `<div style="margin-top:8px"><button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${levelId}/${week}/${parseInt(day)-1}')">← Día ${parseInt(day)-1}</button></div>` : ''}`;
+  renderWizardStep();
+}
+
+function renderWizardStep() {
+  const area = document.getElementById('wizardContent');
+  if (!area || !lessonData) return;
+  const L = lessonData;
+  const step = WIZARD_STEPS[wizardStep].key;
+
+  switch(step) {
+    case 'intro': return renderStepIntro(area, L);
+    case 'vocab': return renderStepVocab(area, L);
+    case 'dialogue': return renderStepDialogue(area, L);
+    case 'grammar': return renderStepGrammar(area, L);
+    case 'examples': return renderStepExamples(area, L);
+    case 'practice': return renderStepPractice(area, L);
+    case 'flashcards': return renderStepFlashcards(area, L);
+    case 'quiz': return renderStepQuiz(area, L);
+  }
+}
+
+function renderStepIntro(area, L) {
+  const obj = L.objective_es || L.objetivo_es || '';
+  const tip = L.tip_es || L.tip || '';
+  area.innerHTML = `
+    <div class="lesson-section">
+      <h3>📖 Introducción</h3>
+      ${obj ? `<div style="font-family:'Nunito',sans-serif;font-size:.9rem;color:var(--fg);line-height:1.7;margin-bottom:16px"><strong>Objetivo:</strong> ${esc(obj)}</div>` : ''}
+      ${tip ? `<div class="tip-box"><p>💡 ${esc(tip)}</p></div>` : ''}
+      <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--muted-fg);margin-top:12px">
+        Esta lección tiene <strong>${(L.vocabulary||[]).length}</strong> palabras de vocabulario,
+        un diálogo, ejemplos, ejercicios de práctica, tarjetas de memoria y un quiz.
+        Avanza paso a paso usando los botones de arriba.
+      </div>
+    </div>`;
+}
+
+function renderStepVocab(area, L) {
+  const vocab = L.vocabulary || [];
+  if (typeof vocab[0] === 'string') {
+    area.innerHTML = `<div class="lesson-section"><h3>📝 Vocabulario</h3><div style="display:flex;flex-wrap:wrap;gap:8px">${vocab.map(v => `<span style="background:rgba(93,112,82,0.08);color:var(--primary);padding:6px 14px;border-radius:9999px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:600">${esc(v)}</span>`).join('')}</div></div>`;
+    return;
+  }
+  area.innerHTML = `
+    <div class="lesson-section">
+      <h3>📝 Vocabulario (${vocab.length} palabras)</h3>
+      <div class="vocab-grid">
+        ${vocab.map(v => `<div class="vocab-item">
+          <div>
+            <div class="vocab-en">${esc(v.en)}</div>
+            ${v.pronunciation ? `<div class="vocab-pron">/${esc(v.pronunciation)}/</div>` : ''}
+            ${v.example_en ? `<div class="vocab-example">${esc(v.example_en)}</div>` : ''}
+          </div>
+          <div>
+            <div class="vocab-es">${esc(v.es)}</div>
+            ${v.example_es ? `<div class="vocab-example">${esc(v.example_es)}</div>` : ''}
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderStepDialogue(area, L) {
+  const dlg = L.dialogue;
+  if (!dlg || !dlg.lines) {
+    area.innerHTML = `<div class="lesson-section"><h3>💬 Diálogo</h3><div class="empty-state">No hay diálogo en esta lección.</div></div>`;
+    return;
+  }
+  area.innerHTML = `
+    <div class="lesson-section">
+      <h3>💬 Diálogo</h3>
+      ${dlg.context_es ? `<div style="font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);font-style:italic;margin-bottom:14px;padding:10px 14px;background:var(--muted);border-radius:var(--radius)">${esc(dlg.context_es)}</div>` : ''}
+      ${dlg.lines.map(line => `<div class="dialogue-line">
+        <div class="dialogue-speaker">${esc(line.speaker)}</div>
+        <div class="dialogue-en">${esc(line.en)}</div>
+        <div class="dialogue-es">${esc(line.es)}</div>
+        ${line.note_es ? `<div class="dialogue-note">${esc(line.note_es)}</div>` : ''}
+      </div>`).join('')}
+    </div>`;
+}
+
+function renderStepGrammar(area, L) {
+  const grammar = L.grammar_es || L.notes || '';
+  const label = L.grammar_label || '';
+  if (!grammar) {
+    area.innerHTML = `<div class="lesson-section"><h3>📐 Gramática</h3><div class="empty-state">No hay notas de gramática para esta lección.</div></div>`;
+    return;
+  }
+  const paragraphs = grammar.split(/\n+/).filter(p => p.trim());
+  area.innerHTML = `
+    <div class="lesson-section">
+      <h3>📐 Gramática${label ? ': ' + esc(label) : ''}</h3>
+      ${paragraphs.map(p => `<p style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--fg);line-height:1.7;margin-bottom:10px">${formatBody(p)}</p>`).join('')}
+    </div>`;
+}
+
+function renderStepExamples(area, L) {
+  const examples = L.examples || [];
+  area.innerHTML = `
+    <div class="lesson-section">
+      <h3>💡 Ejemplos (${examples.length})</h3>
+      ${examples.map(ex => `<div class="example-row">
+        <div class="example-en">${esc(ex.en)}</div>
+        <div class="example-es">${esc(ex.es)}</div>
+        ${ex.note_es ? `<div class="example-note">${esc(ex.note_es)}</div>` : ''}
+      </div>`).join('')}
+    </div>`;
+}
+
+function renderStepPractice(area, L) {
+  const practice = L.practice || [];
+  if (!practice.length) {
+    area.innerHTML = `<div class="lesson-section"><h3>✏️ Práctica</h3><div class="empty-state">No hay ejercicios para esta lección.</div></div>`;
+    return;
+  }
+  area.innerHTML = `
+    <div class="lesson-section">
+      <h3>✏️ Práctica (${practice.length} ejercicios)</h3>
+      ${practice.map((p, i) => `<div style="padding:12px 0;border-bottom:1px solid rgba(222,216,207,0.3)">
+        <div style="font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:700;color:var(--muted-fg);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">${esc(p.instruction_es || p.instruction || 'Traduce')}</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--fg);margin-bottom:6px">${esc(p.prompt)}</div>
+        <button class="btn btn-sm btn-ghost" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Ver Respuesta</button>
+        <div style="display:none" class="practice-answer">${esc(p.answer)}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+/* ── INLINE FLASHCARDS (within wizard) ── */
+function renderStepFlashcards(area, L) {
+  fcCards = L.flashcards || [];
+  fcIndex = 0; fcFlipped = false;
+  area.innerHTML = `
+    <div class="lesson-section">
+      <h3>🃏 Tarjetas de Memoria (${fcCards.length})</h3>
+      <div style="font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);margin-bottom:16px">Haz clic en la tarjeta para voltearla.</div>
+      <div id="fcArea"></div>
+    </div>`;
+  renderFlashcard();
+}
+
+/* ── INLINE QUIZ (within wizard) ── */
+function renderStepQuiz(area, L) {
+  quizQs = L.quiz || [];
+  quizAnswers = new Array(quizQs.length).fill(-1);
+  quizCurrent = 0; quizSubmitted = false;
+  area.innerHTML = `
+    <div class="lesson-section">
+      <h3>📋 Quiz (${quizQs.length} preguntas)</h3>
+      <div id="quizArea"></div>
+    </div>`;
+  renderQuizQuestion();
 }
 
 async function markComplete(levelId, week, day) {
@@ -968,12 +1140,13 @@ async function renderFlashcards(app) {
     const lesson = await api(`/api/curriculum/lesson/${levelId}/${week}/${day}`);
     fcCards = lesson.flashcards || [];
     fcIndex = 0; fcFlipped = false;
+    const topic = lesson.topic_es || lesson.topic || '';
     app.innerHTML = `
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
-        <button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Back to Lesson</button>
+        <button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Volver a Lección</button>
         <div>
-          <span class="cat-badge cat-material">${levelId.toUpperCase()} W${week}D${day}</span>
-          <h2 class="page-title" style="margin-top:6px">🃏 Flashcards: ${esc(lesson.topic)}</h2>
+          <span class="cat-badge cat-material">${levelId.toUpperCase()} S${week}D${day}</span>
+          <h2 class="page-title" style="margin-top:6px">🃏 Tarjetas: ${esc(topic)}</h2>
         </div>
       </div>
       <div id="fcArea"></div>`;
@@ -990,7 +1163,7 @@ function renderFlashcard() {
       <div class="flashcard ${fcFlipped ? 'flipped' : ''}" onclick="fcFlip()">
         <div class="flashcard-face flashcard-front">
           <div class="flashcard-text">${esc(card.front)}</div>
-          <div class="flashcard-hint">Tap to reveal</div>
+          <div class="flashcard-hint">Toca para voltear</div>
         </div>
         <div class="flashcard-face flashcard-back">
           <div class="flashcard-text">${esc(card.back)}</div>
@@ -1027,12 +1200,13 @@ async function renderQuiz(app) {
     quizQs = lesson.quiz || [];
     quizAnswers = new Array(quizQs.length).fill(-1);
     quizCurrent = 0; quizSubmitted = false;
+    const topic = lesson.topic_es || lesson.topic || '';
     app.innerHTML = `
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
-        <button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Back to Lesson</button>
+        <button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Volver a Lección</button>
         <div>
-          <span class="cat-badge cat-assignment">${levelId.toUpperCase()} W${week}D${day}</span>
-          <h2 class="page-title" style="margin-top:6px">📋 Quiz: ${esc(lesson.topic)}</h2>
+          <span class="cat-badge cat-assignment">${levelId.toUpperCase()} S${week}D${day}</span>
+          <h2 class="page-title" style="margin-top:6px">📋 Quiz: ${esc(topic)}</h2>
         </div>
       </div>
       <div id="quizArea"></div>`;
@@ -1048,15 +1222,15 @@ function renderQuizQuestion() {
   const q = quizQs[quizCurrent];
   area.innerHTML = `
     <div class="lesson-section">
-      <div style="font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--muted-fg);font-weight:700;margin-bottom:8px">Question ${quizCurrent + 1} of ${quizQs.length}</div>
-      <div class="quiz-question">${esc(q.q)}</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--muted-fg);font-weight:700;margin-bottom:8px">Pregunta ${quizCurrent + 1} de ${quizQs.length}</div>
+      <div class="quiz-question">${esc(q.q_es || q.q)}</div>
       ${q.options.map((opt, i) => `<button class="quiz-option ${quizAnswers[quizCurrent] === i ? 'selected' : ''}" onclick="quizSelect(${i})">${esc(opt)}</button>`).join('')}
     </div>
     <div style="display:flex;justify-content:space-between;margin-top:16px">
-      <button class="btn btn-sm btn-ghost" onclick="quizPrev()" ${quizCurrent === 0 ? 'disabled style="visibility:hidden"' : ''}>← Previous</button>
+      <button class="btn btn-sm btn-ghost" onclick="quizPrev()" ${quizCurrent === 0 ? 'disabled style="visibility:hidden"' : ''}>← Anterior</button>
       ${quizCurrent < quizQs.length - 1
-        ? `<button class="btn btn-sm btn-primary" onclick="quizNext()">Next →</button>`
-        : `<button class="btn btn-primary" onclick="quizSubmit()">Submit Quiz</button>`
+        ? `<button class="btn btn-sm btn-primary" onclick="quizNext()">Siguiente →</button>`
+        : `<button class="btn btn-primary" onclick="quizSubmit()">Enviar Quiz</button>`
       }
     </div>
     <div style="display:flex;gap:6px;justify-content:center;margin-top:16px">
@@ -1069,7 +1243,7 @@ function quizPrev() { if (quizCurrent > 0) { quizCurrent--; renderQuizQuestion()
 function quizNext() { if (quizCurrent < quizQs.length - 1) { quizCurrent++; renderQuizQuestion(); } }
 
 async function quizSubmit() {
-  if (quizAnswers.some(a => a < 0)) { toast('Please answer all questions', 'error'); return; }
+  if (quizAnswers.some(a => a < 0)) { toast('Por favor responde todas las preguntas', 'error'); return; }
   const parts = S.pageArg.split('/');
   const [levelId, week, day] = parts;
   try {
@@ -1084,19 +1258,19 @@ async function quizSubmit() {
       <div class="quiz-result">
         <div style="font-size:3rem;margin-bottom:8px">${emoji}</div>
         <div class="quiz-score">${res.score} / ${res.total}</div>
-        <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--muted-fg);margin-top:8px;font-weight:600">${pct}% correct</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--muted-fg);margin-top:8px;font-weight:600">${pct}% correcto</div>
         <div style="margin-top:16px">
           ${res.results.map((r, i) => {
             const q = quizQs[i];
             return `<div style="text-align:left;padding:10px 0;border-bottom:1px solid var(--border)">
-              <div style="font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;color:${r.correct ? 'var(--primary)' : 'var(--destructive)'}">${r.correct ? '✓' : '✗'} ${esc(q.q)}</div>
-              <div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--muted-fg);margin-top:2px">Your answer: ${esc(q.options[r.user_answer])} ${r.correct ? '' : '→ Correct: ' + esc(q.options[r.correct_answer])}</div>
+              <div style="font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;color:${r.correct ? 'var(--primary)' : 'var(--destructive)'}">${r.correct ? '✓' : '✗'} ${esc(q.q_es || q.q)}</div>
+              <div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--muted-fg);margin-top:2px">Tu respuesta: ${esc(q.options[r.user_answer])} ${r.correct ? '' : '→ Correcta: ' + esc(q.options[r.correct_answer])}</div>
             </div>`;
           }).join('')}
         </div>
       </div>
       <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">
-        <button class="btn btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Back to Lesson</button>
+        <button class="btn btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Volver a Lección</button>
         <button class="btn btn-primary" onclick="navigate('curriculum')">Curriculum</button>
       </div>`;
   } catch(e) { toast(e.message, 'error'); }
