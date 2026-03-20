@@ -864,7 +864,7 @@ function timeAgo(iso) {
 let curriculumData = null;
 
 async function renderCurriculum(app) {
-  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Loading curriculum...</div>';
+  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Cargando curso...</div>';
   try {
     const data = await api('/api/curriculum/levels');
     curriculumData = data;
@@ -882,7 +882,7 @@ async function renderCurriculum(app) {
             <div class="level-id">${l.id.toUpperCase()}</div>
             <div class="level-name">${esc(l.name)}</div>
             <div class="level-desc">${esc(l.description)}</div>
-            ${S.user ? `<div class="level-progress">${pct}% complete (${doneDays}/${totalDays})</div>
+            ${S.user ? `<div class="level-progress">${pct}% completado (${doneDays}/${totalDays})</div>
             <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>` : ''}
           </div>`;
         }).join('')}
@@ -902,7 +902,7 @@ function openLevel(levelId) {
     ${level.weeks.map(w => {
       const pct = w.total_days ? Math.round(w.completed_days / w.total_days * 100) : 0;
       return `<div class="week-card">
-        <div class="week-num">Week ${w.week}</div>
+        <div class="week-num">Semana ${w.week}</div>
         <div class="week-title">${esc(w.title)}</div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
         <div class="day-list">
@@ -910,7 +910,7 @@ function openLevel(levelId) {
         </div>
       </div>`;
     }).join('')}
-    <div style="text-align:center;margin-top:20px"><button class="btn btn-ghost" onclick="document.getElementById('levelDetail').innerHTML=''">Close</button></div>`;
+    <div style="text-align:center;margin-top:20px"><button class="btn btn-ghost" onclick="document.getElementById('levelDetail').innerHTML=''">Cerrar</button></div>`;
   det.scrollIntoView({behavior:'smooth'});
 }
 
@@ -1125,7 +1125,7 @@ function renderStepQuiz(area, L) {
 async function markComplete(levelId, week, day) {
   try {
     await api(`/api/curriculum/progress/${levelId}/${week}/${day}`, {method:'POST'});
-    toast('Lesson marked complete!');
+    toast('¡Lección completada!');
   } catch(e) { toast(e.message, 'error'); }
 }
 
@@ -1185,7 +1185,7 @@ function fcPrev() { if (fcIndex > 0) { fcIndex--; fcFlipped = false; renderFlash
 function fcNext() { if (fcIndex < fcCards.length - 1) { fcIndex++; fcFlipped = false; renderFlashcard(); } }
 function fcShuffle() {
   for (let i = fcCards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [fcCards[i],fcCards[j]] = [fcCards[j],fcCards[i]]; }
-  fcIndex = 0; fcFlipped = false; renderFlashcard(); toast('Shuffled!');
+  fcIndex = 0; fcFlipped = false; renderFlashcard(); toast('¡Mezcladas!');
 }
 
 /* ═══ QUIZ ═══ */
