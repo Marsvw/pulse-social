@@ -368,7 +368,7 @@ function renderApp(app) {
         Pulse
       </div>
       <div class="nav-links">
-        ${PAGES.map(p => '<button class="' + (currentPage === p.key ? 'active' : '') + '" onclick="navigate(\'' + p.key + '\')">' + p.label + '</button>').join('')}
+        ${PAGES.map(p => '<button data-page="' + p.key + '" class="' + (currentPage === p.key ? 'active' : '') + '" onclick="navigate(\'' + p.key + '\')">' + p.label + '</button>').join('')}
       </div>
       <div class="nav-right">
         <span class="nav-user">${esc(currentUser.display_name || currentUser.username)}</span>
@@ -377,15 +377,16 @@ function renderApp(app) {
     </nav>
     <div class="container fade-in" id="page-content"></div>
     <div class="mobile-nav"><div class="mobile-nav-inner">
-      ${PAGES.map(p => '<button class="' + (currentPage === p.key ? 'active' : '') + '" onclick="navigate(\'' + p.key + '\')"><span class="mnav-icon">' + p.icon + '</span>' + p.label + '</button>').join('')}
+      ${PAGES.map(p => '<button data-page="' + p.key + '" class="' + (currentPage === p.key ? 'active' : '') + '" onclick="navigate(\'' + p.key + '\')"><span class="mnav-icon">' + p.icon + '</span>' + p.label + '</button>').join('')}
     </div></div>`;
   renderPage();
 }
 
 function navigate(page) {
   currentPage = page;
-  $$('.nav-links button').forEach((b, i) => b.classList.toggle('active', PAGES[i].key === page));
-  $$('.mobile-nav button').forEach((b, i) => b.classList.toggle('active', PAGES[i].key === page));
+  document.querySelectorAll('[data-page]').forEach(b => {
+    b.classList.toggle('active', b.dataset.page === page);
+  });
   renderPage();
 }
 
