@@ -21,6 +21,11 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
+
+
 # ── Users ──
 
 class UserOut(BaseModel):
@@ -29,83 +34,87 @@ class UserOut(BaseModel):
     username: str
     email: str
     display_name: str
-    bio: str | None
-    avatar_url: str | None
     is_admin: bool
+    is_active: bool
+    currency: str
+    created_at: datetime.datetime
+
+
+# ── Accounts ──
+
+class AccountCreate(BaseModel):
+    name: str
+    account_type: str = "checking"
+    institution: str = ""
+    balance: float = 0.0
+    currency: str = "USD"
+
+
+class AccountUpdate(BaseModel):
+    name: str | None = None
+    account_type: str | None = None
+    institution: str | None = None
+    balance: float | None = None
+
+
+class AccountOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    account_type: str
+    institution: str
+    balance: float
+    currency: str
     is_active: bool
     created_at: datetime.datetime
 
 
-class UserUpdate(BaseModel):
-    display_name: str | None = None
-    bio: str | None = None
-    avatar_url: str | None = None
+# ── Transactions ──
+
+class TransactionCreate(BaseModel):
+    account_id: int | None = None
+    date: datetime.date
+    description: str
+    amount: float
+    category: str = "Uncategorized"
+    subcategory: str = ""
+    notes: str = ""
 
 
-class AdminUserUpdate(BaseModel):
-    is_admin: bool | None = None
-    is_active: bool | None = None
+class TransactionUpdate(BaseModel):
+    account_id: int | None = None
+    date: datetime.date | None = None
+    description: str | None = None
+    amount: float | None = None
+    category: str | None = None
+    subcategory: str | None = None
+    notes: str | None = None
+    is_recurring: bool | None = None
 
 
-# ── Posts ──
-
-class PostCreate(BaseModel):
-    title: str
-    body: str
-    category: str = "discussion"
-    link_url: str | None = None
-
-
-class PostUpdate(BaseModel):
-    title: str | None = None
-    body: str | None = None
-    link_url: str | None = None
-
-
-class CommentOut(BaseModel):
+class TransactionOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    body: str
-    author_id: int
-    author_username: str = ""
+    account_id: int | None
+    date: datetime.date
+    description: str
+    amount: float
+    category: str
+    subcategory: str
+    is_recurring: bool
+    notes: str
+    source: str
     created_at: datetime.datetime
 
 
-class PostOut(BaseModel):
+# ── Uploads ──
+
+class UploadOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    title: str
-    body: str
-    category: str = "discussion"
-    link_url: str | None = None
-    author_id: int
-    author_username: str = ""
-    author_display_name: str = ""
-    author_avatar_url: str | None = None
-    like_count: int
-    liked_by_me: bool = False
-    comment_count: int = 0
-    comments: list[CommentOut] = []
+    filename: str
+    file_type: str
+    row_count: int
+    status: str
+    error_message: str | None
     created_at: datetime.datetime
-    updated_at: datetime.datetime
-
-
-# ── Comments ──
-
-class CommentCreate(BaseModel):
-    body: str
-
-
-# ── Password Change ──
-
-class PasswordChange(BaseModel):
-    current_password: str
-    new_password: str
-
-
-# ── Admin Stats ──
-
-class AdminStats(BaseModel):
-    total_users: int
-    total_posts: int
-    total_comments: int

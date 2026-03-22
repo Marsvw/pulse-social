@@ -1,1286 +1,707 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Pulse — Translation Classroom</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse — Finance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Nunito:wght@400;500;600;700;800&display=swap');
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#FDFCF8;--fg:#2C2C24;--primary:#5D7052;--primary-fg:#F3F4F1;
-  --secondary:#C18C5D;--accent:#E6DCCD;--accent-fg:#4A4A40;
-  --muted:#F0EBE5;--muted-fg:#78786C;--border:#DED8CF;
-  --destructive:#A85448;--card-bg:#FEFEFA;--max-w:820px;
-  --shadow-soft:0 4px 20px -2px rgba(93,112,82,0.15);
-  --shadow-float:0 10px 40px -10px rgba(193,140,93,0.2);
-  --radius:1rem;--radius-lg:2rem;--radius-xl:3rem;
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-alt: #f4f5f7;
+  --border: #e8e8ec;
+  --border-light: #f0f0f3;
+  --text: #1a1a2e;
+  --text-secondary: #6b7084;
+  --text-muted: #9ca0b0;
+  --accent: #2d6a4f;
+  --accent-light: #d8f3dc;
+  --accent-hover: #1b4332;
+  --red: #d64045;
+  --red-light: #fde8e8;
+  --blue: #3a86ff;
+  --blue-light: #e8f0fe;
+  --amber: #e5a100;
+  --amber-light: #fef3cd;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+  --font: 'DM Sans', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --nav-h: 64px;
 }
-body{
-  font-family:'Nunito',sans-serif;background:var(--bg);color:var(--fg);
-  min-height:100vh;line-height:1.6;position:relative;
+
+html { font-size: 15px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
 }
-/* Grain texture overlay */
-body::after{
-  content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;
-  opacity:0.035;mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Nav */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  height: var(--nav-h);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
 }
-a{color:var(--primary);text-decoration:none;transition:color .3s}
-a:hover{color:var(--secondary)}
-::selection{background:var(--primary);color:var(--primary-fg)}
-input,textarea,button,select{font-family:'Nunito',sans-serif;border-radius:9999px !important}
-textarea{border-radius:var(--radius-lg) !important}
-h1,h2,h3,h4{font-family:'Fraunces',serif;color:var(--fg);line-height:1.2}
+.nav-brand {
+  font-weight: 700; font-size: 1.2rem; letter-spacing: -0.5px;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-links { display: flex; gap: 4px; }
+.nav-links button {
+  background: none; border: none; cursor: pointer;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 0.9rem; font-weight: 500;
+  color: var(--text-secondary); transition: all 0.15s;
+}
+.nav-links button:hover { background: var(--surface-alt); color: var(--text); }
+.nav-links button.active { background: var(--accent-light); color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-user { font-size: 0.85rem; color: var(--text-secondary); }
+.btn-logout {
+  background: none; border: 1px solid var(--border); cursor: pointer;
+  padding: 6px 14px; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 0.82rem; color: var(--text-secondary); transition: all 0.15s;
+}
+.btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+/* Auth */
+.auth-page {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+}
+.auth-card {
+  background: var(--surface); border-radius: 16px; padding: 48px;
+  box-shadow: var(--shadow-lg); width: 100%; max-width: 420px;
+}
+.auth-card h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.5px; }
+.auth-card .subtitle { color: var(--text-secondary); margin-bottom: 28px; font-size: 0.92rem; }
+.auth-card label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; color: var(--text-secondary); }
+.auth-card input {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.95rem;
+  margin-bottom: 16px; transition: border-color 0.15s; outline: none;
+}
+.auth-card input:focus { border-color: var(--accent); }
+.auth-card .toggle { text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-secondary); }
+.auth-card .toggle a { color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 500; }
+.auth-card .toggle a:hover { text-decoration: underline; }
+.auth-error { color: var(--red); font-size: 0.85rem; margin-bottom: 12px; }
+
+/* Buttons */
+.btn-primary {
+  background: var(--accent); color: #fff; border: none; cursor: pointer;
+  padding: 10px 20px; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 0.92rem; font-weight: 600;
+  transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface); color: var(--text); border: 1px solid var(--border); cursor: pointer;
+  padding: 10px 20px; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 0.92rem; font-weight: 500;
+  transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-secondary:hover { border-color: var(--text-muted); background: var(--surface-alt); }
+.btn-sm { padding: 6px 12px; font-size: 0.82rem; }
+.btn-danger { background: var(--red); color: #fff; border: none; cursor: pointer; padding: 6px 12px; border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.82rem; }
+.btn-danger:hover { opacity: 0.9; }
+
+/* Cards & Stats */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); }
+.stat-card .stat-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-card .stat-value { font-size: 1.8rem; font-weight: 700; letter-spacing: -1px; margin: 4px 0; font-family: var(--mono); }
+.stat-card .stat-sub { font-size: 0.82rem; color: var(--text-secondary); }
+.stat-positive { color: var(--accent); }
+.stat-negative { color: var(--red); }
+.stat-neutral { color: var(--text); }
+
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.page-header h2 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th { text-align: left; padding: 10px 14px; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+tbody td { padding: 12px 14px; font-size: 0.9rem; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+tbody tr:hover { background: var(--surface-alt); }
+.amount-positive { color: var(--accent); font-weight: 600; font-family: var(--mono); font-size: 0.88rem; }
+.amount-negative { color: var(--red); font-weight: 600; font-family: var(--mono); font-size: 0.88rem; }
+.category-tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; background: var(--surface-alt); color: var(--text-secondary); }
+.cat-Groceries { background: #e8f5e9; color: #2e7d32; }
+.cat-Dining { background: #fff3e0; color: #e65100; }
+.cat-Shopping { background: #e3f2fd; color: #1565c0; }
+.cat-Subscriptions { background: #f3e5f5; color: #7b1fa2; }
+.cat-Income { background: var(--accent-light); color: var(--accent); }
+.cat-Transfer { background: #e0f2f1; color: #00695c; }
+.cat-Utilities { background: #eceff1; color: #37474f; }
+.cat-Housing { background: #fce4ec; color: #ad1457; }
+.cat-Transport { background: #e8eaf6; color: #283593; }
+.cat-Entertainment { background: #fff8e1; color: #f57f17; }
+.cat-Health { background: #e8f5e9; color: #1b5e20; }
+.cat-Insurance { background: #efebe9; color: #4e342e; }
+.cat-GasAuto { background: #fff3e0; color: #bf360c; }
+
+/* Charts */
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); }
+.chart-card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 16px; }
+.bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { font-size: 0.82rem; width: 120px; text-align: right; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { flex: 1; height: 24px; background: var(--surface-alt); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; min-width: 2px; }
+.bar-value { font-size: 0.8rem; font-family: var(--mono); color: var(--text-secondary); width: 80px; }
+
+/* Upload */
+.upload-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 48px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--surface); }
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: var(--accent-light); }
+.upload-zone .upload-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.upload-zone p { color: var(--text-secondary); font-size: 0.92rem; }
+.upload-zone .upload-formats { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal { background: var(--surface); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-lg); width: 100%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+.modal h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
+.modal label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; color: var(--text-secondary); }
+.modal input, .modal select, .modal textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.92rem; margin-bottom: 14px; outline: none; transition: border-color 0.15s; }
+.modal input:focus, .modal select:focus { border-color: var(--accent); }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+
+/* Subscriptions */
+.sub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.sub-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+.sub-info h4 { font-size: 0.95rem; font-weight: 600; }
+.sub-info p { font-size: 0.82rem; color: var(--text-secondary); }
+.sub-amount { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; color: var(--red); }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+.empty-state h3 { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 8px; }
+.empty-state p { font-size: 0.9rem; max-width: 400px; margin: 0 auto 20px; }
+
+/* Filters */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.filters input, .filters select { padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.88rem; outline: none; }
+.filters input:focus, .filters select:focus { border-color: var(--accent); }
+
+/* Accounts */
+.accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.account-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); }
+.account-card .acct-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; }
+.account-card .acct-name { font-size: 1.05rem; font-weight: 600; margin: 4px 0; }
+.account-card .acct-inst { font-size: 0.85rem; color: var(--text-secondary); }
+.account-card .acct-balance { font-family: var(--mono); font-size: 1.4rem; font-weight: 700; margin-top: 12px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .charts-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .container { padding: 16px; }
+  .stat-card .stat-value { font-size: 1.4rem; }
+  .auth-card { padding: 32px 24px; margin: 16px; }
+  .upload-zone { padding: 32px 16px; }
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.3s ease; }
+
+/* Mobile nav */
+.mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 8px 0; }
+.mobile-nav-inner { display: flex; justify-content: space-around; }
+.mobile-nav button { background: none; border: none; cursor: pointer; padding: 6px 12px; font-family: var(--font); font-size: 0.7rem; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.mobile-nav button.active { color: var(--accent); }
+.mobile-nav button .mnav-icon { font-size: 1.3rem; }
+@media (max-width: 768px) { .mobile-nav { display: block; } body { padding-bottom: 70px; } }
 </style>
 </head>
 <body>
-<style>
-/* ── NAV (floating pill glassmorphism) ── */
-nav{position:sticky;top:12px;z-index:100;max-width:var(--max-w);margin:0 auto;padding:0 20px}
-.nav-pill{background:rgba(255,255,255,0.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:9999px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;box-shadow:var(--shadow-soft);transition:all .3s}
-.nav-pill:hover{box-shadow:var(--shadow-float)}
-.nav-brand{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:800;cursor:pointer;color:var(--primary);transition:color .3s}
-.nav-brand:hover{color:var(--secondary)}
-.nav-sub{font-family:'Nunito',sans-serif;font-size:.65rem;color:var(--muted-fg);text-transform:uppercase;letter-spacing:.15em;margin-left:10px;display:none}
-@media(min-width:600px){.nav-sub{display:inline}}
-.nav-links{display:flex;gap:6px;align-items:center}
-.nav-links button{background:none;border:2px solid var(--primary);color:var(--primary);padding:6px 16px;font-family:'Nunito',sans-serif;font-size:.75rem;cursor:pointer;transition:all .3s;font-weight:700;border-radius:9999px}
-.nav-links button:hover{background:var(--primary);color:var(--primary-fg);transform:scale(1.05)}
-.nav-links button:active{transform:scale(0.95)}
-.nav-links .btn-accent{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
-.nav-links .btn-accent:hover{background:var(--secondary);border-color:var(--secondary);transform:scale(1.05)}
-.nav-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 12px;border:2px solid var(--border);border-radius:9999px;transition:all .3s}
-.nav-user:hover{background:var(--primary);border-color:var(--primary);transform:scale(1.05)}
-.nav-user:hover .nav-avatar{background:var(--primary-fg);color:var(--primary)}
-.nav-user:hover .nav-username{color:var(--primary-fg)}
-.nav-avatar{width:28px;height:28px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--primary-fg);font-family:'Nunito',sans-serif;transition:all .3s;border-radius:6px;object-fit:cover}
-.nav-username{font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--fg);font-weight:600;transition:color .3s}
 
-/* ── MAIN ── */
-main{max-width:var(--max-w);margin:0 auto;padding:30px 20px 80px;min-height:calc(100vh - 200px)}
-
-/* ── TABS ── */
-.tab-bar{display:flex;gap:6px;margin-bottom:24px;padding:6px;background:var(--muted);border-radius:9999px}
-.tab{font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;padding:10px 20px;cursor:pointer;border:none;background:transparent;color:var(--muted-fg);transition:all .3s;border-radius:9999px;position:relative}
-.tab:hover{color:var(--fg);background:rgba(255,255,255,0.5)}
-.tab.active{color:var(--primary-fg);background:var(--primary);box-shadow:var(--shadow-soft)}
-.tab-badge{background:var(--secondary);color:white;font-size:.55rem;padding:1px 6px;margin-left:6px;font-weight:700;border-radius:9999px;vertical-align:middle}
-/* ── CARDS ── */
-.card{background:var(--card-bg);border:1px solid rgba(222,216,207,0.5);padding:24px;margin-bottom:16px;position:relative;transition:all .3s;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft)}
-.card-hover:hover{box-shadow:var(--shadow-float);transform:translateY(-2px)}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.card{animation:fadeUp .4s ease-out}
-
-/* ── CATEGORY BADGE ── */
-.cat-badge{font-family:'Nunito',sans-serif;font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:4px 12px;display:inline-block;margin-bottom:10px;border-radius:9999px}
-.cat-material{background:rgba(93,112,82,0.12);color:var(--primary)}
-.cat-assignment{background:rgba(193,140,93,0.12);color:var(--secondary)}
-.cat-discussion{background:var(--muted);color:var(--muted-fg)}
-
-/* ── FORMS ── */
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--muted-fg);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
-.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px 20px;background:rgba(255,255,255,0.5);border:2px solid var(--border);color:var(--fg);font-family:'Nunito',sans-serif;font-size:.85rem;outline:none;transition:all .3s;resize:vertical}
-.form-group select{cursor:pointer}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(93,112,82,0.15);background:white}
-.form-group input::placeholder,.form-group textarea::placeholder{color:var(--muted-fg);font-family:'Nunito',sans-serif}
-/* ── BUTTONS ── */
-.btn{padding:10px 24px;border:2px solid var(--primary);font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .3s;background:transparent;color:var(--primary);border-radius:9999px}
-.btn:hover{transform:scale(1.05);box-shadow:var(--shadow-soft)}
-.btn:active{transform:scale(0.95)}
-.btn-primary{background:var(--primary);color:var(--primary-fg);border-color:var(--primary);box-shadow:0 4px 20px -2px rgba(93,112,82,0.25)}
-.btn-primary:hover{background:#4a5d42;border-color:#4a5d42;box-shadow:0 6px 24px -4px rgba(93,112,82,0.35);transform:scale(1.05)}
-.btn-danger{background:transparent;color:var(--destructive);border-color:var(--destructive)}
-.btn-danger:hover{background:var(--destructive);color:white;transform:scale(1.05)}
-.btn-ghost{background:transparent;color:var(--fg);border-color:var(--border)}
-.btn-ghost:hover{border-color:var(--primary);color:var(--primary);background:rgba(93,112,82,0.06)}
-.btn-sm{padding:6px 14px;font-size:.7rem}
-.error-msg{color:var(--destructive);font-family:'Nunito',sans-serif;font-size:.8rem;margin-top:8px;font-weight:700}
-
-/* ── AUTH ── */
-.auth-wrap{max-width:420px;margin:40px auto}
-.auth-wrap h2{font-family:'Fraunces',serif;font-size:2.4rem;font-weight:800;line-height:1.1;color:var(--fg);margin-bottom:4px}
-.auth-wrap p.sub{color:var(--muted-fg);margin-bottom:28px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:600}
-.auth-footer{text-align:center;margin-top:20px;font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg)}
-/* ── POST CARD ── */
-.post-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.post-avatar{width:36px;height:36px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--primary-fg);font-family:'Nunito',sans-serif;flex-shrink:0;border-radius:8px;object-fit:cover;transition:all .3s}
-.post-meta{flex:1}
-.post-author{font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;color:var(--fg);transition:color .3s}
-.post-author:hover{color:var(--primary)}
-.post-time{font-family:'Nunito',sans-serif;font-size:.65rem;color:var(--muted-fg)}
-.post-title{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;margin-bottom:8px;line-height:1.25;color:var(--fg)}
-.post-body{color:var(--accent-fg);font-size:.9rem;line-height:1.7;white-space:pre-wrap;word-break:break-word;font-family:'Nunito','Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}
-.post-link{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;color:var(--primary);border:2px solid var(--primary);padding:6px 16px;transition:all .3s;border-radius:9999px}
-.post-link:hover{background:var(--primary);color:var(--primary-fg);text-decoration:none;transform:scale(1.05)}
-.post-divider{border:none;border-top:1px solid var(--border);margin:16px 0 12px;opacity:0.5}
-.post-actions{display:flex;gap:16px;align-items:center}
-.post-action{background:none;border:none;color:var(--muted-fg);font-family:'Nunito',sans-serif;font-size:.75rem;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .3s;font-weight:600;border-radius:9999px;padding:4px 10px}
-.post-action:hover{color:var(--primary);background:rgba(93,112,82,0.06)}
-.post-action.liked{color:var(--destructive);font-weight:700;background:rgba(168,84,72,0.06)}
-/* ── COMMENTS ── */
-.comments-section{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
-.comment{padding:10px 0;border-bottom:1px solid rgba(222,216,207,0.4)}
-.comment:last-child{border-bottom:none}
-.comment-author{font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;color:var(--fg)}
-.comment-body{font-size:.85rem;color:var(--accent-fg);margin-top:3px;line-height:1.5}
-.comment-time{font-family:'Nunito',sans-serif;font-size:.6rem;color:var(--muted-fg);margin-top:2px}
-.comment-form{display:flex;gap:8px;margin-top:10px}
-.comment-form input{flex:1;padding:10px 16px;background:rgba(255,255,255,0.5);border:2px solid var(--border);color:var(--fg);font-family:'Nunito',sans-serif;font-size:.8rem;outline:none;transition:all .3s}
-.comment-form input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(93,112,82,0.15);background:white}
-.comment-delete{background:none;border:none;color:var(--muted-fg);cursor:pointer;font-family:'Nunito',sans-serif;font-size:.65rem;float:right;transition:color .3s;font-weight:600}
-.comment-delete:hover{color:var(--destructive)}
-
-/* ── COMPOSE ── */
-.compose-label{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--primary);color:var(--primary)}
-/* ── PROFILE ── */
-.profile-header{text-align:center;padding:30px 20px;border-bottom:2px solid var(--border);margin-bottom:24px}
-.profile-avatar{width:80px;height:80px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--primary-fg);font-family:'Fraunces',serif;margin:0 auto 16px;border-radius:12px;object-fit:cover;transition:all .3s}
-.profile-name{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:800;color:var(--fg)}
-.profile-username{font-family:'Nunito',sans-serif;color:var(--muted-fg);font-size:.8rem;margin-top:2px;font-weight:600}
-.profile-bio{color:var(--accent-fg);font-size:.9rem;margin-top:12px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6;font-style:italic}
-.profile-joined{font-family:'Nunito',sans-serif;color:var(--muted-fg);font-size:.7rem;margin-top:10px;font-weight:600}
-
-/* ── ADMIN ── */
-.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-bottom:24px;gap:12px}
-.stat-card{padding:24px;text-align:center;background:var(--card-bg);border:1px solid rgba(222,216,207,0.5);border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);transition:all .3s}
-.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-float)}
-.stat-num{font-family:'Fraunces',serif;font-size:2.5rem;font-weight:800;color:var(--primary);transition:transform .3s}
-.stat-card:hover .stat-num{transform:scale(1.1)}
-.stat-label{font-family:'Nunito',sans-serif;font-size:.65rem;color:var(--muted-fg);margin-top:4px;text-transform:uppercase;letter-spacing:.15em;font-weight:700}
-.admin-table{width:100%;border-collapse:separate;border-spacing:0}
-.admin-table th{text-align:left;font-family:'Nunito',sans-serif;font-size:.65rem;color:var(--muted-fg);padding:10px 12px;border-bottom:2px solid var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:.1em}
-.admin-table td{padding:12px;border-bottom:1px solid rgba(222,216,207,0.4);font-family:'Nunito',sans-serif;font-size:.8rem}
-.badge{padding:3px 10px;font-family:'Nunito',sans-serif;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-radius:9999px}
-.badge-admin{background:var(--primary);color:var(--primary-fg)}
-.badge-active{background:rgba(93,112,82,0.12);color:var(--primary)}
-.badge-disabled{background:rgba(168,84,72,0.12);color:var(--destructive)}
-
-/* ── MISC ── */
-.page-title{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:800;margin-bottom:4px;color:var(--fg)}
-.page-subtitle{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--muted-fg);font-weight:600;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--primary)}
-.ornament{padding:20px 0;text-align:center;font-size:1.4rem;color:var(--border);letter-spacing:.6em}
-.empty-state{text-align:center;padding:50px 20px;color:var(--muted-fg);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:600}
-.empty-state span{display:block;font-size:2.5rem;margin-bottom:10px}
-.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(44,44,36,0.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{background:var(--bg);border:1px solid var(--border);padding:28px;width:100%;max-width:440px;animation:fadeUp .3s ease-out;border-radius:var(--radius-lg);box-shadow:var(--shadow-float)}
-.modal h3{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;margin-bottom:16px;color:var(--primary)}
-/* ── TOAST ── */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--primary);color:var(--primary-fg);font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;padding:12px 28px;z-index:300;animation:toastIn .3s ease-out;border-radius:9999px;box-shadow:var(--shadow-float)}
-.toast-success{background:var(--primary)}
-.toast-error{background:var(--destructive)}
-@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-@keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateX(-50%) translateY(20px)}}
-
-/* ── BLOB BACKGROUNDS ── */
-.blob{position:absolute;border-radius:60% 40% 30% 70%/60% 30% 70% 40%;filter:blur(60px);opacity:0.12;pointer-events:none;z-index:-1}
-.blob-1{width:300px;height:300px;background:var(--primary);top:-60px;right:-80px}
-.blob-2{width:250px;height:250px;background:var(--secondary);bottom:-40px;left:-60px}
-
-/* ── CURRICULUM ── */
-.level-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:28px}
-.level-card{background:var(--card-bg);border:2px solid var(--border);padding:24px;cursor:pointer;transition:all .3s;border-radius:var(--radius-lg);text-align:center;box-shadow:var(--shadow-soft)}
-.level-card:hover{border-color:var(--primary);box-shadow:var(--shadow-float);transform:translateY(-3px)}
-.level-card.active{border-color:var(--primary);background:rgba(93,112,82,0.06)}
-.level-id{font-family:'Fraunces',serif;font-size:2rem;font-weight:800;color:var(--primary);margin-bottom:4px}
-.level-name{font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;color:var(--fg);margin-bottom:8px}
-.level-desc{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--muted-fg);line-height:1.4}
-.level-progress{margin-top:10px;font-family:'Nunito',sans-serif;font-size:.65rem;color:var(--primary);font-weight:700}
-.week-card{background:var(--card-bg);border:1px solid rgba(222,216,207,0.5);padding:20px;margin-bottom:12px;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);transition:all .3s}
-.week-card:hover{box-shadow:var(--shadow-float)}
-.week-title{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;color:var(--fg);margin-bottom:8px}
-.week-num{font-family:'Nunito',sans-serif;font-size:.6rem;font-weight:700;color:var(--muted-fg);text-transform:uppercase;letter-spacing:.1em}
-.progress-bar{height:6px;background:var(--muted);border-radius:9999px;margin:10px 0;overflow:hidden}
-.progress-fill{height:100%;background:var(--primary);border-radius:9999px;transition:width .4s ease}
-.day-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.day-btn{width:40px;height:40px;border:2px solid var(--border);background:transparent;border-radius:50%;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .3s;color:var(--fg);display:flex;align-items:center;justify-content:center}
-.day-btn:hover{border-color:var(--primary);color:var(--primary);transform:scale(1.1)}
-.day-btn.completed{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
-.day-btn.completed:hover{background:#4a5d42}
-.lesson-section{background:var(--card-bg);border:1px solid rgba(222,216,207,0.5);padding:24px;margin-bottom:16px;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft)}
-.lesson-section h3{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:12px}
-.vocab-grid{display:grid;grid-template-columns:1fr;gap:0}
-.vocab-item{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 0;border-bottom:1px solid rgba(222,216,207,0.3);align-items:start}
-.vocab-item:last-child{border-bottom:none}
-.vocab-en{font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--fg)}
-.vocab-pron{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--secondary);font-style:italic;margin-top:1px}
-.vocab-es{font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--muted-fg)}
-.vocab-example{font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--accent-fg);margin-top:4px;font-style:italic}
-.example-row{padding:10px 0;border-bottom:1px solid rgba(222,216,207,0.3)}
-.example-row:last-child{border-bottom:none}
-.example-en{font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;color:var(--fg)}
-.example-es{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);font-style:italic;margin-top:2px}
-.example-note{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--secondary);margin-top:2px}
-.dialogue-line{padding:10px 0;border-bottom:1px solid rgba(222,216,207,0.15)}
-.dialogue-line:last-child{border-bottom:none}
-.dialogue-speaker{font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.05em}
-.dialogue-en{font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--fg);margin-top:2px}
-.dialogue-es{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);font-style:italic;margin-top:1px}
-.dialogue-note{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--secondary);margin-top:2px;padding:3px 8px;background:rgba(193,140,93,0.08);border-radius:6px;display:inline-block}
-.tip-box{background:rgba(193,140,93,0.1);border:2px solid rgba(193,140,93,0.25);padding:16px 20px;border-radius:var(--radius-lg);margin-bottom:16px}
-.tip-box p{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--secondary);font-weight:600;line-height:1.5}
-/* ── STEP WIZARD ── */
-.wizard-steps{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
-.wizard-step{font-family:'Nunito',sans-serif;font-size:.65rem;font-weight:700;padding:6px 14px;border:2px solid var(--border);background:transparent;color:var(--muted-fg);cursor:pointer;transition:all .3s;border-radius:9999px;text-transform:uppercase;letter-spacing:.05em}
-.wizard-step:hover{border-color:var(--primary);color:var(--primary)}
-.wizard-step.active{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
-.wizard-step.visited{background:rgba(93,112,82,0.1);color:var(--primary);border-color:var(--primary)}
-.wizard-nav{display:flex;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:2px solid var(--border)}
-.flashcard-container{perspective:800px;margin:0 auto 16px;max-width:380px}
-.flashcard{position:relative;width:100%;height:200px;cursor:pointer;transition:transform .6s;transform-style:preserve-3d}
-.flashcard.flipped{transform:rotateY(180deg)}
-.flashcard-face{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;border-radius:var(--radius-lg);border:2px solid var(--border);font-family:'Nunito',sans-serif}
-.flashcard-front{background:var(--card-bg);color:var(--fg)}
-.flashcard-back{background:var(--primary);color:var(--primary-fg);transform:rotateY(180deg)}
-.flashcard-text{font-size:1.3rem;font-weight:700;text-align:center;line-height:1.3}
-.flashcard-hint{font-size:.7rem;color:var(--muted-fg);margin-top:10px;font-weight:600}
-.flashcard-nav{display:flex;justify-content:center;gap:12px;align-items:center;margin-top:12px}
-.flashcard-counter{font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);font-weight:600}
-.quiz-option{display:block;width:100%;text-align:left;padding:14px 20px;margin-bottom:8px;border:2px solid var(--border);background:var(--card-bg);font-family:'Nunito',sans-serif;font-size:.85rem;cursor:pointer;transition:all .3s;border-radius:var(--radius-lg);color:var(--fg);font-weight:600}
-.quiz-option:hover{border-color:var(--primary);background:rgba(93,112,82,0.04)}
-.quiz-option.selected{border-color:var(--primary);background:rgba(93,112,82,0.1);color:var(--primary)}
-.quiz-option.correct{border-color:#5D7052;background:rgba(93,112,82,0.15);color:#5D7052}
-.quiz-option.wrong{border-color:var(--destructive);background:rgba(168,84,72,0.1);color:var(--destructive)}
-.quiz-question{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;margin-bottom:14px;color:var(--fg);line-height:1.3}
-.quiz-result{text-align:center;padding:30px;background:var(--card-bg);border:2px solid var(--primary);border-radius:var(--radius-lg)}
-.quiz-score{font-family:'Fraunces',serif;font-size:3rem;font-weight:800;color:var(--primary)}
-.practice-answer{font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--primary);font-weight:700;padding:8px 14px;background:rgba(93,112,82,0.06);border-radius:var(--radius);margin-top:4px}
-
-/* ── RESPONSIVE ── */
-@media(max-width:600px){
-  nav{top:8px;padding:0 12px}
-  .nav-pill{padding:0 16px;height:48px}
-  .admin-stats{grid-template-columns:1fr}
-  .nav-username{display:none}
-  .auth-wrap h2{font-size:1.8rem}
-  .post-title{font-size:1.1rem}
-  .tab{padding:8px 12px;font-size:.65rem}
-  .tab-bar{flex-wrap:wrap;border-radius:var(--radius-lg)}
-  .profile-avatar{width:64px;height:64px;font-size:1.5rem}
-}
-</style>
-
-<!-- Ambient blob backgrounds -->
-<div style="position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:-1">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div style="position:absolute;width:200px;height:200px;background:var(--accent);border-radius:30% 70% 70% 30%/30% 30% 70% 70%;filter:blur(80px);opacity:0.1;top:40%;left:50%"></div>
-</div>
-
-<nav>
-  <div class="nav-pill">
-    <div style="display:flex;align-items:baseline">
-      <div class="nav-brand" onclick="navigate('feed')">Pulse</div>
-      <span class="nav-sub">Translation Classroom</span>
-    </div>
-    <div class="nav-links" id="navLinks"></div>
-  </div>
-</nav>
-
-<main id="app"></main>
-
-<footer style="border-top:2px solid var(--border);padding:32px 20px;text-align:center;margin-top:40px;background:var(--muted)">
-  <div style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:800;margin-bottom:6px;color:var(--primary)">Pulse</div>
-  <div style="font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--muted-fg);font-weight:600">
-    Translation Classroom &nbsp;&middot;&nbsp; Est. 2026
-  </div>
-  <div style="margin-top:8px;font-size:.6rem;color:var(--muted-fg);font-family:'Nunito',sans-serif">Made with care for learning</div>
-</footer>
+<div id="app"></div>
 
 <script>
+/* ─── State ─── */
+let token = localStorage.getItem('pulse_token');
+let currentUser = null;
+let currentPage = 'dashboard';
 
-/* ═══ STATE ═══ */
-const S = { token: localStorage.getItem('token'), user: null, page: 'feed', pageArg: null, activeTab: 'material' };
-const postCache = {}; /* stores post data by id for safe edit modal access */
-
-/* ═══ API ═══ */
-const api = async (path, opts = {}) => {
-  const h = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
-  if (S.token) h['Authorization'] = 'Bearer ' + S.token;
-  const r = await fetch(path, { ...opts, headers: h });
-  if (r.status === 204) return null;
-  const data = await r.json();
-  if (!r.ok) throw new Error(data.detail || 'Request failed');
-  return data;
-};
-
-/* ═══ NAV ═══ */
-function updateNav() {
-  const nl = document.getElementById('navLinks');
-  if (S.user) {
-    nl.innerHTML = `
-      <button onclick="navigate('feed')">Feed</button>
-      <button onclick="navigate('curriculum')">Learn</button>
-      ${S.user.is_admin ? '<button onclick="navigate(\'admin\')">Admin</button>' : ''}
-      <div class="nav-user" onclick="navigate('profile',S.user.username)">
-        ${avatarHtml(S.user.avatar_url, S.user.display_name || S.user.username, 'nav-avatar')}
-        <span class="nav-username">${S.user.username}</span>
-      </div>
-      <button onclick="logout()">Log out</button>`;
-  } else {
-    nl.innerHTML = `<button onclick="navigate('login')">Sign In</button><button class="btn-accent" onclick="navigate('register')">Register</button>`;
+/* ─── API ─── */
+async function api(path, opts = {}) {
+  const headers = { ...(opts.headers || {}) };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  if (opts.body && !(opts.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(opts.body);
   }
+  const res = await fetch(path, { ...opts, headers });
+  if (res.status === 401) { logout(); throw new Error('Unauthorized'); }
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Request failed' }));
+    throw new Error(err.detail || 'Request failed');
+  }
+  return res.json();
 }
 
-/* ═══ TOAST ═══ */
-function toast(msg, type) {
-  const el = document.createElement('div');
-  el.className = 'toast toast-' + (type || 'success');
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(() => { el.style.animation = 'toastOut .3s ease-out forwards'; setTimeout(() => el.remove(), 300); }, 2500);
+function logout() { token = null; currentUser = null; localStorage.removeItem('pulse_token'); render(); }
+function $(sel, el) { return (el || document).querySelector(sel); }
+function $$(sel, el) { return (el || document).querySelectorAll(sel); }
+
+function money(n, showSign) {
+  const abs = Math.abs(n);
+  const f = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (showSign && n > 0) return '+$' + f;
+  if (n < 0) return '-$' + f;
+  return '$' + f;
 }
 
-/* ═══ LOADING HELPER ═══ */
-async function withLoading(btnSelector, fn) {
-  const btn = typeof btnSelector === 'string' ? document.querySelector(btnSelector) : btnSelector;
-  if (!btn) return fn();
-  const orig = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = 'WAIT...'; btn.style.opacity = '0.6';
-  try { await fn(); } finally { btn.disabled = false; btn.innerHTML = orig; btn.style.opacity = '1'; }
+function shortDate(d) {
+  const dt = new Date(d + 'T00:00:00');
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-/* ═══ AUTH ═══ */
-function logout() { S.token = null; S.user = null; localStorage.removeItem('token'); updateNav(); navigate('login'); }
+function catClass(cat) { return 'cat-' + cat.replace(/[^a-zA-Z]/g, ''); }
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-async function loadMe() {
-  if (!S.token) return;
-  try { S.user = await api('/api/auth/me'); } catch { logout(); }
-}
-
-/* ═══ ROUTER ═══ */
-function navigate(page, arg) {
-  S.page = page; S.pageArg = arg || null;
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
+/* ─── Render ─── */
 function render() {
-  updateNav();
   const app = document.getElementById('app');
-  switch (S.page) {
-    case 'feed': return renderFeed(app);
-    case 'login': return renderLogin(app);
-    case 'register': return renderRegister(app);
-    case 'profile': return renderProfile(app);
-    case 'edit-profile': return renderEditProfile(app);
-    case 'admin': return renderAdmin(app);
-    case 'curriculum': return renderCurriculum(app);
-    case 'lesson': return renderLesson(app);
-    case 'flashcards': return renderFlashcards(app);
-    case 'quiz': return renderQuiz(app);
-    default: return renderFeed(app);
-  }
+  if (!token) { renderAuth(app); }
+  else if (!currentUser) {
+    app.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--text-muted)">Loading...</div>';
+    loadUser();
+  } else { renderApp(app); }
 }
 
-/* ═══ LOGIN ═══ */
-function renderLogin(app) {
-  app.innerHTML = `<div class="auth-wrap">
-    <h2>Sign In</h2><p class="sub">Translation Classroom</p>
-    <div class="form-group"><label>Username</label><input id="lUser" placeholder="username" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <div class="form-group"><label>Password</label><input id="lPass" type="password" placeholder="password" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <div id="lErr"></div>
-    <button id="loginBtn" class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Enter</button>
-    <p class="auth-footer">No account? <a href="#" onclick="navigate('register');return false" style="text-decoration:underline">Register</a></p>
-  </div>`;
+async function loadUser() {
+  try { currentUser = await api('/api/auth/me'); render(); }
+  catch { logout(); }
 }
 
-async function doLogin() {
-  const user = document.getElementById('lUser').value.trim();
-  const pass = document.getElementById('lPass').value;
-  const err = document.getElementById('lErr');
-  if (!user) { err.innerHTML = '<p class="error-msg">Username is required</p>'; return; }
-  if (!pass) { err.innerHTML = '<p class="error-msg">Password is required</p>'; return; }
-  await withLoading('#loginBtn', async () => {
-    try {
-      const res = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username: user, password: pass }) });
-      S.token = res.access_token; localStorage.setItem('token', S.token);
-      await loadMe(); navigate('feed');
-    } catch (e) { err.innerHTML = `<p class="error-msg">${e.message}</p>`; }
-  });
-}
-
-/* ═══ REGISTER ═══ */
-function renderRegister(app) {
-  app.innerHTML = `<div class="auth-wrap">
-    <h2>Register</h2><p class="sub">Join the Classroom</p>
-    <div class="form-group"><label>Username</label><input id="rUser" placeholder="username" onkeydown="if(event.key==='Enter')doRegister()"></div>
-    <div class="form-group"><label>Email</label><input id="rEmail" placeholder="email@example.com" onkeydown="if(event.key==='Enter')doRegister()"></div>
-    <div class="form-group"><label>Display Name</label><input id="rName" placeholder="your name" onkeydown="if(event.key==='Enter')doRegister()"></div>
-    <div class="form-group"><label>Password</label><input id="rPass" type="password" placeholder="password" onkeydown="if(event.key==='Enter')doRegister()"></div>
-    <div id="rErr"></div>
-    <button id="regBtn" class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">Create Account</button>
-    <p class="auth-footer">Have an account? <a href="#" onclick="navigate('login');return false" style="text-decoration:underline">Sign in</a></p>
-  </div>`;
-}
-
-async function doRegister() {
-  const user = document.getElementById('rUser').value.trim();
-  const email = document.getElementById('rEmail').value.trim();
-  const name = document.getElementById('rName').value.trim();
-  const pass = document.getElementById('rPass').value;
-  const err = document.getElementById('rErr');
-  if (!user) { err.innerHTML = '<p class="error-msg">Username is required</p>'; return; }
-  if (user.length < 3) { err.innerHTML = '<p class="error-msg">Username must be at least 3 characters</p>'; return; }
-  if (!email || !email.includes('@')) { err.innerHTML = '<p class="error-msg">Valid email is required</p>'; return; }
-  if (!pass) { err.innerHTML = '<p class="error-msg">Password is required</p>'; return; }
-  if (pass.length < 4) { err.innerHTML = '<p class="error-msg">Password must be at least 4 characters</p>'; return; }
-  await withLoading('#regBtn', async () => {
-    try {
-      await api('/api/auth/register', { method: 'POST', body: JSON.stringify({ username: user, email, display_name: name || user, password: pass }) });
-      const res = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username: user, password: pass }) });
-      S.token = res.access_token; localStorage.setItem('token', S.token);
-      await loadMe(); navigate('feed');
-    } catch (e) { err.innerHTML = `<p class="error-msg">${e.message}</p>`; }
-  });
-}
-
-/* ═══ FEED (tabbed: Materials / Assignments / Discussion) ═══ */
-function renderFeed(app) {
-  const tabs = [
-    { key: 'all', label: 'All' },
-    { key: 'material', label: 'Materials' },
-    { key: 'assignment', label: 'Assignments' },
-    { key: 'discussion', label: 'Discussion' },
-  ];
-  const tabHtml = tabs.map(t =>
-    `<button class="tab ${S.activeTab === t.key ? 'active' : ''}" onclick="S.activeTab='${t.key}';renderFeed(document.getElementById('app'))">${t.label}</button>`
-  ).join('');
-
-  const showCompose = S.user && S.activeTab !== 'all' && (S.activeTab !== 'material' || S.user.is_admin);
-
+/* ─── Auth ─── */
+let authMode = 'login';
+function renderAuth(app) {
   app.innerHTML = `
-    <div class="tab-bar">${tabHtml}</div>
-    <div style="margin-bottom:16px"><input id="feedSearch" placeholder="Search posts..." style="width:100%;padding:10px 20px;border:2px solid var(--border);background:rgba(255,255,255,0.5);color:var(--fg);font-family:'Nunito',sans-serif;font-size:.85rem;outline:none;border-radius:9999px;transition:all .3s" oninput="filterFeedPosts()" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(93,112,82,0.15)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"></div>
-    ${showCompose ? `<div class="card" style="margin-bottom:24px">
-      <div class="compose-label">New ${S.activeTab === 'material' ? 'Material' : S.activeTab === 'assignment' ? 'Assignment' : 'Discussion'}</div>
-      <div class="form-group"><label>Title</label><input id="cTitle" placeholder="title"></div>
-      <div class="form-group"><label>Content</label><textarea id="cBody" rows="3" placeholder="write something..."></textarea></div>
-      <div class="form-group"><label>Link / Video URL (optional)</label><input id="cLink" placeholder="https://..."></div>
-      <div style="text-align:right"><button class="btn btn-primary" onclick="submitPost()">Publish</button></div>
-      <div id="cErr"></div>
-    </div>` : ''}
-    ${!S.user ? '<div style="margin-bottom:20px;font-family:Inter,sans-serif;font-size:.75rem;color:var(--n500);text-transform:uppercase;letter-spacing:.1em"><a href="#" onclick="navigate(\'login\');return false" style="text-decoration:underline">Sign in</a> to post and interact</div>' : ''}
-    <div id="postsContainer"><div class="empty-state"><span>&#8987;</span>Loading...</div></div>`;
-  loadPosts();
-}
-
-let feedPosts = [];
-
-async function loadPosts() {
-  const c = document.getElementById('postsContainer');
-  try {
-    const url = S.activeTab === 'all' ? '/api/posts/' : `/api/posts/?category=${S.activeTab}`;
-    feedPosts = await api(url);
-    renderFilteredPosts();
-  } catch (e) { c.innerHTML = `<div class="error-msg">${e.message}</div>`; }
-}
-
-function renderFilteredPosts() {
-  const c = document.getElementById('postsContainer');
-  if (!c) return;
-  const search = (document.getElementById('feedSearch')?.value || '').toLowerCase().trim();
-  const filtered = search ? feedPosts.filter(p =>
-    p.title.toLowerCase().includes(search) ||
-    p.body.toLowerCase().includes(search) ||
-    p.author_username.toLowerCase().includes(search) ||
-    (p.author_display_name || '').toLowerCase().includes(search)
-  ) : feedPosts;
-  if (!filtered.length) {
-    c.innerHTML = search
-      ? `<div class="empty-state"><span>&#128269;</span>No posts matching "${esc(search)}"</div>`
-      : `<div class="empty-state"><span>&#9744;</span>No ${S.activeTab === 'material' ? 'materials' : S.activeTab === 'assignment' ? 'assignments' : 'posts'} yet</div>`;
-    return;
-  }
-  c.innerHTML = filtered.map(postCard).join('') + '<div class="ornament">&#x2766;</div>';
-}
-
-function filterFeedPosts() { renderFilteredPosts(); }
-
-async function submitPost() {
-  const title = document.getElementById('cTitle').value.trim();
-  const body = document.getElementById('cBody').value.trim();
-  const link_url = document.getElementById('cLink').value.trim() || null;
-  if (!title || !body) { document.getElementById('cErr').innerHTML = '<p class="error-msg">Title and content required</p>'; return; }
-  try {
-    await api('/api/posts/', { method: 'POST', body: JSON.stringify({ title, body, category: S.activeTab, link_url }) });
-    toast('Published!');
-    renderFeed(document.getElementById('app'));
-  } catch (e) { document.getElementById('cErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
-}
-
-/* ═══ POST CARD ═══ */
-function postCard(p) {
-  postCache[p.id] = p; /* cache for safe edit modal access */
-  const authorName = p.author_display_name || p.author_username;
-  const catClass = p.category === 'material' ? 'cat-material' : p.category === 'assignment' ? 'cat-assignment' : 'cat-discussion';
-  const catLabel = p.category === 'material' ? 'Material' : p.category === 'assignment' ? 'Assignment' : 'Discussion';
-  const linkHtml = p.link_url ? `<a href="${esc(p.link_url)}" target="_blank" rel="noopener" class="post-link">&#9654; Open Link</a>` : '';
-  const canEdit = S.user && (S.user.id === p.author_id || S.user.is_admin);
-  const ago = timeAgo(p.created_at);
-
-  return `<div class="card card-hover" id="post-${p.id}">
-    <span class="cat-badge ${catClass}">${catLabel}</span>
-    <div class="post-header">
-      ${avatarHtml(p.author_avatar_url, authorName, 'post-avatar')}
-      <div class="post-meta">
-        <span class="post-author" onclick="navigate('profile','${p.author_username}')">${esc(authorName)}</span>
-        <div class="post-time">${ago}</div>
-      </div>
-      ${canEdit ? `<button class="btn btn-sm btn-ghost" onclick="openEditModal(${p.id})">Edit</button>
-        <button class="btn btn-sm btn-danger" onclick="deletePost(${p.id})">Del</button>` : ''}
-    </div>
-    <div class="post-title">${esc(p.title)}</div>
-    <div class="post-body">${formatBody(p.body)}</div>
-    ${linkHtml}
-    <hr class="post-divider">
-    <div class="post-actions">
-      <button class="post-action ${p.liked_by_me ? 'liked' : ''}" onclick="toggleLike(${p.id})">&#9829; ${p.like_count}</button>
-      <button class="post-action" onclick="toggleComments(${p.id})">&#9998; ${p.comment_count} comments</button>
-    </div>
-    <div id="comments-${p.id}" style="display:none">${renderComments(p)}</div>
-  </div>`;
-}
-
-/* ═══ COMMENTS ═══ */
-function renderComments(p) {
-  const list = (p.comments || []).map(c => `<div class="comment">
-    ${S.user && (S.user.id === c.author_id || S.user.is_admin) ? `<button class="comment-delete" onclick="deleteComment(${p.id},${c.id})">&#x2715;</button>` : ''}
-    <span class="comment-author">${esc(c.author_username)}</span>
-    <div class="comment-body">${esc(c.body)}</div>
-    <div class="comment-time">${timeAgo(c.created_at)}</div>
-  </div>`).join('');
-  const form = S.user ? `<div class="comment-form"><input id="ci-${p.id}" placeholder="add a comment..." onkeydown="if(event.key==='Enter')addComment(${p.id})"><button class="btn btn-sm btn-primary" onclick="addComment(${p.id})">Send</button></div>` : '';
-  return `<div class="comments-section">${list}${form}</div>`;
-}
-
-function toggleComments(postId) {
-  const el = document.getElementById('comments-' + postId);
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
-async function refreshPostComments(postId) {
-  try {
-    const post = await api(`/api/posts/${postId}`);
-    postCache[postId] = post;
-    const commentsDiv = document.getElementById('comments-' + postId);
-    if (commentsDiv) {
-      commentsDiv.innerHTML = renderComments(post);
-      commentsDiv.style.display = 'block';
-    }
-    /* Update comment count button */
-    const postEl = document.getElementById('post-' + postId);
-    if (postEl) {
-      const btns = postEl.querySelectorAll('.post-action');
-      if (btns[1]) btns[1].innerHTML = `&#9998; ${post.comment_count} comments`;
-    }
-  } catch (e) { alert(e.message); }
-}
-
-async function addComment(postId) {
-  const input = document.getElementById('ci-' + postId);
-  if (!input.value.trim()) return;
-  try {
-    await api(`/api/posts/${postId}/comments`, { method: 'POST', body: JSON.stringify({ body: input.value.trim() }) });
-    await refreshPostComments(postId);
-  } catch (e) { alert(e.message); }
-}
-
-async function deleteComment(postId, commentId) {
-  if (!confirm('Delete comment?')) return;
-  try {
-    await api(`/api/posts/${postId}/comments/${commentId}`, { method: 'DELETE' });
-    await refreshPostComments(postId);
-  } catch (e) { alert(e.message); }
-}
-
-/* ═══ LIKES ═══ */
-async function toggleLike(postId) {
-  if (!S.user) { navigate('login'); return; }
-  try {
-    const res = await api(`/api/posts/${postId}/like`, { method: 'POST' });
-    /* Update just the like button in-place */
-    if (postCache[postId]) {
-      postCache[postId].liked_by_me = res.liked;
-      postCache[postId].like_count = res.like_count;
-    }
-    const postEl = document.getElementById('post-' + postId);
-    if (postEl) {
-      const likeBtn = postEl.querySelector('.post-action');
-      if (likeBtn) {
-        likeBtn.className = 'post-action' + (res.liked ? ' liked' : '');
-        likeBtn.innerHTML = `&#9829; ${res.like_count}`;
-      }
-    }
-  } catch (e) { alert(e.message); }
-}
-
-/* ═══ EDIT / DELETE POST ═══ */
-async function deletePost(id) {
-  if (!confirm('Delete this post?')) return;
-  try { await api(`/api/posts/${id}`, { method: 'DELETE' }); renderFeed(document.getElementById('app')); } catch (e) { alert(e.message); }
-}
-
-function openEditModal(id) {
-  const p = postCache[id];
-  if (!p) return;
-  const modal = document.createElement('div');
-  modal.className = 'modal-bg';
-  modal.id = 'editModal';
-  modal.innerHTML = `<div class="modal">
-    <h3>Edit Post</h3>
-    <div class="form-group"><label>Title</label><input id="eTitle"></div>
-    <div class="form-group"><label>Content</label><textarea id="eBody" rows="4"></textarea></div>
-    <div class="form-group"><label>Link URL</label><input id="eLink"></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-      <button class="btn btn-ghost" onclick="document.getElementById('editModal').remove()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveEdit(${id})">Save</button>
-    </div>
-  </div>`;
-  document.body.appendChild(modal);
-  /* Set values safely via DOM instead of inline interpolation */
-  document.getElementById('eTitle').value = p.title;
-  document.getElementById('eBody').value = p.body;
-  document.getElementById('eLink').value = p.link_url || '';
-  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
-}
-
-async function saveEdit(id) {
-  try {
-    const payload = {
-      title: document.getElementById('eTitle').value,
-      body: document.getElementById('eBody').value,
-      link_url: document.getElementById('eLink').value.trim() || null,
-    };
-    await api(`/api/posts/${id}`, { method: 'PATCH', body: JSON.stringify(payload) });
-    document.getElementById('editModal').remove();
-    toast('Post updated!');
-    renderFeed(document.getElementById('app'));
-  } catch (e) { alert(e.message); }
-}
-
-/* ═══ PROFILE ═══ */
-async function renderProfile(app) {
-  const username = S.pageArg;
-  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Loading...</div>';
-  try {
-    const [user, posts] = await Promise.all([api(`/api/users/${username}`), api(`/api/users/${username}/posts`)]);
-    const isMe = S.user && S.user.id === user.id;
-    const joined = new Date(user.created_at).toLocaleDateString('en-US', { year:'numeric', month:'long' });
-
-    app.innerHTML = `<div class="profile-header">
-      ${avatarHtml(user.avatar_url, user.display_name || user.username, 'profile-avatar')}
-      <div class="profile-name">${esc(user.display_name || user.username)}</div>
-      <div class="profile-username">@${esc(user.username)} ${user.is_admin ? '<span class="badge badge-admin">Teacher</span>' : ''}</div>
-      ${user.bio ? `<div class="profile-bio">${esc(user.bio)}</div>` : ''}
-      <div class="profile-joined">Joined ${joined}</div>
-      ${isMe ? '<button class="btn btn-sm" style="margin-top:12px" onclick="navigate(\'edit-profile\')">Edit Profile</button>' : ''}
-    </div>
-    <h2 class="page-title" style="margin-top:24px">Posts</h2>
-    <div class="page-subtitle">${posts.length} contribution${posts.length !== 1 ? 's' : ''}</div>
-    ${posts.length ? posts.map(postCard).join('') : '<div class="empty-state"><span>&#9744;</span>No posts yet</div>'}`;
-  } catch (e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
-}
-
-/* ═══ EDIT PROFILE ═══ */
-function renderEditProfile(app) {
-  if (!S.user) { navigate('login'); return; }
-  const currentAvatar = S.user.avatar_url;
-  app.innerHTML = `<div class="auth-wrap">
-    <h2>Edit Profile</h2><p class="sub">Update your details</p>
-    <div style="text-align:center;margin-bottom:20px">
-      <div id="avatarPreview">${avatarHtml(currentAvatar, S.user.display_name || S.user.username, 'profile-avatar')}</div>
-      <input type="file" id="epAvatarFile" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none" onchange="previewAvatar(this)">
-      <button class="btn btn-sm" style="margin-top:10px" onclick="document.getElementById('epAvatarFile').click()">Upload Photo</button>
-      ${currentAvatar ? '<button class="btn btn-sm btn-ghost" style="margin-top:6px" onclick="removeAvatar()">Remove Photo</button>' : ''}
-      <div id="avatarMsg" style="margin-top:8px"></div>
-    </div>
-    <div class="form-group"><label>Display Name</label><input id="epName"></div>
-    <div class="form-group"><label>Bio</label><textarea id="epBio" rows="3"></textarea></div>
-    <div id="epErr"></div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn btn-ghost" onclick="navigate('profile',S.user.username)">Cancel</button>
-      <button class="btn btn-primary" onclick="saveProfile()">Save</button>
-    </div>
-    <hr style="border:none;border-top:3px solid var(--fg);margin:28px 0 20px">
-    <h2 style="font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;margin-bottom:4px">Change Password</h2>
-    <p class="sub" style="margin-bottom:16px">Leave blank if you don't want to change it</p>
-    <div class="form-group"><label>Current Password</label><input id="epCurPass" type="password" placeholder="current password"></div>
-    <div class="form-group"><label>New Password</label><input id="epNewPass" type="password" placeholder="new password (min 4 chars)"></div>
-    <div id="epPassMsg"></div>
-    <button class="btn" style="margin-top:8px" onclick="changePassword()">Update Password</button>
-  </div>`;
-  /* Set values safely via DOM */
-  document.getElementById('epName').value = S.user.display_name || '';
-  document.getElementById('epBio').value = S.user.bio || '';
-}
-
-function previewAvatar(input) {
-  const file = input.files[0];
-  if (!file) return;
-  if (file.size > 5 * 1024 * 1024) {
-    document.getElementById('avatarMsg').innerHTML = '<p class="error-msg">Image must be under 5MB</p>';
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = e => {
-    document.getElementById('avatarPreview').innerHTML = `<img src="${e.target.result}" class="profile-avatar" style="object-fit:cover">`;
-  };
-  reader.readAsDataURL(file);
-  /* Upload immediately */
-  uploadAvatar(file);
-}
-
-async function uploadAvatar(file) {
-  const msg = document.getElementById('avatarMsg');
-  msg.innerHTML = '<p style="color:var(--muted-fg);font-size:.75rem">Uploading...</p>';
-  try {
-    const form = new FormData();
-    form.append('file', file);
-    const h = {};
-    if (S.token) h['Authorization'] = 'Bearer ' + S.token;
-    const r = await fetch('/api/users/me/avatar', { method: 'POST', headers: h, body: form });
-    const text = await r.text();
-    let data;
-    try { data = JSON.parse(text); } catch { throw new Error('Server error: ' + text.substring(0, 100)); }
-    if (!r.ok) throw new Error(data.detail || 'Upload failed');
-    S.user = data;
-    msg.innerHTML = '<p style="color:var(--primary);font-size:.75rem;font-weight:700">Photo updated!</p>';
-    updateNav();
-  } catch (e) {
-    msg.innerHTML = `<p class="error-msg">${e.message}</p>`;
-  }
-}
-
-async function removeAvatar() {
-  try {
-    S.user = await api('/api/users/me', { method: 'PATCH', body: JSON.stringify({ avatar_url: null }) });
-    toast('Photo removed');
-    updateNav();
-    renderEditProfile(document.getElementById('app'));
-  } catch (e) { toast(e.message, 'error'); }
-}
-
-async function saveProfile() {
-  try {
-    const payload = {
-      display_name: document.getElementById('epName').value,
-      bio: document.getElementById('epBio').value,
-    };
-    S.user = await api('/api/users/me', { method: 'PATCH', body: JSON.stringify(payload) });
-    toast('Profile updated!');
-    navigate('profile', S.user.username);
-  } catch (e) { document.getElementById('epErr').innerHTML = `<p class="error-msg">${e.message}</p>`; }
-}
-
-async function changePassword() {
-  const cur = document.getElementById('epCurPass').value;
-  const nw = document.getElementById('epNewPass').value;
-  const msg = document.getElementById('epPassMsg');
-  if (!cur || !nw) { msg.innerHTML = '<p class="error-msg">Both fields required</p>'; return; }
-  if (nw.length < 4) { msg.innerHTML = '<p class="error-msg">New password must be at least 4 characters</p>'; return; }
-  try {
-    await api('/api/auth/change-password', { method: 'POST', body: JSON.stringify({ current_password: cur, new_password: nw }) });
-    toast('Password changed!');
-    msg.innerHTML = '';
-    document.getElementById('epCurPass').value = '';
-    document.getElementById('epNewPass').value = '';
-  } catch (e) { msg.innerHTML = `<p class="error-msg">${e.message}</p>`; }
-}
-
-/* ═══ ADMIN ═══ */
-async function renderAdmin(app) {
-  if (!S.user || !S.user.is_admin) { navigate('feed'); return; }
-  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Loading...</div>';
-  try {
-    const [stats, users] = await Promise.all([api('/api/admin/stats'), api('/api/admin/users')]);
-    app.innerHTML = `
-      <h2 class="page-title">Admin Panel</h2>
-      <div class="page-subtitle">Teacher Dashboard</div>
-      <div class="admin-stats">
-        <div class="stat-card"><div class="stat-num">${stats.total_users}</div><div class="stat-label">Students</div></div>
-        <div class="stat-card"><div class="stat-num">${stats.total_posts}</div><div class="stat-label">Posts</div></div>
-        <div class="stat-card"><div class="stat-num">${stats.total_comments}</div><div class="stat-label">Comments</div></div>
-      </div>
-      <table class="admin-table">
-        <tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr>
-        ${users.map(u => `<tr>
-          <td><strong>${esc(u.username)}</strong></td>
-          <td>${esc(u.email)}</td>
-          <td>${u.is_admin ? '<span class="badge badge-admin">Teacher</span>' : '<span class="badge badge-active">Student</span>'}</td>
-          <td>${u.is_active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-disabled">Disabled</span>'}</td>
-          <td>${u.id !== S.user.id ? `
-            <button class="btn btn-sm btn-ghost" onclick="adminToggle(${u.id},${!u.is_active})">${u.is_active ? 'Disable' : 'Enable'}</button>
-            <button class="btn btn-sm btn-danger" onclick="adminDelete(${u.id},'${esc(u.username)}')">Delete</button>` : '—'}</td>
-        </tr>`).join('')}
-      </table>`;
-  } catch (e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
-}
-
-async function adminToggle(id, activate) {
-  try { await api(`/api/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify({ is_active: activate }) }); renderAdmin(document.getElementById('app')); }
-  catch (e) { alert(e.message); }
-}
-
-async function adminDelete(id, name) {
-  if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
-  try { await api(`/api/admin/users/${id}`, { method: 'DELETE' }); renderAdmin(document.getElementById('app')); }
-  catch (e) { alert(e.message); }
-}
-
-/* ═══ UTILS ═══ */
-function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-
-function formatBody(text) {
-  if (!text) return '';
-  let s = esc(text);
-  /* Auto-link URLs */
-  s = s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="text-decoration:underline;text-decoration-color:var(--accent)">$1</a>');
-  /* **bold** */
-  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  /* *italic* */
-  s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  return s;
-}
-
-function avatarHtml(url, name, cssClass) {
-  const cls = cssClass || 'post-avatar';
-  if (url) return `<img src="${esc(url)}" alt="${esc(name)}" class="${cls}" style="object-fit:cover">`;
-  const initial = (name || '?')[0].toUpperCase();
-  return `<div class="${cls}">${initial}</div>`;
-}
-
-function timeAgo(iso) {
-  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
-  if (diff < 60) return 'just now';
-  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-  if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
-  return new Date(iso).toLocaleDateString();
-}
-
-/* ═══ CURRICULUM ═══ */
-let curriculumData = null;
-
-async function renderCurriculum(app) {
-  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Cargando curso...</div>';
-  try {
-    const data = await api('/api/curriculum/levels');
-    curriculumData = data;
-    const levels = data.levels;
-
-    app.innerHTML = `
-      <h2 class="page-title">Curso de Inglés</h2>
-      <div class="page-subtitle">Para hispanohablantes — Nivel A1</div>
-      <div class="level-grid">
-        ${levels.map(l => {
-          const totalDays = l.weeks.reduce((s,w) => s + w.total_days, 0);
-          const doneDays = l.weeks.reduce((s,w) => s + w.completed_days, 0);
-          const pct = totalDays ? Math.round(doneDays / totalDays * 100) : 0;
-          return `<div class="level-card" onclick="openLevel('${l.id}')">
-            <div class="level-id">${l.id.toUpperCase()}</div>
-            <div class="level-name">${esc(l.name)}</div>
-            <div class="level-desc">${esc(l.description)}</div>
-            ${S.user ? `<div class="level-progress">${pct}% completado (${doneDays}/${totalDays})</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>` : ''}
-          </div>`;
-        }).join('')}
-      </div>
-      <div id="levelDetail"></div>`;
-  } catch(e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
-}
-
-function openLevel(levelId) {
-  if (!curriculumData) return;
-  const level = curriculumData.levels.find(l => l.id === levelId);
-  if (!level) return;
-  const det = document.getElementById('levelDetail');
-  det.innerHTML = `
-    <h2 class="page-title">${esc(level.name)}</h2>
-    <div class="page-subtitle">${esc(level.description)}</div>
-    ${level.weeks.map(w => {
-      const pct = w.total_days ? Math.round(w.completed_days / w.total_days * 100) : 0;
-      return `<div class="week-card">
-        <div class="week-num">Semana ${w.week}</div>
-        <div class="week-title">${esc(w.title)}</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-        <div class="day-list">
-          ${w.days.map(d => `<button class="day-btn ${d.completed ? 'completed' : ''}" onclick="navigate('lesson','${levelId}/${w.week}/${d.day}')" title="${esc(d.topic)}${d.quiz_score !== null ? ' — Quiz: '+d.quiz_score+'/'+d.quiz_total : ''}">${d.day}</button>`).join('')}
+    <div class="auth-page">
+      <div class="auth-card fade-in">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v20M2 12h20M5.5 5.5l13 13M18.5 5.5l-13 13"/></svg>
+          <span style="font-weight:700;font-size:1.3rem;color:var(--accent);letter-spacing:-0.5px">Pulse</span>
         </div>
-      </div>`;
-    }).join('')}
-    <div style="text-align:center;margin-top:20px"><button class="btn btn-ghost" onclick="document.getElementById('levelDetail').innerHTML=''">Cerrar</button></div>`;
-  det.scrollIntoView({behavior:'smooth'});
+        <h1>${authMode === 'login' ? 'Welcome back' : 'Create account'}</h1>
+        <p class="subtitle">${authMode === 'login' ? 'Sign in to your finance dashboard' : 'Start tracking your finances'}</p>
+        <div id="auth-error" class="auth-error" style="display:none"></div>
+        ${authMode === 'register' ? '<label>Display Name</label><input type="text" id="auth-display" placeholder="Your name"><label>Email</label><input type="email" id="auth-email" placeholder="you@example.com">' : ''}
+        <label>Username</label>
+        <input type="text" id="auth-user" placeholder="username">
+        <label>Password</label>
+        <input type="password" id="auth-pass" placeholder="password" onkeydown="if(event.key==='Enter')doAuth()">
+        <button class="btn-primary" onclick="doAuth()" style="width:100%;margin-top:8px">${authMode === 'login' ? 'Sign In' : 'Create Account'}</button>
+        <div class="toggle">
+          ${authMode === 'login'
+            ? "Don't have an account? <a onclick=\"authMode='register';render()\">Sign up</a>"
+            : 'Already have an account? <a onclick="authMode=\'login\';render()">Sign in</a>'}
+        </div>
+      </div>
+    </div>`;
+  setTimeout(() => { const u = $('#auth-user'); if (u) u.focus(); }, 50);
 }
 
-/* ── LESSON WIZARD STATE ── */
-let lessonData = null;
-let wizardStep = 0;
-const WIZARD_STEPS = [
-  {key:'intro', label:'Intro', icon:'📖'},
-  {key:'vocab', label:'Vocabulario', icon:'📝'},
-  {key:'dialogue', label:'Diálogo', icon:'💬'},
-  {key:'grammar', label:'Gramática', icon:'📐'},
-  {key:'examples', label:'Ejemplos', icon:'💡'},
-  {key:'practice', label:'Práctica', icon:'✏️'},
-  {key:'flashcards', label:'Tarjetas', icon:'🃏'},
-  {key:'quiz', label:'Quiz', icon:'📋'},
+async function doAuth() {
+  const errEl = $('#auth-error');
+  errEl.style.display = 'none';
+  try {
+    if (authMode === 'register') {
+      await api('/api/auth/register', { method: 'POST', body: {
+        username: $('#auth-user').value, email: $('#auth-email').value,
+        password: $('#auth-pass').value, display_name: $('#auth-display').value,
+      }});
+      authMode = 'login';
+    }
+    const data = await api('/api/auth/login', { method: 'POST', body: {
+      username: $('#auth-user').value, password: $('#auth-pass').value
+    }});
+    token = data.access_token;
+    localStorage.setItem('pulse_token', token);
+    currentUser = null;
+    render();
+  } catch (e) { errEl.textContent = e.message; errEl.style.display = 'block'; }
+}
+
+/* ─── App Shell ─── */
+const PAGES = [
+  { key: 'dashboard', label: 'Dashboard', icon: '\u229e' },
+  { key: 'transactions', label: 'Transactions', icon: '\u2195' },
+  { key: 'upload', label: 'Upload', icon: '\u2191' },
+  { key: 'accounts', label: 'Accounts', icon: '\u25ce' },
+  { key: 'subscriptions', label: 'Subscriptions', icon: '\u21bb' },
 ];
 
-async function renderLesson(app) {
-  const parts = S.pageArg ? S.pageArg.split('/') : [];
-  if (parts.length < 3) { navigate('curriculum'); return; }
-  const [levelId, week, day] = parts;
-  app.innerHTML = '<div class="empty-state"><span>&#8987;</span>Cargando lección...</div>';
-  try {
-    lessonData = await api(`/api/curriculum/lesson/${levelId}/${week}/${day}`);
-    wizardStep = 0;
-    renderLessonWizard(app);
-  } catch(e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
-}
-
-function renderLessonWizard(app) {
-  if (!app) app = document.getElementById('app');
-  const L = lessonData;
-  const parts = S.pageArg.split('/');
-  const [levelId, week, day] = parts;
-  const topicEs = L.topic_es || L.topic || '';
-  const topicEn = L.topic_en || '';
-
+function renderApp(app) {
   app.innerHTML = `
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-      <button class="btn btn-sm btn-ghost" onclick="navigate('curriculum')">← Curriculum</button>
-      <div style="flex:1">
-        <span class="cat-badge cat-material">${levelId.toUpperCase()} — Semana ${week}, Día ${day}</span>
-        <h2 class="page-title" style="margin-top:6px">${esc(topicEs)}</h2>
-        ${topicEn ? `<div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--muted-fg);font-weight:600;margin-top:2px">${esc(topicEn)}</div>` : ''}
+    <nav>
+      <div class="nav-brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v20M2 12h20M5.5 5.5l13 13M18.5 5.5l-13 13"/></svg>
+        Pulse
       </div>
-    </div>
-    <div class="wizard-steps">
-      ${WIZARD_STEPS.map((s,i) => `<button class="wizard-step ${i===wizardStep?'active':i<wizardStep?'visited':''}" onclick="wizardStep=${i};renderLessonWizard()">${s.icon} ${s.label}</button>`).join('')}
-    </div>
-    <div id="wizardContent"></div>
-    <div class="wizard-nav">
-      ${wizardStep > 0 ? `<button class="btn btn-ghost" onclick="wizardStep--;renderLessonWizard()">← ${WIZARD_STEPS[wizardStep-1].label}</button>` : '<div></div>'}
-      ${wizardStep < WIZARD_STEPS.length - 1 ? `<button class="btn btn-primary" onclick="wizardStep++;renderLessonWizard()">${WIZARD_STEPS[wizardStep+1].label} →</button>` : `<div style="display:flex;gap:8px;flex-wrap:wrap">
-        ${S.user ? `<button class="btn btn-ghost" onclick="markComplete('${levelId}',${week},${day})">✓ Completar</button>` : ''}
-        ${parseInt(day)<5 ? `<button class="btn btn-primary" onclick="navigate('lesson','${levelId}/${week}/${parseInt(day)+1}')">Día ${parseInt(day)+1} →</button>` : parseInt(week)<10 ? `<button class="btn btn-primary" onclick="navigate('lesson','${levelId}/${parseInt(week)+1}/1')">Semana ${parseInt(week)+1} →</button>` : ''}
-      </div>`}
-    </div>
-    ${parseInt(day) > 1 ? `<div style="margin-top:8px"><button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${levelId}/${week}/${parseInt(day)-1}')">← Día ${parseInt(day)-1}</button></div>` : ''}`;
-  renderWizardStep();
-}
-
-function renderWizardStep() {
-  const area = document.getElementById('wizardContent');
-  if (!area || !lessonData) return;
-  const L = lessonData;
-  const step = WIZARD_STEPS[wizardStep].key;
-
-  switch(step) {
-    case 'intro': return renderStepIntro(area, L);
-    case 'vocab': return renderStepVocab(area, L);
-    case 'dialogue': return renderStepDialogue(area, L);
-    case 'grammar': return renderStepGrammar(area, L);
-    case 'examples': return renderStepExamples(area, L);
-    case 'practice': return renderStepPractice(area, L);
-    case 'flashcards': return renderStepFlashcards(area, L);
-    case 'quiz': return renderStepQuiz(area, L);
-  }
-}
-
-function renderStepIntro(area, L) {
-  const obj = L.objective_es || L.objetivo_es || '';
-  const tip = L.tip_es || L.tip || '';
-  area.innerHTML = `
-    <div class="lesson-section">
-      <h3>📖 Introducción</h3>
-      ${obj ? `<div style="font-family:'Nunito',sans-serif;font-size:.9rem;color:var(--fg);line-height:1.7;margin-bottom:16px"><strong>Objetivo:</strong> ${esc(obj)}</div>` : ''}
-      ${tip ? `<div class="tip-box"><p>💡 ${esc(tip)}</p></div>` : ''}
-      <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--muted-fg);margin-top:12px">
-        Esta lección tiene <strong>${(L.vocabulary||[]).length}</strong> palabras de vocabulario,
-        un diálogo, ejemplos, ejercicios de práctica, tarjetas de memoria y un quiz.
-        Avanza paso a paso usando los botones de arriba.
+      <div class="nav-links">
+        ${PAGES.map(p => '<button class="' + (currentPage === p.key ? 'active' : '') + '" onclick="navigate(\'' + p.key + '\')">' + p.label + '</button>').join('')}
       </div>
-    </div>`;
-}
-
-function renderStepVocab(area, L) {
-  const vocab = L.vocabulary || [];
-  if (typeof vocab[0] === 'string') {
-    area.innerHTML = `<div class="lesson-section"><h3>📝 Vocabulario</h3><div style="display:flex;flex-wrap:wrap;gap:8px">${vocab.map(v => `<span style="background:rgba(93,112,82,0.08);color:var(--primary);padding:6px 14px;border-radius:9999px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:600">${esc(v)}</span>`).join('')}</div></div>`;
-    return;
-  }
-  area.innerHTML = `
-    <div class="lesson-section">
-      <h3>📝 Vocabulario (${vocab.length} palabras)</h3>
-      <div class="vocab-grid">
-        ${vocab.map(v => `<div class="vocab-item">
-          <div>
-            <div class="vocab-en">${esc(v.en)}</div>
-            ${v.pronunciation ? `<div class="vocab-pron">/${esc(v.pronunciation)}/</div>` : ''}
-            ${v.example_en ? `<div class="vocab-example">${esc(v.example_en)}</div>` : ''}
-          </div>
-          <div>
-            <div class="vocab-es">${esc(v.es)}</div>
-            ${v.example_es ? `<div class="vocab-example">${esc(v.example_es)}</div>` : ''}
-          </div>
-        </div>`).join('')}
+      <div class="nav-right">
+        <span class="nav-user">${esc(currentUser.display_name || currentUser.username)}</span>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
       </div>
-    </div>`;
+    </nav>
+    <div class="container fade-in" id="page-content"></div>
+    <div class="mobile-nav"><div class="mobile-nav-inner">
+      ${PAGES.map(p => '<button class="' + (currentPage === p.key ? 'active' : '') + '" onclick="navigate(\'' + p.key + '\')"><span class="mnav-icon">' + p.icon + '</span>' + p.label + '</button>').join('')}
+    </div></div>`;
+  renderPage();
 }
 
-function renderStepDialogue(area, L) {
-  const dlg = L.dialogue;
-  if (!dlg || !dlg.lines) {
-    area.innerHTML = `<div class="lesson-section"><h3>💬 Diálogo</h3><div class="empty-state">No hay diálogo en esta lección.</div></div>`;
-    return;
-  }
-  area.innerHTML = `
-    <div class="lesson-section">
-      <h3>💬 Diálogo</h3>
-      ${dlg.context_es ? `<div style="font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);font-style:italic;margin-bottom:14px;padding:10px 14px;background:var(--muted);border-radius:var(--radius)">${esc(dlg.context_es)}</div>` : ''}
-      ${dlg.lines.map(line => `<div class="dialogue-line">
-        <div class="dialogue-speaker">${esc(line.speaker)}</div>
-        <div class="dialogue-en">${esc(line.en)}</div>
-        <div class="dialogue-es">${esc(line.es)}</div>
-        ${line.note_es ? `<div class="dialogue-note">${esc(line.note_es)}</div>` : ''}
-      </div>`).join('')}
-    </div>`;
+function navigate(page) {
+  currentPage = page;
+  $$('.nav-links button').forEach((b, i) => b.classList.toggle('active', PAGES[i].key === page));
+  $$('.mobile-nav button').forEach((b, i) => b.classList.toggle('active', PAGES[i].key === page));
+  renderPage();
 }
 
-function renderStepGrammar(area, L) {
-  const grammar = L.grammar_es || L.notes || '';
-  const label = L.grammar_label || '';
-  if (!grammar) {
-    area.innerHTML = `<div class="lesson-section"><h3>📐 Gramática</h3><div class="empty-state">No hay notas de gramática para esta lección.</div></div>`;
-    return;
-  }
-  const paragraphs = grammar.split(/\n+/).filter(p => p.trim());
-  area.innerHTML = `
-    <div class="lesson-section">
-      <h3>📐 Gramática${label ? ': ' + esc(label) : ''}</h3>
-      ${paragraphs.map(p => `<p style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--fg);line-height:1.7;margin-bottom:10px">${formatBody(p)}</p>`).join('')}
-    </div>`;
-}
-
-function renderStepExamples(area, L) {
-  const examples = L.examples || [];
-  area.innerHTML = `
-    <div class="lesson-section">
-      <h3>💡 Ejemplos (${examples.length})</h3>
-      ${examples.map(ex => `<div class="example-row">
-        <div class="example-en">${esc(ex.en)}</div>
-        <div class="example-es">${esc(ex.es)}</div>
-        ${ex.note_es ? `<div class="example-note">${esc(ex.note_es)}</div>` : ''}
-      </div>`).join('')}
-    </div>`;
-}
-
-function renderStepPractice(area, L) {
-  const practice = L.practice || [];
-  if (!practice.length) {
-    area.innerHTML = `<div class="lesson-section"><h3>✏️ Práctica</h3><div class="empty-state">No hay ejercicios para esta lección.</div></div>`;
-    return;
-  }
-  area.innerHTML = `
-    <div class="lesson-section">
-      <h3>✏️ Práctica (${practice.length} ejercicios)</h3>
-      ${practice.map((p, i) => `<div style="padding:12px 0;border-bottom:1px solid rgba(222,216,207,0.3)">
-        <div style="font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:700;color:var(--muted-fg);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">${esc(p.instruction_es || p.instruction || 'Traduce')}</div>
-        <div style="font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--fg);margin-bottom:6px">${esc(p.prompt)}</div>
-        <button class="btn btn-sm btn-ghost" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Ver Respuesta</button>
-        <div style="display:none" class="practice-answer">${esc(p.answer)}</div>
-      </div>`).join('')}
-    </div>`;
-}
-
-/* ── INLINE FLASHCARDS (within wizard) ── */
-function renderStepFlashcards(area, L) {
-  fcCards = L.flashcards || [];
-  fcIndex = 0; fcFlipped = false;
-  area.innerHTML = `
-    <div class="lesson-section">
-      <h3>🃏 Tarjetas de Memoria (${fcCards.length})</h3>
-      <div style="font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted-fg);margin-bottom:16px">Haz clic en la tarjeta para voltearla.</div>
-      <div id="fcArea"></div>
-    </div>`;
-  renderFlashcard();
-}
-
-/* ── INLINE QUIZ (within wizard) ── */
-function renderStepQuiz(area, L) {
-  quizQs = L.quiz || [];
-  quizAnswers = new Array(quizQs.length).fill(-1);
-  quizCurrent = 0; quizSubmitted = false;
-  area.innerHTML = `
-    <div class="lesson-section">
-      <h3>📋 Quiz (${quizQs.length} preguntas)</h3>
-      <div id="quizArea"></div>
-    </div>`;
-  renderQuizQuestion();
-}
-
-async function markComplete(levelId, week, day) {
+async function renderPage() {
+  const el = document.getElementById('page-content');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted)">Loading...</div>';
   try {
-    await api(`/api/curriculum/progress/${levelId}/${week}/${day}`, {method:'POST'});
-    toast('¡Lección completada!');
-  } catch(e) { toast(e.message, 'error'); }
+    switch (currentPage) {
+      case 'dashboard': await renderDashboard(el); break;
+      case 'transactions': await renderTransactions(el); break;
+      case 'upload': await renderUpload(el); break;
+      case 'accounts': await renderAccounts(el); break;
+      case 'subscriptions': await renderSubscriptions(el); break;
+    }
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">!</div><h3>Error</h3><p>' + esc(e.message) + '</p></div>';
+  }
 }
 
-/* ═══ FLASHCARDS ═══ */
-let fcCards = [], fcIndex = 0, fcFlipped = false;
+/* ─── Dashboard ─── */
+async function renderDashboard(el) {
+  const [overview, categories, trend] = await Promise.all([
+    api('/api/analytics/overview'),
+    api('/api/analytics/spending-by-category?months=1'),
+    api('/api/analytics/monthly-trend?months=6'),
+  ]);
+  const m = overview.this_month;
+  const pm = overview.last_month;
+  const incChange = pm.income > 0 ? ((m.income - pm.income) / pm.income * 100).toFixed(0) : null;
+  const expChange = pm.expenses > 0 ? ((m.expenses - pm.expenses) / pm.expenses * 100).toFixed(0) : null;
 
-async function renderFlashcards(app) {
-  const parts = S.pageArg ? S.pageArg.split('/') : [];
-  if (parts.length < 3) { navigate('curriculum'); return; }
-  const [levelId, week, day] = parts;
-  try {
-    const lesson = await api(`/api/curriculum/lesson/${levelId}/${week}/${day}`);
-    fcCards = lesson.flashcards || [];
-    fcIndex = 0; fcFlipped = false;
-    const topic = lesson.topic_es || lesson.topic || '';
-    app.innerHTML = `
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
-        <button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Volver a Lección</button>
-        <div>
-          <span class="cat-badge cat-material">${levelId.toUpperCase()} S${week}D${day}</span>
-          <h2 class="page-title" style="margin-top:6px">🃏 Tarjetas: ${esc(topic)}</h2>
-        </div>
+  el.innerHTML = `
+    <div class="page-header"><h2>Dashboard</h2><span style="font-size:0.85rem;color:var(--text-muted)">${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span></div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Income this month</div>
+        <div class="stat-value stat-positive">${money(m.income)}</div>
+        <div class="stat-sub">${incChange !== null ? (incChange >= 0 ? '+' : '') + incChange + '% vs last month' : 'No prior data'}</div>
       </div>
-      <div id="fcArea"></div>`;
-    renderFlashcard();
-  } catch(e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
-}
-
-function renderFlashcard() {
-  const area = document.getElementById('fcArea');
-  if (!area || !fcCards.length) return;
-  const card = fcCards[fcIndex];
-  area.innerHTML = `
-    <div class="flashcard-container">
-      <div class="flashcard ${fcFlipped ? 'flipped' : ''}" onclick="fcFlip()">
-        <div class="flashcard-face flashcard-front">
-          <div class="flashcard-text">${esc(card.front)}</div>
-          <div class="flashcard-hint">Toca para voltear</div>
-        </div>
-        <div class="flashcard-face flashcard-back">
-          <div class="flashcard-text">${esc(card.back)}</div>
-        </div>
+      <div class="stat-card">
+        <div class="stat-label">Expenses this month</div>
+        <div class="stat-value stat-negative">${money(m.expenses)}</div>
+        <div class="stat-sub">${expChange !== null ? (expChange >= 0 ? '+' : '') + expChange + '% vs last month' : 'No prior data'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Net this month</div>
+        <div class="stat-value ${m.net >= 0 ? 'stat-positive' : 'stat-negative'}">${money(m.net, true)}</div>
+        <div class="stat-sub">${m.txn_count} transactions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Balance</div>
+        <div class="stat-value stat-neutral">${money(overview.total_balance)}</div>
+        <div class="stat-sub">${overview.account_count} account${overview.account_count !== 1 ? 's' : ''}</div>
       </div>
     </div>
-    <div class="flashcard-nav">
-      <button class="btn btn-sm btn-ghost" onclick="fcPrev()" ${fcIndex === 0 ? 'disabled' : ''}>← Prev</button>
-      <span class="flashcard-counter">${fcIndex + 1} / ${fcCards.length}</span>
-      <button class="btn btn-sm btn-ghost" onclick="fcNext()" ${fcIndex === fcCards.length - 1 ? 'disabled' : ''}>Next →</button>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Spending by Category</h3>
+        <div id="cat-chart" class="bar-chart"></div>
+        ${categories.length === 0 ? '<div class="empty-state" style="padding:20px"><p>No spending data yet</p></div>' : ''}
+      </div>
+      <div class="chart-card">
+        <h3>Monthly Trend</h3>
+        <div id="trend-chart"></div>
+        ${trend.length === 0 ? '<div class="empty-state" style="padding:20px"><p>No data yet</p></div>' : ''}
+      </div>
     </div>
-    <div style="text-align:center;margin-top:16px">
-      <button class="btn btn-sm" onclick="fcShuffle()">🔀 Shuffle</button>
+    <div class="card">
+      <h3 style="margin-bottom:12px;font-size:0.95rem;font-weight:600">All-Time Summary</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+        <div><span style="font-size:0.82rem;color:var(--text-muted)">Total Income</span><div style="font-family:var(--mono);font-weight:600;font-size:1.1rem;color:var(--accent)">${money(overview.all_time.income)}</div></div>
+        <div><span style="font-size:0.82rem;color:var(--text-muted)">Total Expenses</span><div style="font-family:var(--mono);font-weight:600;font-size:1.1rem;color:var(--red)">${money(overview.all_time.expenses)}</div></div>
+        <div><span style="font-size:0.82rem;color:var(--text-muted)">Net All-Time</span><div style="font-family:var(--mono);font-weight:600;font-size:1.1rem;color:${overview.all_time.net >= 0 ? 'var(--accent)' : 'var(--red)'}">${money(overview.all_time.net, true)}</div></div>
+        <div><span style="font-size:0.82rem;color:var(--text-muted)">Total Transactions</span><div style="font-family:var(--mono);font-weight:600;font-size:1.1rem">${overview.all_time.txn_count.toLocaleString()}</div></div>
+      </div>
     </div>`;
+
+  // Category bars
+  if (categories.length > 0) {
+    const maxCat = Math.max(...categories.map(c => c.total));
+    document.getElementById('cat-chart').innerHTML = categories.slice(0, 8).map(c =>
+      '<div class="bar-row"><div class="bar-label">' + esc(c.category) + '</div><div class="bar-track"><div class="bar-fill" style="width:' + (c.total / maxCat * 100).toFixed(1) + '%;background:var(--accent)"></div></div><div class="bar-value">' + money(c.total) + '</div></div>'
+    ).join('');
+  }
+
+  // Trend
+  if (trend.length > 0) {
+    const maxT = Math.max(...trend.map(t => Math.max(t.income, t.expenses)));
+    const mos = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('trend-chart').innerHTML =
+      '<div style="display:flex;flex-direction:column;gap:10px">' + trend.map(t =>
+        '<div><div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:4px">' + mos[t.month] + ' ' + t.year + '</div>' +
+        '<div style="display:flex;gap:6px;align-items:center"><div style="flex:1;display:flex;gap:3px">' +
+        '<div style="height:18px;border-radius:3px;background:var(--accent);width:' + (maxT > 0 ? (t.income / maxT * 100).toFixed(1) : 0) + '%;transition:width 0.5s"></div>' +
+        '<div style="height:18px;border-radius:3px;background:var(--red);opacity:0.7;width:' + (maxT > 0 ? (t.expenses / maxT * 100).toFixed(1) : 0) + '%;transition:width 0.5s"></div>' +
+        '</div><span style="font-size:0.75rem;font-family:var(--mono);color:' + (t.net >= 0 ? 'var(--accent)' : 'var(--red)') + ';width:70px;text-align:right">' + money(t.net, true) + '</span></div></div>'
+      ).join('') + '</div>' +
+      '<div style="display:flex;gap:16px;margin-top:12px;font-size:0.75rem;color:var(--text-muted)">' +
+      '<span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent);margin-right:4px"></span>Income</span>' +
+      '<span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--red);opacity:0.7;margin-right:4px"></span>Expenses</span></div>';
+  }
 }
 
-function fcFlip() { fcFlipped = !fcFlipped; renderFlashcard(); }
-function fcPrev() { if (fcIndex > 0) { fcIndex--; fcFlipped = false; renderFlashcard(); } }
-function fcNext() { if (fcIndex < fcCards.length - 1) { fcIndex++; fcFlipped = false; renderFlashcard(); } }
-function fcShuffle() {
-  for (let i = fcCards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [fcCards[i],fcCards[j]] = [fcCards[j],fcCards[i]]; }
-  fcIndex = 0; fcFlipped = false; renderFlashcard(); toast('¡Mezcladas!');
-}
+/* ─── Transactions ─── */
+let txnFilters = { search: '', category: '', date_from: '', date_to: '' };
+async function renderTransactions(el) {
+  let url = '/api/transactions/?limit=200';
+  if (txnFilters.search) url += '&search=' + encodeURIComponent(txnFilters.search);
+  if (txnFilters.category) url += '&category=' + encodeURIComponent(txnFilters.category);
+  if (txnFilters.date_from) url += '&date_from=' + txnFilters.date_from;
+  if (txnFilters.date_to) url += '&date_to=' + txnFilters.date_to;
 
-/* ═══ QUIZ ═══ */
-let quizQs = [], quizAnswers = [], quizCurrent = 0, quizSubmitted = false;
+  const [txns, cats] = await Promise.all([api(url), api('/api/transactions/categories')]);
+  const catOpts = cats.map(c => c.category).sort();
 
-async function renderQuiz(app) {
-  const parts = S.pageArg ? S.pageArg.split('/') : [];
-  if (parts.length < 3) { navigate('curriculum'); return; }
-  const [levelId, week, day] = parts;
-  try {
-    const lesson = await api(`/api/curriculum/lesson/${levelId}/${week}/${day}`);
-    quizQs = lesson.quiz || [];
-    quizAnswers = new Array(quizQs.length).fill(-1);
-    quizCurrent = 0; quizSubmitted = false;
-    const topic = lesson.topic_es || lesson.topic || '';
-    app.innerHTML = `
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
-        <button class="btn btn-sm btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Volver a Lección</button>
-        <div>
-          <span class="cat-badge cat-assignment">${levelId.toUpperCase()} S${week}D${day}</span>
-          <h2 class="page-title" style="margin-top:6px">📋 Quiz: ${esc(topic)}</h2>
-        </div>
+  el.innerHTML = `
+    <div class="page-header">
+      <h2>Transactions</h2>
+      <div style="display:flex;gap:8px">
+        <button class="btn-secondary btn-sm" onclick="navigate('upload')">\u2191 Import</button>
+        <button class="btn-primary btn-sm" onclick="showAddTransaction()">+ Add</button>
       </div>
-      <div id="quizArea"></div>`;
-    renderQuizQuestion();
-  } catch(e) { app.innerHTML = `<div class="error-msg">${e.message}</div>`; }
+    </div>
+    <div class="filters">
+      <input type="text" placeholder="Search..." value="${esc(txnFilters.search)}" onchange="txnFilters.search=this.value;renderPage()" style="width:200px">
+      <select onchange="txnFilters.category=this.value;renderPage()">
+        <option value="">All Categories</option>
+        ${catOpts.map(c => '<option value="' + esc(c) + '"' + (txnFilters.category === c ? ' selected' : '') + '>' + esc(c) + '</option>').join('')}
+      </select>
+      <input type="date" value="${txnFilters.date_from}" onchange="txnFilters.date_from=this.value;renderPage()">
+      <input type="date" value="${txnFilters.date_to}" onchange="txnFilters.date_to=this.value;renderPage()">
+      ${Object.values(txnFilters).some(v => v) ? '<button class="btn-secondary btn-sm" onclick="txnFilters={search:\'\',category:\'\',date_from:\'\',date_to:\'\'};renderPage()">Clear</button>' : ''}
+    </div>
+    ${txns.length === 0 ? `
+      <div class="empty-state">
+        <div class="empty-icon">\u2195</div>
+        <h3>No transactions yet</h3>
+        <p>Upload a bank statement or add transactions manually to get started.</p>
+        <button class="btn-primary" onclick="navigate('upload')">Upload Statement</button>
+      </div>` : `
+      <div class="card" style="padding:0;overflow:hidden">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Date</th><th>Description</th><th>Category</th><th style="text-align:right">Amount</th><th>Source</th><th></th></tr></thead>
+          <tbody>${txns.map(t => '<tr>' +
+            '<td style="white-space:nowrap;font-size:0.85rem">' + shortDate(t.date) + '</td>' +
+            '<td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(t.description) + '</td>' +
+            '<td><span class="category-tag ' + catClass(t.category) + '">' + esc(t.category) + '</span></td>' +
+            '<td style="text-align:right" class="' + (t.amount >= 0 ? 'amount-positive' : 'amount-negative') + '">' + money(t.amount) + '</td>' +
+            '<td style="font-size:0.8rem;color:var(--text-muted)">' + t.source + '</td>' +
+            '<td><button class="btn-danger btn-sm" onclick="deleteTxn(' + t.id + ')" style="opacity:0.6;font-size:0.75rem">\u00d7</button></td>' +
+            '</tr>').join('')}</tbody>
+        </table></div>
+      </div>
+      <div style="text-align:center;padding:12px;font-size:0.82rem;color:var(--text-muted)">${txns.length} transaction${txns.length !== 1 ? 's' : ''}</div>`}`;
 }
 
-function renderQuizQuestion() {
-  const area = document.getElementById('quizArea');
-  if (!area) return;
-  if (quizSubmitted) return;
+async function deleteTxn(id) {
+  if (!confirm('Delete this transaction?')) return;
+  await api('/api/transactions/' + id, { method: 'DELETE' });
+  renderPage();
+}
 
-  const q = quizQs[quizCurrent];
-  area.innerHTML = `
-    <div class="lesson-section">
-      <div style="font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--muted-fg);font-weight:700;margin-bottom:8px">Pregunta ${quizCurrent + 1} de ${quizQs.length}</div>
-      <div class="quiz-question">${esc(q.q_es || q.q)}</div>
-      ${q.options.map((opt, i) => `<button class="quiz-option ${quizAnswers[quizCurrent] === i ? 'selected' : ''}" onclick="quizSelect(${i})">${esc(opt)}</button>`).join('')}
-    </div>
-    <div style="display:flex;justify-content:space-between;margin-top:16px">
-      <button class="btn btn-sm btn-ghost" onclick="quizPrev()" ${quizCurrent === 0 ? 'disabled style="visibility:hidden"' : ''}>← Anterior</button>
-      ${quizCurrent < quizQs.length - 1
-        ? `<button class="btn btn-sm btn-primary" onclick="quizNext()">Siguiente →</button>`
-        : `<button class="btn btn-primary" onclick="quizSubmit()">Enviar Quiz</button>`
-      }
-    </div>
-    <div style="display:flex;gap:6px;justify-content:center;margin-top:16px">
-      ${quizQs.map((_, i) => `<div style="width:10px;height:10px;border-radius:50%;background:${quizAnswers[i] >= 0 ? 'var(--primary)' : 'var(--border)'};cursor:pointer" onclick="quizCurrent=${i};renderQuizQuestion()"></div>`).join('')}
+function showAddTransaction() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  overlay.innerHTML = `
+    <div class="modal fade-in">
+      <h3>Add Transaction</h3>
+      <label>Date</label><input type="date" id="txn-date" value="${new Date().toISOString().split('T')[0]}">
+      <label>Description</label><input type="text" id="txn-desc" placeholder="e.g. Starbucks">
+      <label>Amount (negative for expense)</label><input type="number" id="txn-amount" step="0.01" placeholder="-4.50">
+      <label>Category</label>
+      <select id="txn-cat"><option>Uncategorized</option><option>Groceries</option><option>Dining</option><option>Shopping</option><option>Subscriptions</option><option>Utilities</option><option>Housing</option><option>Transport</option><option>Entertainment</option><option>Health</option><option>Insurance</option><option>Gas &amp; Auto</option><option>Income</option><option>Transfer</option></select>
+      <label>Notes (optional)</label><input type="text" id="txn-notes" placeholder="">
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+        <button class="btn-primary" onclick="saveTransaction()">Save</button>
+      </div>
     </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => $('#txn-desc').focus(), 50);
 }
 
-function quizSelect(i) { quizAnswers[quizCurrent] = i; renderQuizQuestion(); }
-function quizPrev() { if (quizCurrent > 0) { quizCurrent--; renderQuizQuestion(); } }
-function quizNext() { if (quizCurrent < quizQs.length - 1) { quizCurrent++; renderQuizQuestion(); } }
-
-async function quizSubmit() {
-  if (quizAnswers.some(a => a < 0)) { toast('Por favor responde todas las preguntas', 'error'); return; }
-  const parts = S.pageArg.split('/');
-  const [levelId, week, day] = parts;
+async function saveTransaction() {
   try {
-    const res = await api(`/api/curriculum/quiz/${levelId}/${week}/${day}`, {
-      method: 'POST', body: JSON.stringify({answers: quizAnswers})
-    });
-    quizSubmitted = true;
-    const area = document.getElementById('quizArea');
-    const pct = Math.round(res.score / res.total * 100);
-    const emoji = pct === 100 ? '🎉' : pct >= 67 ? '👍' : '📚';
-    area.innerHTML = `
-      <div class="quiz-result">
-        <div style="font-size:3rem;margin-bottom:8px">${emoji}</div>
-        <div class="quiz-score">${res.score} / ${res.total}</div>
-        <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--muted-fg);margin-top:8px;font-weight:600">${pct}% correcto</div>
-        <div style="margin-top:16px">
-          ${res.results.map((r, i) => {
-            const q = quizQs[i];
-            return `<div style="text-align:left;padding:10px 0;border-bottom:1px solid var(--border)">
-              <div style="font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;color:${r.correct ? 'var(--primary)' : 'var(--destructive)'}">${r.correct ? '✓' : '✗'} ${esc(q.q_es || q.q)}</div>
-              <div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:var(--muted-fg);margin-top:2px">Tu respuesta: ${esc(q.options[r.user_answer])} ${r.correct ? '' : '→ Correcta: ' + esc(q.options[r.correct_answer])}</div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">
-        <button class="btn btn-ghost" onclick="navigate('lesson','${S.pageArg}')">← Volver a Lección</button>
-        <button class="btn btn-primary" onclick="navigate('curriculum')">Curriculum</button>
-      </div>`;
-  } catch(e) { toast(e.message, 'error'); }
+    await api('/api/transactions/', { method: 'POST', body: {
+      date: $('#txn-date').value, description: $('#txn-desc').value,
+      amount: parseFloat($('#txn-amount').value), category: $('#txn-cat').value, notes: $('#txn-notes').value,
+    }});
+    $('.modal-overlay').remove();
+    renderPage();
+  } catch (e) { alert(e.message); }
 }
 
-/* ═══ INIT ═══ */
-(async () => {
-  await loadMe();
-  navigate('feed');
-})();
+/* ─── Upload ─── */
+async function renderUpload(el) {
+  const [history, accounts] = await Promise.all([api('/api/upload/history'), api('/api/accounts/')]);
+  el.innerHTML = `
+    <div class="page-header"><h2>Upload Statement</h2></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+      <div class="upload-zone" onclick="document.getElementById('csv-input').click()"
+           ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')"
+           ondrop="event.preventDefault();this.classList.remove('dragover');handleDrop(event,'csv')">
+        <div class="upload-icon">\ud83d\udcc4</div>
+        <p><strong>CSV Statement</strong></p>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px">Bank exports, credit card CSVs</p>
+        <div class="upload-formats">Supports most bank CSV formats</div>
+        <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="uploadFile(this.files[0],'csv')">
+      </div>
+      <div class="upload-zone" onclick="document.getElementById('pdf-input').click()"
+           ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')"
+           ondrop="event.preventDefault();this.classList.remove('dragover');handleDrop(event,'pdf')">
+        <div class="upload-icon">\ud83d\udcd1</div>
+        <p><strong>PDF Statement</strong></p>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px">Bank &amp; credit card PDFs</p>
+        <div class="upload-formats">Best-effort extraction</div>
+        <input type="file" id="pdf-input" accept=".pdf" style="display:none" onchange="uploadFile(this.files[0],'pdf')">
+      </div>
+    </div>
+    ${accounts.length > 0 ? '<div style="margin-bottom:24px"><label style="font-size:0.85rem;color:var(--text-secondary)">Link to account (optional):</label><select id="upload-account" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font);margin-left:8px"><option value="">None</option>' + accounts.map(a => '<option value="' + a.id + '">' + esc(a.name) + '</option>').join('') + '</select></div>' : ''}
+    <div id="upload-status" style="margin-bottom:24px"></div>
+    ${history.length > 0 ? `
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border)"><h3 style="font-size:0.95rem;font-weight:600">Upload History</h3></div>
+        <table><thead><tr><th>File</th><th>Type</th><th>Transactions</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>${history.map(u => '<tr><td style="font-size:0.88rem">' + esc(u.filename) + '</td><td><span class="category-tag">' + u.file_type.toUpperCase() + '</span></td><td>' + u.row_count + '</td><td><span style="color:' + (u.status === 'processed' ? 'var(--accent)' : 'var(--red)') + '">' + u.status + '</span></td><td style="font-size:0.82rem;color:var(--text-muted)">' + new Date(u.created_at).toLocaleDateString() + '</td></tr>').join('')}</tbody></table>
+      </div>` : ''}`;
+}
+
+function handleDrop(e, type) { const f = e.dataTransfer.files[0]; if (f) uploadFile(f, type); }
+
+async function uploadFile(file, type) {
+  const status = document.getElementById('upload-status');
+  status.innerHTML = '<div class="card" style="background:var(--blue-light);border-color:var(--blue)"><p style="color:var(--blue)">Uploading ' + esc(file.name) + '...</p></div>';
+  const form = new FormData();
+  form.append('file', file);
+  const acctSel = document.getElementById('upload-account');
+  if (acctSel && acctSel.value) form.append('account_id', acctSel.value);
+  try {
+    const result = await api('/api/upload/' + type, { method: 'POST', body: form });
+    if (result.status === 'processed') {
+      status.innerHTML = '<div class="card" style="background:var(--accent-light);border-color:var(--accent)"><p style="color:var(--accent);font-weight:600">Imported ' + result.row_count + ' transactions from ' + esc(file.name) + '</p>' + (result.error_message ? '<p style="font-size:0.82rem;color:var(--amber);margin-top:8px">' + esc(result.error_message) + '</p>' : '') + '</div>';
+    } else {
+      status.innerHTML = '<div class="card" style="background:var(--red-light);border-color:var(--red)"><p style="color:var(--red);font-weight:600">Upload failed</p><p style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px">' + esc(result.error_message || 'Unknown error') + '</p></div>';
+    }
+  } catch (e) { status.innerHTML = '<div class="card" style="background:var(--red-light);border-color:var(--red)"><p style="color:var(--red)">' + esc(e.message) + '</p></div>'; }
+}
+
+/* ─── Accounts ─── */
+async function renderAccounts(el) {
+  const accounts = await api('/api/accounts/');
+  const total = accounts.reduce((s, a) => s + a.balance, 0);
+  const icons = { checking: '\ud83c\udfe6', savings: '\ud83d\udcb0', credit_card: '\ud83d\udcb3', investment: '\ud83d\udcc8', cash: '\ud83d\udcb5' };
+  el.innerHTML = `
+    <div class="page-header"><h2>Accounts</h2><button class="btn-primary btn-sm" onclick="showAddAccount()">+ Add Account</button></div>
+    ${accounts.length === 0 ? '<div class="empty-state"><div class="empty-icon">\u25ce</div><h3>No accounts yet</h3><p>Add your bank accounts, credit cards, and other financial accounts.</p><button class="btn-primary" onclick="showAddAccount()">Add Account</button></div>' : `
+      <div class="stat-card" style="margin-bottom:20px">
+        <div class="stat-label">Total Balance</div>
+        <div class="stat-value ${total >= 0 ? 'stat-positive' : 'stat-negative'}">${money(total)}</div>
+        <div class="stat-sub">${accounts.length} account${accounts.length !== 1 ? 's' : ''}</div>
+      </div>
+      <div class="accounts-grid">${accounts.map(a =>
+        '<div class="account-card"><div class="acct-type">' + (icons[a.account_type] || '\u25ce') + ' ' + a.account_type.replace('_', ' ') + '</div><div class="acct-name">' + esc(a.name) + '</div><div class="acct-inst">' + (esc(a.institution) || 'No institution') + '</div><div class="acct-balance ' + (a.balance >= 0 ? 'stat-positive' : 'stat-negative') + '">' + money(a.balance) + '</div></div>'
+      ).join('')}</div>`}`;
+}
+
+function showAddAccount() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  overlay.innerHTML = `
+    <div class="modal fade-in">
+      <h3>Add Account</h3>
+      <label>Account Name</label><input type="text" id="acct-name" placeholder="e.g. Chase Checking">
+      <label>Type</label><select id="acct-type"><option value="checking">Checking</option><option value="savings">Savings</option><option value="credit_card">Credit Card</option><option value="investment">Investment</option><option value="cash">Cash</option></select>
+      <label>Institution</label><input type="text" id="acct-inst" placeholder="e.g. Chase, Bank of America">
+      <label>Current Balance</label><input type="number" id="acct-bal" step="0.01" value="0">
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+        <button class="btn-primary" onclick="saveAccount()">Save</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => $('#acct-name').focus(), 50);
+}
+
+async function saveAccount() {
+  try {
+    await api('/api/accounts/', { method: 'POST', body: {
+      name: $('#acct-name').value, account_type: $('#acct-type').value,
+      institution: $('#acct-inst').value, balance: parseFloat($('#acct-bal').value) || 0,
+    }});
+    $('.modal-overlay').remove();
+    renderPage();
+  } catch (e) { alert(e.message); }
+}
+
+/* ─── Subscriptions ─── */
+async function renderSubscriptions(el) {
+  const data = await api('/api/analytics/subscriptions');
+  el.innerHTML = `
+    <div class="page-header"><h2>Subscriptions</h2></div>
+    ${data.subscriptions.length === 0 ? '<div class="empty-state"><div class="empty-icon">\u21bb</div><h3>No subscriptions detected</h3><p>Upload at least 2-3 months of statements and recurring charges will be automatically detected.</p></div>' : `
+      <div class="stats-grid" style="margin-bottom:24px">
+        <div class="stat-card"><div class="stat-label">Monthly Total</div><div class="stat-value stat-negative">${money(data.total_monthly)}</div><div class="stat-sub">${data.subscriptions.length} subscription${data.subscriptions.length !== 1 ? 's' : ''}</div></div>
+        <div class="stat-card"><div class="stat-label">Yearly Estimate</div><div class="stat-value stat-negative">${money(data.total_yearly)}</div><div class="stat-sub">Based on current subscriptions</div></div>
+      </div>
+      <div class="sub-grid">${data.subscriptions.map(s =>
+        '<div class="sub-card"><div class="sub-info"><h4>' + esc(s.description) + '</h4><p><span class="category-tag ' + catClass(s.category) + '">' + esc(s.category) + '</span> &middot; ' + s.occurrences + ' charges</p><p>Last: ' + shortDate(s.last_seen) + '</p></div><div class="sub-amount">' + money(s.avg_amount) + '<span style="font-size:0.7rem;color:var(--text-muted)">/mo</span></div></div>'
+      ).join('')}</div>`}`;
+}
+
+/* ─── Init ─── */
+render();
 </script>
 </body>
 </html>
